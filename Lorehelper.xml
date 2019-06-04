@@ -1,0 +1,244 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+<Frame name="Lorehelper_MainFrame_Template" parent="UIParent" inherits="BasicFrameTemplate" hidden="false" enableMouse="true" movable="true" clampedToScreen="true" virtual = "true">
+<Size x="400" y="500"/>
+  
+  <Anchors>
+    <Anchor point="CENTER"/>
+  </Anchors>
+  
+  <Scripts>
+    <OnLoad>
+	  self:RegisterForDrag("LeftButton")
+      self:Show();
+	  
+	  <!--bugs time to time, think of rewriting
+	  if Lorehelper_VarFrame then
+		self:SetPoint(Lorehelper_VarFrame.mainframepoint, Lorehelper_VarFrame.relativeTo, Lorehelper_VarFrame.relativePoint, Lorehelper_VarFrame.xOfs, Lorehelper_VarFrame.yOfs)
+	  end-->
+	  
+	  local framewidth = self:GetWidth() - 15 <!--so the text fits nicely-->
+	  
+	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+	  self.title:SetPoint("TOPLEFT", 0, -5);
+	  self.title:SetWidth(framewidth);
+	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
+	  
+	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
+	  self.text:SetPoint("TOPLEFT",5,-30)
+	  self.text:SetJustifyH("LEFT")
+	  self.text:SetJustifyV("TOP")
+	  self.text:SetWidth(framewidth);
+	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
+	  <!--self.text:SetTextColor(0.5, 1, 0.5, 1)-->
+	  self.text:Show()<!-- shown by default -->
+	  
+	  <!--most of the frames will have newtext as well, displayed after the player chooses an answer-->
+	  self.newtext = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
+	  self.newtext:SetPoint("TOPLEFT",5,-30)
+	  self.newtext:SetJustifyH("LEFT")
+	  self.newtext:SetJustifyV("TOP")
+	  self.newtext:SetWidth(framewidth);
+	  self.newtext:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
+	  <!--self.newtext:SetTextColor(1, 0.7, 0.3, 1)-->
+	  self.newtext:Hide()<!-- hidden by default -->
+	  
+	  self.background = self:CreateTexture(nil, "BACKGROUND")
+	  self.background:SetPoint("TOPLEFT")
+	  self.background:SetWidth(self:GetWidth());<!-- not framewidth because it's not a text -->
+	  self.background:SetHeight(self:GetHeight());
+	  self.background:SetTexture(LHART_DEFAULTPICTURE)
+    </OnLoad>
+	<OnDragStart>
+		if not self.isLocked then
+			self:StartMoving()
+		end
+	</OnDragStart>
+	<OnDragStop>
+		self:StopMovingOrSizing()
+		if Lorehelper_VarFrame then
+			Lorehelper_VarFrame.mainframepoint, Lorehelper_VarFrame.relativeTo, Lorehelper_VarFrame.relativePoint, Lorehelper_VarFrame.xOfs, Lorehelper_VarFrame.yOfs = self:GetPoint();
+		end
+	</OnDragStop>
+	<OnMouseDown>
+	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	</OnMouseDown>
+  </Scripts>
+  
+	<Layers>
+		<Layer level="OVERLAY">
+			<Texture setAllPoints="true">
+			<Color r="1.0" g="0.5" b="0.0" a="0.4" />
+			</Texture>
+		</Layer>
+
+<!--		<Layer level="ARTWORK">
+		<Texture name="$parent_bqPicture" file="Interface\TALENTFRAME\PriestDiscipline-TopLeft">
+			<Size x="400" y="600"/>
+			<Anchors>
+				<Anchor point="TOPLEFT" x="0" y="0"/>
+			</Anchors>
+			<Color r="1" g="1" b="1" a="0.45"/>
+		</Texture>
+		</Layer>-->
+	</Layers>
+
+<!--  <Frames>
+    <Button name="$parentButton" inherits="UIPanelButtonTemplate" text="Cliick me!">
+      <Size x="120" y="21"/>
+      <Anchors>
+        <Anchor point="LEFT"/>
+      </Anchors>
+	  <Scripts>
+		<OnClick>
+		self:Hide();
+		</OnClick>
+	  </Scripts>
+    </Button>	
+  </Frames> -->
+</Frame>
+
+
+<Button name="Lorehelper_Button_Template" inherits="UIPanelButtonTemplate" virtual = "true">
+<Size x="80" y="20"/>
+<Scripts>
+	<OnLoad>
+    <!--self:SetHighlightTexture("interface\\addons\\Lorehelper\\BUTTONS\\UI-SILVER-BUTTON-UP.blp")-->
+	self:SetHighlightTexture(LHART_BUTTONUP)
+    self:GetHighlightTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+    self:SetNormalTexture(LHART_BUTTONUP)
+    self:GetNormalTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+    self:SetPushedTexture(LHART_BUTTONDOWN)
+    self:GetPushedTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+	</OnLoad>
+	<OnMouseDown>
+	<!-- hides all the "error" messages -->
+	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	</OnMouseDown>
+</Scripts>
+</Button>
+
+<!--    <Button name="BagBuddyItemTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+        <Size>
+          <AbsDimension x="37" y="37"/>
+        </Size>
+        <Layers>
+          <Layer level="BORDER">
+            <Texture name="$parentIconTexture" parentKey="icon"/>
+            <FontString name="$parentCount" parentKey="count" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
+              <Anchors>
+                <Anchor point="BOTTOMRIGHT">
+                  <Offset>
+                    <AbsDimension x="-5" y="2"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+          <Layer level="BACKGROUND">
+            <Texture name="$parentGlow" parentKey="glow" alphaMode="ADD" file="Interface\Buttons\UI-ActionButton-Border">
+              <Size x="70" y="70"/>
+              <Anchors>
+                <Anchor point="CENTER"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0" a="0.6"/>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Attributes>
+          <Attribute name="type2" type="string" value="item"/>
+        </Attributes>
+        <NormalTexture name="$parentNormalTexture" file="Interface\Buttons\UI-Quickslot2">
+          <Size>
+            <AbsDimension x="64" y="64"/>
+          </Size>
+          <Anchors>
+            <Anchor point="CENTER">
+              <Offset>
+                <AbsDimension x="0" y="-1"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </NormalTexture>
+        <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
+		
+	<Scripts>
+		<OnMouseDown>
+		StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+		</OnMouseDown>
+	</Scripts>
+      </Button>-->
+	  
+	  <!-- Credits to Gello A Firelord (2006) for this code -->
+	  <Button name="Lorehelper_MinimapButton" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+		<Size>
+			<AbsDimension x="33" y="33"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT"/>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="Lorehelper_MinimapButton_Icon" file="Interface\Icons\Inv_misc_book_11">
+					<Size>
+						<AbsDimension x="21" y="21"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="7" y="-6"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="OVERLAY">
+				<Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+					<Size>
+						<AbsDimension x="56" y="56"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame name="Lorehelper_MinimapButton_DraggingFrame" hidden="true">
+				<Scripts>
+					<OnUpdate>
+						Lorehelper_MinimapButton_DraggingFrame_OnUpdate()
+					</OnUpdate>
+				</Scripts>
+			</Frame>
+		</Frames>
+		<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForClicks("LeftButtonUp","RightButtonUp")
+				self:RegisterForDrag("LeftButton","RightButton")
+			</OnLoad>
+			<OnEnter>
+				if (not self.dragging) then
+						GameTooltip:SetOwner(self or UIParent, "ANCHOR_LEFT")
+						GameTooltip:SetText("Lorehelper will guide you|nthrough the lore of your race");
+						GameTooltip:Show();
+				end
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnDragStart>
+				self:LockHighlight()
+				Lorehelper_MinimapButton_DraggingFrame:Show()
+			</OnDragStart>
+			<OnDragStop>
+				self:UnlockHighlight()
+				Lorehelper_MinimapButton_DraggingFrame:Hide()
+			</OnDragStop>
+			<OnClick>
+				Lorehelper_MinimapButton_OnClick() -- do your thing in here, arg1 is mouse button clicked
+			</OnClick>
+		</Scripts>
+	</Button>
+</Ui>
