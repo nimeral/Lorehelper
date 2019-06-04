@@ -73,23 +73,7 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "Lorehelper" then
 		-- Our saved variables are ready at this point. If there are none, the variables will set to nil.
 		if Lorehelper_VarFrame==nil then
-			Lorehelper_VarFrame = CreateFrame ("Frame")
-			
-			Lorehelper_VarFrame.minimappos = 45; --default position in degrees
-			Lorehelper_VarFrame.mainframepoint = "CENTER";
-			Lorehelper_VarFrame.relativeTo=UIParent;
-			Lorehelper_VarFrame.relativePoint="CENTER";
-			Lorehelper_VarFrame.xOfs=0;
-			Lorehelper_VarFrame.yOfs=0;
-			
-			Lorehelper_VarFrame.race = UnitRace("player");
-			Lorehelper_VarFrame.class = UnitClass("player");
-			Lorehelper_VarFrame.name = UnitName("player");
-			Lorehelper_VarFrame.age = nil;
-			Lorehelper_VarFrame.responses = {};
-			Lorehelper_VarFrame.testdone = false;
-			print("Welcome to Lorehelper, "..Lorehelper_VarFrame.name.."!");
-			Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
+			Lorehelper_Init();
 			--int main (void) lol
 			--{
 			Lorehelper_VarFrame.curframe = Lorehelper_DoTest();
@@ -135,7 +119,7 @@ end
 function Lorehelper_PositionButtons (buttonframe, buttonnumber, framewidth, textheight)
 	if -75+80*(buttonnumber+1) < framewidth then
 		buttonframe:SetPoint("TOPLEFT",-75+80*buttonnumber,-35-textheight)--80 is the hardcoded button width
-	else buttonframe:SetPoint("TOPLEFT",-75+80*(buttonnumber-4),-60-textheight)--and 4 is 390/80, where 390 is the standard framewidth. I'll make it more flexible one day
+	else buttonframe:SetPoint("TOPLEFT",-75+80*(buttonnumber-4),-80-textheight)--and 4 is 390/80, where 390 is the standard framewidth. I'll make it more flexible one day
 	end
 end
 ------------------------------------------
@@ -144,8 +128,8 @@ local varframe = Lorehelper_VarFrame; --global variable frame
 --local fr = nil;--the frame to be created and shown  
 
 if waschild==true then
-	varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost someone")}, postanswertexts, picture);--no postpictures
-else varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost someone"), LHT("Participated"), LHT("Lost everything")}, postanswertexts, picture);
+	varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost|nsomeone")}, postanswertexts, picture);--no postpictures
+else varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost|nsomeone"), LHT("Participated"), LHT("Lost|neverything")}, postanswertexts, picture);
 end
 
 return varframe.curframe;
@@ -173,7 +157,7 @@ function Lorehelper_TestQuestion(title, text, answers, postanswertexts, picture,
 	for i=1,#answers do
 		fr.buttonframes[i] = CreateFrame("Button", nil, fr, "Lorehelper_Button_Template");
 		Lorehelper_PositionButtons (fr.buttonframes[i], i, framewidth, fr.text:GetHeight());
-		fr.buttonframes[i]:SetText(answers[i]);
+		fr.buttonframes[i]:SetFormattedText(answers[i]);--with SetText, I can't |n on buttons
 		fr.buttonframes[i]:SetScript("OnClick", 
 			function()
 			--hide the old text and buttons
@@ -216,7 +200,8 @@ function Lorehelper_TestQuestion(title, text, answers, postanswertexts, picture,
 			fr.okbutton:SetScript("OnClick", 
 				function()
 					--update responses global variable 
-					varframe.responses[title]=answers[i];
+					varframe.responses[title]={varframe.curtestquestionnumber, answers[i]};
+					varframe.curtestquestionnumber = varframe.curtestquestionnumber + 1;
 					--and hide everything related to this question
 					fr:Hide();
 	
@@ -330,8 +315,41 @@ function Lorehelper_PresentAnswers(picture)--no other input because LorehelperVa
 
 	--fill the frame with the text of player's answers
 	local text = "Name: "..varframe.name.."|nRace: "..varframe.race.."|nAge: "..varframe.age.."|n";
+	
+	--sort the responses by "time"
+	--[[oh fuck it, I'll sort it later
+	local numberlist = {}
+	local answerlist = {}
+	-- populate the table that holds the keys
+	for question,answer in pairs(varframe.responses) do 
+		table.insert(numberlist, answer[1])
+		table.insert(answerlist, answer[2]) 
+	end
+
+	for a, b in pairs(numberlist) do
+		print(a)
+		print(b)
+	end
+	for a, b in pairs(answerlist) do
+		print(a)
+		print(b)
+	end
+
+	--sort the keys??
+	table.sort(numberlist)
+	for a, b in pairs(numberlist) do
+		print(a)
+		print(b)
+	end
+	-- use the keys to retrieve the values in the sorted order??
+	for _, k in ipairs(numberlist) do print(k, numberlist[k], answerlist[k]) end--]]
+
 	for question,answer in pairs(varframe.responses) do
-		text = text..question..": "..answer.."|n";
+		--for key,value in pairs(answer) do
+		--	print("found member " .. key.."--"..value);
+		--end
+		--answer contains a pair {number_of_test_question, text_of_answer}. The string below adds text_of_answer without |n's to the frame
+		text = text..question..": "..answer[1]..string.gsub(answer[2], "|n", " ").."|n";
 	end
 
 	fr.text:SetText(text);
@@ -349,6 +367,7 @@ function Lorehelper_PresentAnswers(picture)--no other input because LorehelperVa
 			varframe.age = nil;
 			varframe.responses = {};
 			varframe.testdone = false;
+			varframe.curtestquestionnumber = 1;
 			fr:Hide();
 			Lorehelper_DoTest();
 		end,
@@ -468,7 +487,7 @@ if varframe.responses["Gurubashi War"]==nil then
 		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWarAdult"), false, {LHT("HumanEventGurubashiWarAvoided"), LHT("HumanEventGurubashiWarLostSomeone"), LHT("HumanEventGurubashiWarParticipated"), LHT("HumanEventGurubashiWarLostEverything")}, LHART_GURUBASHIWAR)	;
 		return varframe.curframe;
 	elseif varframe.age+childage >= ageticks[#ageticks] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWarChild"), false, {LHT("HumanEventGurubashiWarAvoided"), LHT("HumanEventGurubashiWarLostSomeone"), LHT("HumanEventGurubashiWarParticipated"), LHT("HumanEventGurubashiWarLostEverything")}, LHART_GURUBASHIWAR)
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWarChild"), true, {LHT("HumanEventGurubashiWarAvoided"), LHT("HumanEventGurubashiWarLostSomeone"), LHT("HumanEventGurubashiWarParticipated"), LHT("HumanEventGurubashiWarLostEverything")}, LHART_GURUBASHIWAR)
 		return varframe.curframe;
 	end
 end
@@ -478,7 +497,7 @@ if varframe.responses["Third War: Kalimdor"]==nil then
 		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdorAdult"), false, {LHT("HumanEventThirdWarKalimdorAvoided"), LHT("HumanEventThirdWarKalimdorLostSomeone"), LHT("HumanEventThirdWarKalimdorParticipated"), LHT("HumanEventThirdWarKalimdorLostEverything")}, LHART_THIRDWARKALIMDOR)	
 		return varframe.curframe;
 	elseif varframe.age+childage >= ageticks[1] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdorChild"), false, {LHT("HumanEventThirdWarKalimdorAvoided"), LHT("HumanEventThirdWarKalimdorLostSomeone"), LHT("HumanEventThirdWarKalimdorParticipated"), LHT("HumanEventThirdWarKalimdorLostEverything")}, LHART_THIRDWARKALIMDOR)
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdorChild"), true, {LHT("HumanEventThirdWarKalimdorAvoided"), LHT("HumanEventThirdWarKalimdorLostSomeone"), LHT("HumanEventThirdWarKalimdorParticipated"), LHT("HumanEventThirdWarKalimdorLostEverything")}, LHART_THIRDWARKALIMDOR)
 		return varframe.curframe;
 	end	
 end
@@ -622,6 +641,30 @@ function Lorehelper_MinimapButton_OnClick()
 end
 -----------------------------
 -----------------------------
+function Lorehelper_Init()--creates Lorehelper_VarFrame and fills it with defaults
+	Lorehelper_VarFrame = CreateFrame ("Frame")
+			
+	Lorehelper_VarFrame.minimappos = 45; --default position in degrees
+			
+	--[[Lorehelper_VarFrame.mainframepoint = "CENTER";
+	Lorehelper_VarFrame.relativeTo=UIParent;
+	Lorehelper_VarFrame.relativePoint="CENTER";
+	Lorehelper_VarFrame.xOfs=0;
+	Lorehelper_VarFrame.yOfs=0;--]]--the position saving feature bugs too often, idk
+			
+	Lorehelper_VarFrame.race = UnitRace("player");
+	Lorehelper_VarFrame.class = UnitClass("player");
+	Lorehelper_VarFrame.name = UnitName("player");
+			
+	Lorehelper_VarFrame.age = nil;
+	Lorehelper_VarFrame.responses = {};
+	Lorehelper_VarFrame.curtestquestionnumber = 1;
+	Lorehelper_VarFrame.testdone = false;
+	
+	print("Welcome to Lorehelper, "..Lorehelper_VarFrame.name.."!");
+	
+	Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
+end
 -----------------------------
 
 

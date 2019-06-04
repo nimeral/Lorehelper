@@ -16,7 +16,7 @@
 		self:SetPoint(Lorehelper_VarFrame.mainframepoint, Lorehelper_VarFrame.relativeTo, Lorehelper_VarFrame.relativePoint, Lorehelper_VarFrame.xOfs, Lorehelper_VarFrame.yOfs)
 	  end-->
 	  
-	  local framewidth = self:GetWidth() - 15 <!--so the text fits nicely-->
+	  local framewidth = self:GetWidth() - 10 <!--so the text fits nicely-->
 	  
 	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
 	  self.title:SetPoint("TOPLEFT", 0, -5);
@@ -99,7 +99,7 @@
 
 
 <Button name="Lorehelper_Button_Template" inherits="UIPanelButtonTemplate" virtual = "true">
-<Size x="80" y="20"/>
+<Size x="80" y="40"/>
 <Scripts>
 	<OnLoad>
     <!--self:SetHighlightTexture("interface\\addons\\Lorehelper\\BUTTONS\\UI-SILVER-BUTTON-UP.blp")-->
@@ -109,6 +109,12 @@
     self:GetNormalTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
     self:SetPushedTexture(LHART_BUTTONDOWN)
     self:GetPushedTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+	
+	<!--this code actually works and adds a more visible texture to button
+	local t = self:CreateTexture(nil,"BACKGROUND")	
+	t:SetTexture("Interface\\BUTTONS\\RedGrad64")
+	t:SetAllPoints(self)
+ 	self.texture = t-->
 	</OnLoad>
 	<OnMouseDown>
 	<!-- hides all the "error" messages -->

@@ -29,3 +29,5 @@ LHART_TROLL = "Interface\\DRESSUPFRAME\\DressUpBackground-Troll1"
 LHART_UNDEAD = "Interface\\DRESSUPFRAME\\DressUpBackground-Scourge1"
 
 LHART_TAUREN = "Interface\\DRESSUPFRAME\\DressUpBackground-Tauren1"
+--unused artworks below
+LHART_FACTIONICONS = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Factions.blp"
