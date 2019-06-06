@@ -541,7 +541,7 @@ if varframe.responses["Home Kingdom"] == "Lordaeron" then
 elseif varframe.responses["Home Kingdom"] == "Dalaran" then
 	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueDalaran"),standard_postanswers, false);	
 else
-	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueStandard"),standard_postanswers, true);	
+	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueStandard"),standard_postanswers, false);--there will be no "however" for those from e.g. Gilneas participating
 end
 
 if varframe.responses["Home Kingdom"] == "Kul Tiras" or varframe.responses["Home Kingdom"] == "Lordaeron" then
