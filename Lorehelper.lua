@@ -450,9 +450,8 @@ local varframe = Lorehelper_VarFrame;
 --local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
 local childage = 18;
 local oldage = 80;
-local ageticks = Lorehelper_FormAgeTicks(childage, {20, 10, 4, 0, -18})
---{23, 33, 39, 43, 61};--will still be partially hardcoded
---so it's the end of Third War, the beginning of it, 
+local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -18})--will still be partially hardcoded
+--the end of Third War, the beginning of it, end of Second, beginning, beginning of First, Gurubashi War year
 for i=1,#ageticks do
 	print(ageticks[i])
 end
@@ -461,7 +460,7 @@ end
 -------------------------------------------------
 if varframe.age == nil then
 	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
-	{LHT("HumanAge18-23"), LHT("HumanAge23-33"), LHT("HumanAge33-39"), LHT("HumanAge39-43"), LHT("HumanAge43-61"), LHT("HumanAge61-80")},
+	{LHT("HumanAge18-23"), LHT("HumanAge23-33"), LHT("HumanAge23-33"), LHT("HumanAge33-39"), LHT("HumanAge39-43"), LHT("HumanAge43-61"), LHT("HumanAge61-80")},
 	LHART_HUMAN); --also updates varframe.age
 -------------------------------------------------
 --Ask about home kingdom
@@ -538,9 +537,12 @@ else
 	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorStandard"),standard_postanswers);	
 end
 -------
+--ageticks are
+--the end of Third War, the beginning of it, end of Second, beginning, beginning of First, Gurubashi War year
+
 --varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
 --(varframe.age < ageticks[#ageticks]) is the logical waschild variable
-if varframe.responses["Gurubashi War"]==nil then
+if varframe.responses["Gurubashi War"]==nil then--age of 61 (18 by the beginning of Gurubashi) is enough to possibly participate in Gurubashi
 	if age+childage >= ageticks[#ageticks] then
 		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWar"), (age < ageticks[#ageticks]), gurubashi_postanswers, LHART_GURUBASHIWAR);
 		return varframe.curframe;
@@ -548,29 +550,29 @@ if varframe.responses["Gurubashi War"]==nil then
 end
 
 if varframe.responses["First War"]==nil then
-	if age+childage >= ageticks[#ageticks-1] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("First War"), LHT("HumanEventFirstWar"), (age < ageticks[#ageticks-1]), firstwar_postanswers, LHART_GURUBASHIWAR);
+	if age+childage >= ageticks[#ageticks-2] then--age of 39 (18 by the beginning of Second war) is enough to possibly participate in First
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("First War"), LHT("HumanEventFirstWar"), (age < ageticks[#ageticks-2]), firstwar_postanswers, LHART_GURUBASHIWAR);
 		return varframe.curframe;
 	end
 end
 
 if varframe.responses["Second War"]==nil then
-	if age+childage >= ageticks[#ageticks-2] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Second War"), LHT("HumanEventSecondWar"), (age < ageticks[#ageticks-2]), secondwar_postanswers, LHART_GURUBASHIWAR);
+	if age+childage >= ageticks[#ageticks-3] then--age of 33 (18 by the end of Second war) is enough to possibly participate in Second
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Second War"), LHT("HumanEventSecondWar"), (age < ageticks[#ageticks-3]), secondwar_postanswers, LHART_GURUBASHIWAR);
 		return varframe.curframe;
 	end
 end
 
-if varframe.responses["Third War: Plague"]==nil then
-	if age+childage >= ageticks[1] then--same array index intended, as both Third Wars are roughly same time!
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Plague"), LHT("HumanEventThirdWarPlague"), (age < ageticks[1]), thirdwarplague_postanswers, LHART_GURUBASHIWAR);
+if varframe.responses["Third War: Plague"]==nil then--age of 23 is enough to possibly participate in Third
+	if age+childage >= ageticks[2] then--same array index intended, as both Third Wars are roughly same time!
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Plague"), LHT("HumanEventThirdWarPlague"), (age < ageticks[2]), thirdwarplague_postanswers, LHART_GURUBASHIWAR);
 		return varframe.curframe;
 	end
 end
 
 if varframe.responses["Third War: Kalimdor"]==nil then
-	if age+childage >= ageticks[1] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdor"), (age < ageticks[1]), thirdwarkalimdor_postanswers, LHART_THIRDWARKALIMDOR);
+	if age+childage >= ageticks[2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdor"), (age < ageticks[2]), thirdwarkalimdor_postanswers, LHART_THIRDWARKALIMDOR);
 		return varframe.curframe;
 	end	
 end
