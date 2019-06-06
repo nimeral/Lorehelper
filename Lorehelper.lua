@@ -145,6 +145,17 @@ end
 return processed_postanswers;
 end
 ------------------------------------------
+function Lorehelper_FormAgeTicks (childage, yearsofevents)--adds a prefix to an array of strings
+ageticks = {};
+
+for i=1,#yearsofevents do
+	ageticks[i] = childage+25-yearsofevents[i];--25 is the current year in WoW
+end
+
+return ageticks;
+end
+------------------------------------------
+------------------------------------------
 ------------------------------------------
 ------------------------------------------
 --Function that handles all the "test" questions
@@ -311,7 +322,7 @@ end
 --Function that presents the players answers
 ------------------------------------------
 -------------------------------------------------
-function Lorehelper_PresentAnswers(picture)--no other input because LorehelperVarFrame.responses is global
+function Lorehelper_PresentAnswers(picture, sortorder)--no other input because LorehelperVarFrame.responses is global
 	--BUG: "questions" are alphabetically ordered, need to keep their order as separate variable
 	local varframe = Lorehelper_VarFrame; --global variable frame
 	local fr = CreateFrame ("Frame",nil,self,"Lorehelper_MainFrame_Template"); --the frame to be shown and interacted with
@@ -439,7 +450,12 @@ local varframe = Lorehelper_VarFrame;
 --local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
 local childage = 18;
 local oldage = 80;
-local ageticks = {23, 33, 39, 43, 61};--will still be partially hardcoded
+local ageticks = Lorehelper_FormAgeTicks(childage, {20, 10, 4, 0, -18})
+--{23, 33, 39, 43, 61};--will still be partially hardcoded
+--so it's the end of Third War, the beginning of it, 
+for i=1,#ageticks do
+	print(ageticks[i])
+end
 -------------------------------------------------
 --Ask about age
 -------------------------------------------------
@@ -478,7 +494,7 @@ elseif varframe.responses["Third War: Kalimdor"]==nil then--title of the last of
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_SOMEJUNGLES);
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_SOMEJUNGLES, {"Home Kingdom", "Gurubashi War", "First War", "Second War", "Third War: Plague", "Third War: Kalimdor"});--the order of questions is passed to the function but not yet used there (BUG)
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -510,7 +526,9 @@ secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventSecondWa
 
 if varframe.responses["Home Kingdom"] == "Lordaeron" then
 	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueLordaeron"),standard_postanswers);	
-else 
+elseif varframe.responses["Home Kingdom"] == "Dalaran" then
+	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueDalaran"),standard_postanswers);	
+else
 	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueStandard"),standard_postanswers);	
 end
 
@@ -519,12 +537,33 @@ if varframe.responses["Home Kingdom"] == "Kul Tiras" or varframe.responses["Home
 else 
 	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorStandard"),standard_postanswers);	
 end
-
+-------
 --varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
 --(varframe.age < ageticks[#ageticks]) is the logical waschild variable
 if varframe.responses["Gurubashi War"]==nil then
 	if age+childage >= ageticks[#ageticks] then
 		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWar"), (age < ageticks[#ageticks]), gurubashi_postanswers, LHART_GURUBASHIWAR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["First War"]==nil then
+	if age+childage >= ageticks[#ageticks-1] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("First War"), LHT("HumanEventFirstWar"), (age < ageticks[#ageticks-1]), firstwar_postanswers, LHART_GURUBASHIWAR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Second War"]==nil then
+	if age+childage >= ageticks[#ageticks-2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Second War"), LHT("HumanEventSecondWar"), (age < ageticks[#ageticks-2]), secondwar_postanswers, LHART_GURUBASHIWAR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Third War: Plague"]==nil then
+	if age+childage >= ageticks[1] then--same array index intended, as both Third Wars are roughly same time!
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Plague"), LHT("HumanEventThirdWarPlague"), (age < ageticks[1]), thirdwarplague_postanswers, LHART_GURUBASHIWAR);
 		return varframe.curframe;
 	end
 end
