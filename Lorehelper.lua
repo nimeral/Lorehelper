@@ -135,6 +135,16 @@ end
 return varframe.curframe;
 end
 ------------------------------------------
+function Lorehelper_FormEventPostanswers (prefix, standard_postanswers)--adds a prefix to an array of strings
+processed_postanswers = {};
+
+for i=1,#standard_postanswers do
+	processed_postanswers[i] = prefix.." "..standard_postanswers[i];
+end
+
+return processed_postanswers;
+end
+------------------------------------------
 ------------------------------------------
 ------------------------------------------
 --Function that handles all the "test" questions
@@ -200,7 +210,7 @@ function Lorehelper_TestQuestion(title, text, answers, postanswertexts, picture,
 			fr.okbutton:SetScript("OnClick", 
 				function()
 					--update responses global variable 
-					varframe.responses[title]={varframe.curtestquestionnumber, answers[i]};
+					varframe.responses[title]=answers[i];
 					varframe.curtestquestionnumber = varframe.curtestquestionnumber + 1;
 					--and hide everything related to this question
 					fr:Hide();
@@ -344,12 +354,15 @@ function Lorehelper_PresentAnswers(picture)--no other input because LorehelperVa
 	-- use the keys to retrieve the values in the sorted order??
 	for _, k in ipairs(numberlist) do print(k, numberlist[k], answerlist[k]) end--]]
 
+-----------------------------------------------------
+--Will need to have another argument in this function - order of the answers - and sort them in this order
+-----------------------------------------------------
 	for question,answer in pairs(varframe.responses) do
 		--for key,value in pairs(answer) do
 		--	print("found member " .. key.."--"..value);
 		--end
 		--answer contains a pair {number_of_test_question, text_of_answer}. The string below adds text_of_answer without |n's to the frame
-		text = text..question..": "..answer[1]..string.gsub(answer[2], "|n", " ").."|n";
+		text = text..question..": "..string.gsub(answer, "|n", " ").."|n";
 	end
 
 	fr.text:SetText(text);
@@ -480,24 +493,45 @@ end
 -------------------------------------------------
 function Lorehelper_Human_Events (ageticks, childage)
 local varframe = Lorehelper_VarFrame;
+local age = varframe.age;
 --local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
 
+standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+
+if varframe.responses["Home Kingdom"] == "Stormwind" then
+	gurubashi_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventGurubashiWarStormwind"),standard_postanswers);	
+	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventFirstWarStormwind"),standard_postanswers);	
+else 
+	gurubashi_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventGurubashiWarStandard"), standard_postanswers);
+	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventFirstWarStandard"),standard_postanswers);	
+end
+
+secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventSecondWarStandard"),standard_postanswers);	
+
+if varframe.responses["Home Kingdom"] == "Lordaeron" then
+	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueLordaeron"),standard_postanswers);	
+else 
+	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueStandard"),standard_postanswers);	
+end
+
+if varframe.responses["Home Kingdom"] == "Kul Tiras" or varframe.responses["Home Kingdom"] == "Lordaeron" then
+	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorKulTirasLordaeron"),standard_postanswers);	
+else 
+	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorStandard"),standard_postanswers);	
+end
+
+--varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
+--(varframe.age < ageticks[#ageticks]) is the logical waschild variable
 if varframe.responses["Gurubashi War"]==nil then
-	if varframe.age >= ageticks[#ageticks] then--human's older than 61
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWarAdult"), false, {LHT("HumanEventGurubashiWarAvoided"), LHT("HumanEventGurubashiWarLostSomeone"), LHT("HumanEventGurubashiWarParticipated"), LHT("HumanEventGurubashiWarLostEverything")}, LHART_GURUBASHIWAR)	;
-		return varframe.curframe;
-	elseif varframe.age+childage >= ageticks[#ageticks] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWarChild"), true, {LHT("HumanEventGurubashiWarAvoided"), LHT("HumanEventGurubashiWarLostSomeone"), LHT("HumanEventGurubashiWarParticipated"), LHT("HumanEventGurubashiWarLostEverything")}, LHART_GURUBASHIWAR)
+	if age+childage >= ageticks[#ageticks] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Gurubashi War"), LHT("HumanEventGurubashiWar"), (age < ageticks[#ageticks]), gurubashi_postanswers, LHART_GURUBASHIWAR);
 		return varframe.curframe;
 	end
 end
 
 if varframe.responses["Third War: Kalimdor"]==nil then
-	if varframe.age >= ageticks[1] then--human's older than 23
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdorAdult"), false, {LHT("HumanEventThirdWarKalimdorAvoided"), LHT("HumanEventThirdWarKalimdorLostSomeone"), LHT("HumanEventThirdWarKalimdorParticipated"), LHT("HumanEventThirdWarKalimdorLostEverything")}, LHART_THIRDWARKALIMDOR)	
-		return varframe.curframe;
-	elseif varframe.age+childage >= ageticks[1] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdorChild"), true, {LHT("HumanEventThirdWarKalimdorAvoided"), LHT("HumanEventThirdWarKalimdorLostSomeone"), LHT("HumanEventThirdWarKalimdorParticipated"), LHT("HumanEventThirdWarKalimdorLostEverything")}, LHART_THIRDWARKALIMDOR)
+	if age+childage >= ageticks[1] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Kalimdor"), LHT("HumanEventThirdWarKalimdor"), (age < ageticks[1]), thirdwarkalimdor_postanswers, LHART_THIRDWARKALIMDOR);
 		return varframe.curframe;
 	end	
 end
