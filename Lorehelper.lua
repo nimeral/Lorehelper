@@ -135,11 +135,21 @@ end
 return varframe.curframe;
 end
 ------------------------------------------
-function Lorehelper_FormEventPostanswers (prefix, standard_postanswers)--adds a prefix to an array of strings
+function Lorehelper_FormEventPostanswers (prefix, standard_postanswers, isstandard)--adds a prefix to an array of strings
 processed_postanswers = {};
 
-for i=1,#standard_postanswers do
-	processed_postanswers[i] = prefix.." "..standard_postanswers[i];
+if isstandard==true then 
+	processed_postanswers[1] = prefix.."|n|nSo "..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided the event as suggested by lore
+	for i=2,#standard_postanswers do
+		processed_postanswers[i] = prefix.."|n|nHowever, "..Lorehelper_LowerFirstLetter(standard_postanswers[i]);--was affected "despite" lore
+	end
+end
+	
+if isstandard==false then 
+	processed_postanswers[1] = prefix.."|n|nSomehow, however, "..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided despite lore
+	for i=2,#standard_postanswers do
+		processed_postanswers[i] = prefix.."|n|n"..standard_postanswers[i];--was affected as suggested by lore
+	end
 end
 
 return processed_postanswers;
@@ -155,6 +165,9 @@ end
 return ageticks;
 end
 ------------------------------------------
+function Lorehelper_LowerFirstLetter(str)
+    return (str:gsub("^%u", string.lower))
+end
 ------------------------------------------
 ------------------------------------------
 ------------------------------------------
@@ -514,27 +527,27 @@ local age = varframe.age;
 standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
 
 if varframe.responses["Home Kingdom"] == "Stormwind" then
-	gurubashi_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventGurubashiWarStormwind"),standard_postanswers);	
-	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventFirstWarStormwind"),standard_postanswers);	
+	gurubashi_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventGurubashiWarStormwind"),standard_postanswers, false);	
+	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventFirstWarStormwind"),standard_postanswers, false);	
 else 
-	gurubashi_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventGurubashiWarStandard"), standard_postanswers);
-	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventFirstWarStandard"),standard_postanswers);	
+	gurubashi_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventGurubashiWarStandard"), standard_postanswers, true);
+	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventFirstWarStandard"),standard_postanswers, true);	
 end
 
-secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventSecondWarStandard"),standard_postanswers);	
+secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventSecondWarStandard"),standard_postanswers, false);	
 
 if varframe.responses["Home Kingdom"] == "Lordaeron" then
-	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueLordaeron"),standard_postanswers);	
+	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueLordaeron"),standard_postanswers, false);	
 elseif varframe.responses["Home Kingdom"] == "Dalaran" then
-	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueDalaran"),standard_postanswers);	
+	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueDalaran"),standard_postanswers, false);	
 else
-	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueStandard"),standard_postanswers);	
+	thirdwarplague_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarPlagueStandard"),standard_postanswers, true);	
 end
 
 if varframe.responses["Home Kingdom"] == "Kul Tiras" or varframe.responses["Home Kingdom"] == "Lordaeron" then
-	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorKulTirasLordaeron"),standard_postanswers);	
+	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorKulTirasLordaeron"), standard_postanswers, false);	
 else 
-	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorStandard"),standard_postanswers);	
+	thirdwarkalimdor_postanswers = Lorehelper_FormEventPostanswers (LHT("HumanEventThirdWarKalimdorStandard"),standard_postanswers, false);--there will be no "however" for those from e.g. Gilneas participating
 end
 -------
 --ageticks are
