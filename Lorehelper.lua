@@ -336,7 +336,6 @@ end
 ------------------------------------------
 -------------------------------------------------
 function Lorehelper_PresentAnswers(picture, sortorder)--no other input because LorehelperVarFrame.responses is global
-	--BUG: "questions" are alphabetically ordered, need to keep their order as separate variable
 	local varframe = Lorehelper_VarFrame; --global variable frame
 	local fr = CreateFrame ("Frame",nil,self,"Lorehelper_MainFrame_Template"); --the frame to be shown and interacted with
 	local framewidth = fr:GetWidth() - 10;
@@ -349,44 +348,11 @@ function Lorehelper_PresentAnswers(picture, sortorder)--no other input because L
 
 	--fill the frame with the text of player's answers
 	local text = "Name: "..varframe.name.."|nRace: "..varframe.race.."|nAge: "..varframe.age.."|n";
-	
-	--sort the responses by "time"
-	--[[oh fuck it, I'll sort it later
-	local numberlist = {}
-	local answerlist = {}
-	-- populate the table that holds the keys
-	for question,answer in pairs(varframe.responses) do 
-		table.insert(numberlist, answer[1])
-		table.insert(answerlist, answer[2]) 
-	end
 
-	for a, b in pairs(numberlist) do
-		print(a)
-		print(b)
-	end
-	for a, b in pairs(answerlist) do
-		print(a)
-		print(b)
-	end
-
-	--sort the keys??
-	table.sort(numberlist)
-	for a, b in pairs(numberlist) do
-		print(a)
-		print(b)
-	end
-	-- use the keys to retrieve the values in the sorted order??
-	for _, k in ipairs(numberlist) do print(k, numberlist[k], answerlist[k]) end--]]
-
------------------------------------------------------
---Will need to have another argument in this function - order of the answers - and sort them in this order
------------------------------------------------------
-	for question,answer in pairs(varframe.responses) do
-		--for key,value in pairs(answer) do
-		--	print("found member " .. key.."--"..value);
-		--end
-		--answer contains a pair {number_of_test_question, text_of_answer}. The string below adds text_of_answer without |n's to the frame
-		text = text..question..": "..string.gsub(answer, "|n", " ").."|n";
+	for _,question in ipairs(sortorder) do
+		if varframe.responses[question] ~= nil then
+			text = text..question..": "..string.gsub(varframe.responses[question], "|n", " ").."|n";
+		end
 	end
 
 	fr.text:SetText(text);
@@ -506,7 +472,7 @@ elseif varframe.responses["Third War: Kalimdor"]==nil then--title of the last of
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_SOMEJUNGLES, {"Home Kingdom", "Gurubashi War", "First War", "Second War", "Third War: Plague", "Third War: Kalimdor"});--the order of questions is passed to the function but not yet used there (BUG)
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_SOMEJUNGLES, {"Home Kingdom", "Gurubashi War", "First War", "Second War", "Third War: Plague", "Third War: Kalimdor"});--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
