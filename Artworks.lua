@@ -13,6 +13,12 @@ LHART_HUMANLORDAERON = "Interface\\DRESSUPFRAME\\DressUpBackground-Scourge1"
 LHART_HUMANKULTIRAS = "Interface\\Glues\\CREDITS\\Ocean6"
 LHART_HUMANSTROMGARDE = "Interface\\TALENTFRAME\\WarriorArms-TopLeft"
 
+LHART_GURUBASHIWAR = "Interface\\Glues\\Models\\UI_Goblin\\UI_Goblin_BG03"
+LHART_FIRSTWAR = "Interface\\Glues\\Credits\\Dark_Portal5"
+LHART_SECONDWAR = "Interface\\Glues\\Credits\\Acrest1"
+LHART_THIRDWARPLAGUE = "Interface\\LFGFrame\\LFGICON-STRATHOLME"
+LHART_THIRDWARKALIMDOR = "Interface\\LFGFrame\\LFGICON-HYJALPAST"
+
 LHART_SOMEJUNGLES = "Interface\\Glues\\Models\\UI_Goblin\\UI_Goblin_BG03"
 
 LHART_DWARF = "Interface\\DRESSUPFRAME\\DressUpBackground-Dwarf1"

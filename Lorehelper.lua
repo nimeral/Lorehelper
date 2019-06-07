@@ -139,14 +139,14 @@ function Lorehelper_FormEventPostanswers (prefix, standard_postanswers, isstanda
 processed_postanswers = {};
 
 if isstandard==true then 
-	processed_postanswers[1] = prefix.."|n|nSo "..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided the event as suggested by lore
+	processed_postanswers[1] = prefix.."|n|n"..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided the event as suggested by lore
 	for i=2,#standard_postanswers do
 		processed_postanswers[i] = prefix.."|n|nHowever, "..Lorehelper_LowerFirstLetter(standard_postanswers[i]);--was affected "despite" lore
 	end
 end
 	
 if isstandard==false then 
-	processed_postanswers[1] = prefix.."|n|nSomehow, however, "..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided despite lore
+	processed_postanswers[1] = prefix.."|n|nLuckily, "..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided despite lore
 	for i=2,#standard_postanswers do
 		processed_postanswers[i] = prefix.."|n|n"..standard_postanswers[i];--was affected as suggested by lore
 	end
@@ -472,7 +472,7 @@ elseif varframe.responses["Third War: Kalimdor"]==nil then--title of the last of
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_SOMEJUNGLES, {"Home Kingdom", "Gurubashi War", "First War", "Second War", "Third War: Plague", "Third War: Kalimdor"});--the order of questions is passed 
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_HUMAN, {"Home Kingdom", "Gurubashi War", "First War", "Second War", "Third War: Plague", "Third War: Kalimdor"});--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -530,21 +530,21 @@ end
 
 if varframe.responses["First War"]==nil then
 	if age+childage >= ageticks[#ageticks-2] then--age of 39 (18 by the beginning of Second war) is enough to possibly participate in First
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("First War"), LHT("HumanEventFirstWar"), (age < ageticks[#ageticks-2]), firstwar_postanswers, LHART_GURUBASHIWAR);
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("First War"), LHT("HumanEventFirstWar"), (age < ageticks[#ageticks-2]), firstwar_postanswers, LHART_FIRSTWAR);
 		return varframe.curframe;
 	end
 end
 
 if varframe.responses["Second War"]==nil then
 	if age+childage >= ageticks[#ageticks-3] then--age of 33 (18 by the end of Second war) is enough to possibly participate in Second
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Second War"), LHT("HumanEventSecondWar"), (age < ageticks[#ageticks-3]), secondwar_postanswers, LHART_GURUBASHIWAR);
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Second War"), LHT("HumanEventSecondWar"), (age < ageticks[#ageticks-3]), secondwar_postanswers, LHART_SECONDWAR);
 		return varframe.curframe;
 	end
 end
 
 if varframe.responses["Third War: Plague"]==nil then--age of 23 is enough to possibly participate in Third
 	if age+childage >= ageticks[2] then--same array index intended, as both Third Wars are roughly same time!
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Plague"), LHT("HumanEventThirdWarPlague"), (age < ageticks[2]), thirdwarplague_postanswers, LHART_GURUBASHIWAR);
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War: Plague"), LHT("HumanEventThirdWarPlague"), (age < ageticks[2]), thirdwarplague_postanswers, LHART_THIRDWARPLAGUE);
 		return varframe.curframe;
 	end
 end
