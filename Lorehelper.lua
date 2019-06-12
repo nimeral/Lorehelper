@@ -135,17 +135,17 @@ end
 return varframe.curframe;
 end
 ------------------------------------------
-function Lorehelper_FormEventPostanswers (prefix, standard_postanswers, isstandard)--adds a prefix to an array of strings
+function Lorehelper_FormEventPostanswers (prefix, standard_postanswers, shouldnotbeimportant)--adds a prefix to an array of strings
 processed_postanswers = {};
 
-if isstandard==true then 
-	processed_postanswers[1] = prefix.."|n|n"..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided the event as suggested by lore
+if shouldnotbeimportant==true then 
+	processed_postanswers[1] = prefix.."|n|n"..standard_postanswers[1];--avoided the event as suggested by lore
 	for i=2,#standard_postanswers do
 		processed_postanswers[i] = prefix.."|n|nHowever, "..Lorehelper_LowerFirstLetter(standard_postanswers[i]);--was affected "despite" lore
 	end
 end
 	
-if isstandard==false then 
+if shouldnotbeimportant==false then 
 	processed_postanswers[1] = prefix.."|n|nLuckily, "..Lorehelper_LowerFirstLetter(standard_postanswers[1]);--avoided despite lore
 	for i=2,#standard_postanswers do
 		processed_postanswers[i] = prefix.."|n|n"..standard_postanswers[i];--was affected as suggested by lore
@@ -398,14 +398,109 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function Lorehelper_Dwarf ()
---local age = Lorehelpre_AskAge();
 
-Lorehelper_TestQuestion ("Home city", 
-"Where're you from? Human lol, orc lol, whoever the fuck you are hahah peo peo poe poepro poekiinguhiasudhye", 
-{"haha", "yes", "no"}, 
-{"haha indeed", "yes indeed", "no way"});
+local varframe = Lorehelper_VarFrame;
+--local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
+local childage = 20;
+local oldage = 400;
+local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -230})--will still be partially hardcoded
+--the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of Three Hammers
+for i=1,#ageticks do
+	print(ageticks[i])
+end
+-------------------------------------------------
+--Ask about age
+-------------------------------------------------
+if varframe.age == nil then
+	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
+	{LHT("DwarfAgeYoung"), LHT("DwarfAgeThirdWar"), LHT("DwarfAgeThirdWar"), LHT("DwarfAgePeace"), LHT("DwarfAgeSecondWar"), LHT("DwarfAgeSecondWar"), LHT("DwarfAgeWarofThreeHammers")},
+	LHART_DWARF); --also updates varframe.age
+-------------------------------------------------
+--Ask about home kingdom
+-------------------------------------------------
+elseif varframe.responses["Clan"]==nil then
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Clan"), 
+	LHT("DwarfClan"), 
+	{LHT("Bronzebeard"), LHT("Wildhammer"), LHT("Dark Iron")}, 
+	{LHT("DwarfClanBronzebeard"), LHT("DwarfClanWildhammer"), LHT("DwarfClanDarkIron")},
+	LHART_DWARF,
+	{LHART_DWARFBRONZEBEARD, LHART_DWARFWILDHAMMER, LHART_DWARFDARKIRON});
+-------------------------------------------------
+-------------------------------------------------
+elseif varframe.responses["Third War"]==nil then--title of the last of the frames to be generated line below
+	varframe.curframe = Lorehelper_Dwarf_Events (ageticks, childage);--function generating a few frames, depending on age
+	print (varframe.curframe.title:GetText())
+-------------------------------------------------
+-------------------------------------------------
+else 
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_DWARF, {"Clan", "War of the Three Hammers", "First War", "Second War", "Third War"});--the order of questions is passed 
+	if varframe.testdone == true then --if the test was done before and we're just relogging again
+		varframe.curframe:Hide ();
+		print (LHT("MsgAccessLoreProfile"));
+	end
+	varframe.testdone = true;
+	--Lorehelper_SimpleMessage ("Click the Lorehelper button near your minimap, or type /lore to see your answers.");
+end
 
+return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Dwarf_Events (ageticks, childage)
+local varframe = Lorehelper_VarFrame;
+local age = varframe.age;
+--local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
 
+standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+
+if varframe.responses["Clan"] == "Bronzebeard" then
+	warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventWarofThreeHammersBronzebeard"),standard_postanswers, false);	
+elseif varframe.responses["Clan"] == "Wildhammer" then 
+	warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventWarofThreeHammersWildhammer"),standard_postanswers, false);	
+elseif varframe.responses["Clan"] == "Dark Iron" then 
+	warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventWarofThreeHammersDarkIron"),standard_postanswers, false);	
+end
+
+firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventFirstWar"),standard_postanswers, true);	
+
+secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventSecondWar"),standard_postanswers, false);	
+
+thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventThirdWar"),standard_postanswers, false);	
+-------
+--ageticks are
+--the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of the Three Hammers
+
+--varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
+--(varframe.age < ageticks[#ageticks]) is the logical waschild variable
+if varframe.responses["War of the Three Hammers"]==nil then--age of 61 (18 by the beginning of Gurubashi) is enough to possibly participate in Gurubashi
+	if age+childage >= ageticks[#ageticks] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Three Hammers"), LHT("DwarfEventWarofThreeHammers"), (age < ageticks[#ageticks]), warofthreehammers_postanswers, LHART_WAROFTHREEHAMMERS);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["First War"]==nil then
+	if age+childage >= ageticks[#ageticks-2] then--age of 41 (20 by the beginning of Second war) is enough to possibly participate in First
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("First War"), LHT("DwarfEventFirstWar"), (age < ageticks[#ageticks-2]), firstwar_postanswers, LHART_FIRSTWAR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Second War"]==nil then
+	if age+childage >= ageticks[#ageticks-3] then--age of 35 (20 by the end of Second war) is enough to possibly participate in Second
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Second War"), LHT("DwarfEventSecondWar"), (age < ageticks[#ageticks-3]), secondwar_postanswers, LHART_SECONDWAR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Third War"]==nil then--age of 25 is enough to possibly participate in Third
+	if age+childage >= ageticks[2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War"), LHT("DwarfEventThirdWar"), (age < ageticks[2]), thirdwar_postanswers, LHART_THIRDWARKALIMDOR);
+		return varframe.curframe;
+	end
+end
+
+return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------

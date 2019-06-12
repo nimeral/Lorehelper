@@ -27,7 +27,7 @@ function Lorehelper_Text (key)
 	elseif key=="HumanStandardAvoided" then text="You were not much affected by these events."
 	elseif key=="HumanStandardLostSomeone" then text="You have lost someone you loved during these events."
 	elseif key=="HumanStandardParticipated" then text="You did fight in this war. Luckily, survived."
-	elseif key=="HumanStandardLostEverything" then text="You have suffered a lot during these horrible events. The scars of this war will forever remind you of people you loved and lost, of burnt houses, of crying children, of fresh graves..."
+	elseif key=="HumanStandardLostEverything" then text="You have suffered a lot during these horrible events. The scars of this war will forever remind you of those you loved and lost, of burnt houses, of crying children, of fresh graves..."
 	
 	elseif key=="HumanEventGurubashiWar" then text="The short but violent conflict between the Kingdom of Stormwind and trolls of Stranglethorn is known as Gurubashi War."
 	elseif key=="HumanEventGurubashiWarStandard" then text="The Gurubashi War was fought in lands of Stormwind, far from your home Kingdom."	

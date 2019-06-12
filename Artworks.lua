@@ -20,9 +20,9 @@ LHART_THIRDWARPLAGUE = "Interface\\LFGFrame\\LFGICON-STRATHOLME"
 LHART_THIRDWARKALIMDOR = "Interface\\LFGFrame\\LFGICON-HYJALPAST"
 
 LHART_SOMEJUNGLES = "Interface\\Glues\\Models\\UI_Goblin\\UI_Goblin_BG03"
-
 LHART_DWARF = "Interface\\DRESSUPFRAME\\DressUpBackground-Dwarf1"
-LHART_DWARFWARHAMMER = "Interface\\GLUES\\MODELS\\AERIEPEAK01"
+LHART_DWARFWILDHAMMER = "Interface\\GLUES\\MODELS\\UI_MAINMENU\\AERIEPEAK01"
+LHART_DWARFDARKIRON = "Interface\\AddOns\\Lorehelper\\Art\\Blackrock Mountain"
 
 LHART_GNOME = "Interface\\DRESSUPFRAME\\DressUpBackground-Gnome1"
 
