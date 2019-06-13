@@ -1,3 +1,4 @@
+--credits to Blizzard and to WoWWiki for some of the texts. Licence CC BY-SA 3.0.
 function Lorehelper_Text (key)
 	local text = nil;
 	

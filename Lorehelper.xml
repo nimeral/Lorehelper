@@ -22,6 +22,7 @@
 	  self.title:SetPoint("TOPLEFT", 0, -5);
 	  self.title:SetWidth(framewidth);
 	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
+	  self.title:SetTextColor(0.15, 1, 0.2, 1)
 	  
 	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
 	  self.text:SetPoint("TOPLEFT",5,-30)
@@ -29,7 +30,7 @@
 	  self.text:SetJustifyV("TOP")
 	  self.text:SetWidth(framewidth);
 	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
-	  <!--self.text:SetTextColor(0.5, 1, 0.5, 1)-->
+	  self.text:SetTextColor(0.15, 1, 0.2, 1)
 	  self.text:Show()<!-- shown by default -->
 	  
 	  <!--most of the frames will have newtext as well, displayed after the player chooses an answer-->
@@ -39,6 +40,7 @@
 	  self.newtext:SetJustifyV("TOP")
 	  self.newtext:SetWidth(framewidth);
 	  self.newtext:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
+	  self.newtext:SetTextColor(0.15, 1, 0.2, 1)
 	  <!--self.newtext:SetTextColor(1, 0.7, 0.3, 1)-->
 	  self.newtext:Hide()<!-- hidden by default -->
 	  
