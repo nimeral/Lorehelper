@@ -385,14 +385,132 @@ return fr;
 end
 -------------------------------------------------
 function Lorehelper_NightElf ()
---local age = Lorehelpre_AskAge();
 
-Lorehelper_TestQuestion ("Home city", 
-"Where're you from? Human lol, orc lol, whoever the fuck you are hahah peo peo poe poepro poekiinguhiasudhye", 
-{"haha", "yes", "no"}, 
-{"haha indeed", "yes indeed", "no way"});
+local varframe = Lorehelper_VarFrame;
+local childage = 20;
+local oldage = 15000;
+local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, -975, -1200, -7050, -9300, -10000, -12000})--will still be partially hardcoded
+--conflict with Illidan and naga, the end of Third War, the beginning of it, War of the Shifting Sands, genocide of Shen'Dralar, middle of Exile of the High Elves, War of the Satyr, War of the Ancients, founding of Eldre'Thalas
+for i=1,#ageticks do
+	print(ageticks[i])
+end
+-------------------------------------------------
+--Ask about age
+-------------------------------------------------
+if varframe.age == nil then
+	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
+	{LHT("NightElfAgeYoung"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeShiftingSands"), LHT("NightElfAgeShiftingSands"), LHT("NightElfAgeExileHighElves"), LHT("NightElfAgeWarSatyr"), LHT("NightElfAgeWarAncients"), LHT("NightElfAgeWarAncients")}
+	LHART_NIGHTELF); --also updates varframe.age
+-------------------------------------------------
+--Ask whether a night elf was once Highborne
+-------------------------------------------------
+elseif varframe.responses["Society"]==nil then
+	if varframe.age >= -6800 then--end of High Elves exile
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
+	LHT("NightElfSociety"), 
+	{LHT("Kaldorei"), LHT("Highborne"), LHT("Shen'Dralar")}, 
+	{LHT("NightElfKaldorei"), LHT("NightElfHighborne"), LHT("NightElfShenDralar")},
+	LHART_NIGHTELF,
+	{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFHIGHBORNE, LHART_NIGHTELFSHENDRALAR});
+	elseif varframe.age >= -1200 then--genocide of Shen'Dralar
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
+	LHT("NightElfSociety"), 
+	{LHT("Kaldorei"), LHT("Shen'Dralar")}, 
+	{LHT("NightElfKaldorei"), LHT("NightElfShenDralar")},
+	LHART_NIGHTELF,
+	{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFSHENDRALAR});	
+	else varframe.responses["Society"]="Kaldorei";--a bit of a hack 
+	end
+-------------------------------------------------
+elseif varframe.responses["The Betrayer Ascendant"]==nil then--title of the last of the frames to be generated line below
+	varframe.curframe = Lorehelper_NightElf_Events (ageticks, childage);--function generating a few frames, depending on age
+-------------------------------------------------
+-------------------------------------------------
+else 
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_NIGHTELF, {"Society", "War of the Ancients", "War of the Satyr", "Shen'Dralar genocide", "War of the Shifting Sands", "Third War", "The Betrayer Ascendant"});--the order of questions is passed 
+	if varframe.testdone == true then --if the test was done before and we're just relogging again
+		varframe.curframe:Hide ();
+		print (LHT("MsgAccessLoreProfile"));
+	end
+	varframe.testdone = true;
+end
 
+return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_NightElf_Events (ageticks, childage)
+local varframe = Lorehelper_VarFrame;
+local age = varframe.age;
 
+standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+
+if varframe.responses["Society"]=="Kaldorei" then
+	warancients_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarAncientsKaldorei"),standard_postanswers, false);
+elseif varframe.responses["Society"]=="Highborne" then
+	warancients_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarAncientsHighborne"),standard_postanswers, false);
+elseif varframe.responses["Society"]=="Shen'Dralar" then
+	warancients_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarAncientsShenDralar"),standard_postanswers, false);
+end
+
+warsatyr_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarSatyrStandard"),standard_postanswers, false);
+
+warshiftingsands_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarShiftingSandsStandard"),standard_postanswers, false);
+
+thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventThirdWarStandard"),standard_postanswers, false);		
+
+betrayer_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventBetrayerStandard"),standard_postanswers, false);	
+-------
+--ageticks are
+--conflict with Illidan and naga, the end of Third War, the beginning of it, War of the Shifting Sands, genocide of Shen'Dralar, middle of Exile of the High Elves, War of the Satyr, War of the Ancients, founding of Eldre'Thalas
+
+--varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
+--(varframe.age < ageticks[#ageticks]) is the logical waschild variable
+if varframe.responses["War of the Ancients"]==nil then
+	if age+childage >= ageticks[7] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Ancients"), LHT("NightElfEventWarAncients"), (age < ageticks[7]), warancients_postanswers, LHART_WARANCIENTS);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["War of the Satyr"]==nil then
+	if age+childage >= ageticks[6] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Satyr"), LHT("NightElfEventWarSatyr"), (age < ageticks[6]), warsatyr_postanswers, LHART_WARSATYR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Shen'Dralar genocide"]==nil then
+	if varframe.responses["Society"]=="Shen'Dralar" then
+		shendralargenocide_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventShenDralarGenocideShenDralar"),standard_postanswers, false);
+		if age+childage >= ageticks[5] then
+			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("TaurenEventThirdWar"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
+			return varframe.curframe;
+		end
+end
+
+if varframe.responses["War of the Shifting Sands"]==nil then
+	if age+childage >= ageticks[4] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Shifting Sands"), LHT("NightElfEventShiftingSands"), (age < ageticks[4]), thirdwar_postanswers, LHART_SHIFTINGSANDS);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Third War"]==nil then
+	if age+childage >= ageticks[2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War"), LHT("NightElfEventThirdWar"), (age < ageticks[2]), thirdwar_postanswers, LHART_THIRDWARKALIMDOR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["The Betrayer Ascendant"]==nil then
+	if age+childage >= ageticks[1] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("The Betrayer Ascendant"), LHT("NightElfEventBetrayer"), (age < ageticks[1]), betrayer_postanswers, LHART_BETRAYER);
+		return varframe.curframe;
+	end
+end
+
+return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
@@ -440,7 +558,6 @@ else
 		print (LHT("MsgAccessLoreProfile"));
 	end
 	varframe.testdone = true;
-	--Lorehelper_SimpleMessage ("Click the Lorehelper button near your minimap, or type /lore to see your answers.");
 end
 
 return varframe.curframe;
@@ -462,11 +579,17 @@ elseif varframe.responses["Clan"] == "Dark Iron" then
 	warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventWarofThreeHammersDarkIron"),standard_postanswers, false);	
 end
 
-firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventFirstWar"),standard_postanswers, true);	
+firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventFirstWarStandard"),standard_postanswers, true);	
 
-secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventSecondWar"),standard_postanswers, false);	
+if varframe.responses["Clan"] == "Bronzebeard" then
+	secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventSecondWarBronzebeard"),standard_postanswers, false);	
+elseif varframe.responses["Clan"] == "Wildhammer" then 
+	secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventSecondWarWildhammer"),standard_postanswers, false);	
+elseif varframe.responses["Clan"] == "Dark Iron" then 
+	secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventSecondWarDarkIron"),standard_postanswers, false);	
+end	
 
-thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventThirdWar"),standard_postanswers, false);	
+thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventThirdWarStandard"),standard_postanswers, false);	
 -------
 --ageticks are
 --the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of the Three Hammers
@@ -507,14 +630,119 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function Lorehelper_Gnome ()
---local age = Lorehelpre_AskAge();
 
-Lorehelper_TestQuestion ("Home city", 
-"Where're you from? Human lol, orc lol, whoever the fuck you are hahah peo peo poe poepro poekiinguhiasudhye", 
-{"haha", "yes", "no"}, 
-{"haha indeed", "yes indeed", "no way"});
+local varframe = Lorehelper_VarFrame;
+local childage = 24;
+local oldage = 500;
+local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -230, -400})--will still be partially hardcoded
+--the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of Three Hammers, King Mechagon disappearance
+for i=1,#ageticks do
+	print(ageticks[i])
+end
+-------------------------------------------------
+--Ask about age
+-------------------------------------------------
+if varframe.age == nil then
+	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
+	{LHT("GnomeAgeYoung"), LHT("GnomeAgeThirdWar"), LHT("GnomeAgeThirdWar"), LHT("GnomeAgePeace"), LHT("GnomeAgeSecondWar"), LHT("GnomeAgeSecondWar"), LHT("GnomeAgeWarofThreeHammers"), LHT("GnomeAgeKingMechagon")},
+	LHART_GNOME); --also updates varframe.age
+-------------------------------------------------
+--Ask whether a gnome is an engineer or not
+-------------------------------------------------
+elseif varframe.responses["Engineer"]==nil then
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Engineer"), 
+	LHT("GnomeEngineer"), 
+	{LHT("Yes"), LHT("No")}, 
+	{LHT("GnomeEngineerYes"), LHT("GnomeEngineerNo")},
+	LHART_GNOME,
+	{LHART_GNOMEENGINEER, LHART_GNOMENONENGINEER});
+-------------------------------------------------
+elseif varframe.responses["Third War"]==nil then--title of the last of the frames to be generated line below
+	varframe.curframe = Lorehelper_Gnome_Events (ageticks, childage);--function generating a few frames, depending on age
+-------------------------------------------------
+-------------------------------------------------
+else 
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_GNOME, {"Engineer", "King Mechagon disappearance", "War of the Three Hammers", "First War", "Second War", "Fighting for Gnomeregan", "Third War"});--the order of questions is passed 
+	if varframe.testdone == true then --if the test was done before and we're just relogging again
+		varframe.curframe:Hide ();
+		print (LHT("MsgAccessLoreProfile"));
+	end
+	varframe.testdone = true;
+end
 
+return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Gnome_Events (ageticks, childage)
+local varframe = Lorehelper_VarFrame;
+local age = varframe.age;
 
+standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+
+kingmechadon_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventKingMechadonStandard"), standard_postanswers, true);	
+
+warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventWarofThreeHammersStandard"),standard_postanswers, true);	
+
+firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventFirstWarStandard"),standard_postanswers, true);	
+
+secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventSecondWarStandard"),standard_postanswers, false);	
+
+gnomeregan_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventGnomereganStandard"),standard_postanswers, false);	
+
+thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventThirdWarStandard"),standard_postanswers, true);	
+-------
+--ageticks are
+--the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of the Three Hammers, King Mechadon disappearance
+
+--varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
+--(varframe.age < ageticks[#ageticks]) is the logical waschild variable
+
+--FEATURE: maybe I need a more-customizable event test question function for non-violent events
+if varframe.responses["King Mechagon disappearance"]==nil then
+	if age+childage >= ageticks[#ageticks] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("King Mechagon disappearance"), LHT("GnomeEventKingMechagon"), (age < ageticks[#ageticks]), kingmechagon_postanswers, LHART_KINGMECHAGON);
+		return varframe.curframe;
+	end
+end
+
+--FEATURE: maybe I need to automate the creation of text keys by concatenating strings (would work like "GnomeEvent".."War of the Three Hammers"). Or maybe it's an overkill.
+if varframe.responses["War of the Three Hammers"]==nil then
+	if age+childage >= ageticks[#ageticks-1] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Three Hammers"), LHT("GnomeEventWarofThreeHammers"), (age < ageticks[#ageticks-1]), warofthreehammers_postanswers, LHART_WAROFTHREEHAMMERS);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["First War"]==nil then
+	if age+childage >= ageticks[#ageticks-3] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("First War"), LHT("GnomeEventFirstWar"), (age < ageticks[#ageticks-3]), firstwar_postanswers, LHART_FIRSTWAR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Second War"]==nil then
+	if age+childage >= ageticks[#ageticks-4] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Second War"), LHT("GnomeEventSecondWar"), (age < ageticks[#ageticks-4]), secondwar_postanswers, LHART_SECONDWAR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Fighting for Gnomeregan"]==nil then
+	if age+childage >= ageticks[2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Fighting for Gnomeregan"), LHT("GnomeEventGnomeregan"), (age < ageticks[2]), gnomeregan_postanswers, LHART_GNOMEREGAN);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Third War"]==nil then
+	if age+childage >= ageticks[2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War"), LHT("GnomeEventThirdWar"), (age < ageticks[2]), thirdwar_postanswers, LHART_THIRDWARKALIMDOR);
+		return varframe.curframe;
+	end
+end
+
+return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
@@ -662,8 +890,8 @@ function Lorehelper_Troll ()
 local varframe = Lorehelper_VarFrame;
 local childage = 14;
 local oldage = 100;
-local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -18})--will still be partially hardcoded
---the end of Third War, the beginning of it, end of Second, beginning, beginning of First (only for jungle trolls really), beginning of Gurubasi War (same)
+local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 10, 4, 0, -18})--will still be partially hardcoded
+--war with Theramore, the end of Third War, the beginning of it, end of Second, beginning, beginning of First (only for jungle trolls really), beginning of Gurubasi War (same)
 for i=1,#ageticks do
 	print(ageticks[i])
 end
@@ -672,7 +900,7 @@ end
 -------------------------------------------------
 if varframe.age == nil then
 	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
-	{LHT("TrollAgeYoung"), LHT("TrollAgeThirdWar"), LHT("TrollAgeThirdWar"), LHT("TrollAgeBetweenWar"), LHT("TrollAgeSecondWar"), LHT("TrollAgeOld"), LHT("TrollAgeOld")},
+	{LHT("TrollAgeYoung"), LHT("TrollAgeThirdWar"), LHT("TrollAgeThirdWar"), LHT("TrollAgeThirdWar"), LHT("TrollAgeBetweenWar"), LHT("TrollAgeSecondWar"), LHT("TrollAgeOld"), LHT("TrollAgeOld")},
 	LHART_TROLL); --also updates varframe.age
 -------------------------------------------------
 --Ask about home tribe
@@ -686,12 +914,12 @@ elseif varframe.responses["Tribe"]==nil then
 	{LHART_TROLLDARKSPEAR, LHART_TROLLREVANTUSK, LHART_TROLLSHATTERSPEAR, LHART_TROLLZANDALARI, LHART_TROLLBADTRIBE});
 -------------------------------------------------
 -------------------------------------------------
-elseif varframe.responses["Third War"]==nil then--title of the last of the frames to be generated line below
+elseif varframe.responses["War with Theramore"]==nil then--title of the last of the frames to be generated line below
 	varframe.curframe = Lorehelper_Troll_Events (ageticks, childage);--function generating a few frames, depending on age
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_TROLL, {"Tribe", "Gurubashi War", "First War", "Second War", "Third War"});--the order of questions is passed 
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_TROLL, {"Tribe", "Gurubashi War", "First War", "Second War", "Third War", "War with Theramore"});--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -714,21 +942,25 @@ if varframe.responses["Tribe"] == "Bad tribe" then
 	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventFirstWarJungleTroll"),standard_postanswers, false);	
 	secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventSecondWarForestTroll"),standard_postanswers, false);	
 	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventThirdWarStandard"),standard_postanswers, true);
+	wartheramore_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventWarTheramoreStandard"),standard_postanswers, true);
 elseif varframe.responses["Tribe"] == "Darkspear" then 
 	gurubashiwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventGurubashiWarStandard"),standard_postanswers, true);	
 	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventFirstWarJungleTroll"),standard_postanswers, false);	
 	secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventSecondWarStandard"),standard_postanswers, true);
 	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventThirdWarDarkspear"),standard_postanswers, false);
+	wartheramore_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventWarTheramoreDarkspear"),standard_postanswers, false);
 elseif varframe.responses["Tribe"] == "Revantusk" then 
 	gurubashiwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventGurubashiWarStandard"),standard_postanswers, true);	
 	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventFirstWarStandard"),standard_postanswers, true);	
 	secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventSecondWarForestTroll"),standard_postanswers, false);
 	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventThirdWarStandard"),standard_postanswers, true);
+	wartheramore_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventWarTheramoreStandard"),standard_postanswers, true);
 else
 	gurubashiwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventGurubashiWarStandard"),standard_postanswers, true);	
 	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventFirstWarStandard"),standard_postanswers, true);	
 	secondwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventSecondWarStandard"),standard_postanswers, true);
 	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventThirdWarStandard"),standard_postanswers, true);
+	wartheramore_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventWarTheramoreStandard"),	standard_postanswers, true);
 end	
 -------
 --ageticks are
@@ -757,12 +989,20 @@ if varframe.responses["Second War"]==nil then
 	end
 end
 
-if varframe.responses["Third War"]==nil then--age of 19 is enough to possibly participate in Third
+if varframe.responses["Third War"]==nil then--age of 18 is enough to possibly participate in Third
 	if age+childage >= ageticks[2] then
 		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War"), LHT("TrollEventThirdWar"), (age < ageticks[2]), thirdwar_postanswers, LHART_THIRDWARKALIMDOR);
 		return varframe.curframe;
 	end
 end
+
+if varframe.responses["War with Theramore"]==nil then--age of 17 is enough to possibly participate in Third
+	if age+childage >= ageticks[1] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War with Theramore"), LHT("TrollEventWarTheramore"), (age < ageticks[1]), wartheramore_postanswers, LHART_WARWITHTHERAMORE);
+		return varframe.curframe;
+	end
+end
+
 
 return varframe.curframe;
 end
@@ -770,14 +1010,95 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function Lorehelper_Tauren ()
---local age = Lorehelpre_AskAge();
 
-Lorehelper_TestQuestion ("Home city", 
-"Where're you from? Human lol, orc lol, whoever the fuck you are hahah peo peo poe poepro poekiinguhiasudhye", 
-{"haha", "yes", "no"}, 
-{"haha indeed", "yes indeed", "no way"});
+local varframe = Lorehelper_VarFrame;
+local childage = 14;
+local oldage = 120;
+local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 0})--will still be partially hardcoded
+--war with Theramore, the end of Third War, the beginning of it, beginning of First War just to have something 
+for i=1,#ageticks do
+	print(ageticks[i])
+end
+-------------------------------------------------
+--Ask about age
+-------------------------------------------------
+if varframe.age == nil then
+	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
+	{LHT("TaurenAgeYoung"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeMiddleAge")},
+	LHART_TAUREN); --also updates varframe.age
+-------------------------------------------------
+--Ask whether a tauren belongs to Grimtotem clan
+-------------------------------------------------
+elseif varframe.responses["Grimtotem"]==nil then
+	if varframe.class == "Druid" then
+		nongrimtotem_text = LHT("TaurenGrimtotemDruid");
+		grimtotem_text = LHT("TaurenNonGrimtotemDruid");
+	elseif varframe.class == "Shaman" then		
+		nongrimtotem_text = LHT("TaurenGrimtotemShaman");
+		grimtotem_text = LHT("TaurenNonGrimtotemShaman");
+	elseif varframe.class == "Hunter" then		
+		nongrimtotem_text = LHT("TaurenGrimtotemHunter");
+		grimtotem_text = LHT("TaurenNonGrimtotemHunter");
+	elseif varframe.class == "Warrior" then		
+		nongrimtotem_text = LHT("TaurenGrimtotemWarrior");
+		grimtotem_text = LHT("TaurenNonGrimtotemWarrior");
+	end
+	
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Grimtotem"), 
+	LHT("TaurenGrimtotem"), 
+	{LHT("Yes"), LHT("No")}, 
+	{grimtotem_text, nongrimtotem_text},
+	LHART_TAUREN,
+	{LHART_TAURENGRIMTOTEM, LHART_TAURENNONGRIMTOTEM});
+-------------------------------------------------
+elseif varframe.responses["War with Theramore"]==nil then--title of the last of the frames to be generated line below
+	varframe.curframe = Lorehelper_Tauren_Events (ageticks, childage);--function generating a few frames, depending on age
+-------------------------------------------------
+-------------------------------------------------
+else 
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_GNOME, {"Grimtotem", "Third War", "War with Theramore"});--the order of questions is passed 
+	if varframe.testdone == true then --if the test was done before and we're just relogging again
+		varframe.curframe:Hide ();
+		print (LHT("MsgAccessLoreProfile"));
+	end
+	varframe.testdone = true;
+end
 
-return fr;
+return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Tauren_Events (ageticks, childage)
+local varframe = Lorehelper_VarFrame;
+local age = varframe.age;
+
+standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+
+thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TaurenEventThirdWarStandard"),standard_postanswers, false);	
+
+wartheramore_postanswers = Lorehelper_FormEventPostanswers (LHT("TaurenEventWarTheramoreStandard"),standard_postanswers, false);	
+-------
+--ageticks are
+--war with Theramore, the end of Third War, the beginning of it, beginning of First
+
+--varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
+--(varframe.age < ageticks[#ageticks]) is the logical waschild variable
+
+if varframe.responses["Third War"]==nil then
+	if age+childage >= ageticks[2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War"), LHT("TaurenEventThirdWar"), (age < ageticks[2]), thirdwar_postanswers, LHART_THIRDWARKALIMDOR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["War with Theramore"]==nil then
+	if age+childage >= ageticks[1] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War with Theramore"), LHT("TaurenEventWarTheramore"), (age < ageticks[1]), wartheramore_postanswers, LHART_WARWITHTHERAMORE);
+		return varframe.curframe;
+	end
+end
+
+return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------

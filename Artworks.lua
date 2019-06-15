@@ -29,6 +29,7 @@ LHART_DWARFDARKIRON = "Interface\\AddOns\\Lorehelper\\Art\\Blackrock Mountain"
 LHART_WAROFTHREEHAMMERS = "Interface\\AddOns\\Lorehelper\\Art\\Warofthethreehammers"
 
 LHART_GNOME = "Interface\\DRESSUPFRAME\\DressUpBackground-Gnome1"
+LHART_GNOMEREGAN = "Interface\\LFGFrame\\LFGICON-GNOMEREGAN"--"Interface\\GLUES\\Loadingscreens\\LoadScreenGnomeregan"
 
 LHART_NIGHTELF = "Interface\\DRESSUPFRAME\\DressUpBackground-Nightelf1"
 
