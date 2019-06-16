@@ -99,6 +99,47 @@
   </Frames> -->
 </Frame>
 
+<Frame name="Lorehelper_ListFrame_Template" hidden="false" enableMouse="false" movable="false" clampedToScreen="false" virtual = "true">
+<Size x="100" y="480"/>
+  
+  <Scripts>
+    <OnLoad>
+	  local framewidth = self:GetWidth() - 10 <!--so the text fits nicely-->
+	  
+	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+	  self.title:SetPoint("TOPLEFT", 0, -5);
+	  self.title:SetWidth(framewidth);
+	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
+	  self.title:SetTextColor(0.15, 1, 0.2, 1)
+	  
+	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
+	  self.text:SetPoint("TOPLEFT",5,-30)
+	  self.text:SetJustifyH("LEFT")
+	  self.text:SetJustifyV("TOP")
+	  self.text:SetWidth(framewidth);
+	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
+	  self.text:SetTextColor(0.15, 1, 0.2, 1)
+	  self.text:Show()<!-- shown by default -->
+	  
+	  self.background = self:CreateTexture(nil, "BACKGROUND")
+	  self.background:SetPoint("TOPLEFT")
+	  self.background:SetWidth(self:GetWidth());<!-- not framewidth because it's not a text -->
+	  self.background:SetHeight(self:GetHeight());
+	  self.background:SetTexture(LHART_DEFAULTPICTURE)
+    </OnLoad>
+	<OnMouseDown>
+	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	</OnMouseDown>
+  </Scripts>
+  
+	<Layers>
+		<Layer level="OVERLAY">
+			<Texture setAllPoints="true">
+			<Color r="1.0" g="0.5" b="0.0" a="0.4" />
+			</Texture>
+		</Layer>
+	</Layers>
+</Frame>
 
 <Button name="Lorehelper_Button_Template" inherits="UIPanelButtonTemplate" virtual = "true">
 <Size x="80" y="40"/>

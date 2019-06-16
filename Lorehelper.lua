@@ -332,7 +332,7 @@ return fr;
 end
 -------------------------------------------------
 ------------------------------------------
---Function that presents the players answers
+--Function that presents the players answers, its expected relations with other races (IN PROGRESS), and highlights the important zones (IN PROGRESS)
 ------------------------------------------
 -------------------------------------------------
 function Lorehelper_PresentAnswers(picture, sortorder)--no other input because LorehelperVarFrame.responses is global
@@ -381,6 +381,11 @@ function Lorehelper_PresentAnswers(picture, sortorder)--no other input because L
 		StaticPopup_Show ("LOREHELPER_RETAKEMESSAGE");
 		end
 		);
+	--frame with buttons for important zones	
+	fr.highlightsframe = CreateFrame ("Frame",nil,fr,"Lorehelper_ListFrame_Template")
+	fr.highlightsframe:SetPoint("TOPRIGHT",fr,"TOPRIGHT",100,-20)
+	--fr.highlightsframe:SetHeight(fr:GetHeight())
+	--fr.highlightsframe:SetWidth(100)
 return fr;
 end
 -------------------------------------------------
@@ -1026,24 +1031,24 @@ end
 -------------------------------------------------
 if varframe.age == nil then
 	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
-	{LHT("TaurenAgeYoung"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeMiddleAge")},
+	{LHT("TaurenAgeYoung"), LHT("TaurenAgeYoung"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeThirdWar"), LHT("TaurenAgeMiddleAge")},
 	LHART_TAUREN); --also updates varframe.age
 -------------------------------------------------
 --Ask whether a tauren belongs to Grimtotem clan
 -------------------------------------------------
 elseif varframe.responses["Grimtotem"]==nil then
 	if varframe.class == "Druid" then--it's all ugly but I've typed it already
-		nongrimtotem_text = LHT("TaurenGrimtotemDruid");
-		grimtotem_text = LHT("TaurenNonGrimtotemDruid");
+		grimtotem_text = LHT("TaurenGrimtotemDruid");
+		nongrimtotem_text = LHT("TaurenNonGrimtotemDruid");
 	elseif varframe.class == "Shaman" then		
-		nongrimtotem_text = LHT("TaurenGrimtotemShaman");
-		grimtotem_text = LHT("TaurenNonGrimtotemShaman");
+		grimtotem_text = LHT("TaurenGrimtotemShaman");
+		nongrimtotem_text = LHT("TaurenNonGrimtotemShaman");
 	elseif varframe.class == "Hunter" then		
-		nongrimtotem_text = LHT("TaurenGrimtotemHunter");
-		grimtotem_text = LHT("TaurenNonGrimtotemHunter");
+		grimtotem_text = LHT("TaurenGrimtotemHunter");
+		nongrimtotem_text = LHT("TaurenNonGrimtotemHunter");
 	elseif varframe.class == "Warrior" then		
-		nongrimtotem_text = LHT("TaurenGrimtotemWarrior");
-		grimtotem_text = LHT("TaurenNonGrimtotemWarrior");
+		grimtotem_text = LHT("TaurenGrimtotemWarrior");
+		nongrimtotem_text = LHT("TaurenNonGrimtotemWarrior");
 	end
 	
 	varframe.curframe = Lorehelper_TestQuestion (LHT("Grimtotem"), 
