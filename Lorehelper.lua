@@ -399,26 +399,26 @@ end
 -------------------------------------------------
 if varframe.age == nil then
 	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
-	{LHT("NightElfAgeYoung"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeShiftingSands"), LHT("NightElfAgeShiftingSands"), LHT("NightElfAgeExileHighElves"), LHT("NightElfAgeWarSatyr"), LHT("NightElfAgeWarAncients"), LHT("NightElfAgeWarAncients")}
+	{LHT("NightElfAgeYoung"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeThirdWar"), LHT("NightElfAgeShiftingSands"), LHT("NightElfAgeShiftingSands"), LHT("NightElfAgeExileHighElves"), LHT("NightElfAgeWarSatyr"), LHT("NightElfAgeWarAncients"), LHT("NightElfAgeWarAncients")},
 	LHART_NIGHTELF); --also updates varframe.age
 -------------------------------------------------
 --Ask whether a night elf was once Highborne
 -------------------------------------------------
 elseif varframe.responses["Society"]==nil then
 	if varframe.age >= -6800 then--end of High Elves exile
-	varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
-	LHT("NightElfSociety"), 
-	{LHT("Kaldorei"), LHT("Highborne"), LHT("Shen'Dralar")}, 
-	{LHT("NightElfKaldorei"), LHT("NightElfHighborne"), LHT("NightElfShenDralar")},
-	LHART_NIGHTELF,
-	{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFHIGHBORNE, LHART_NIGHTELFSHENDRALAR});
+		varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
+		LHT("NightElfSociety"), 
+		{LHT("Kaldorei"), LHT("Highborne"), LHT("Shen'Dralar")}, 
+		{LHT("NightElfKaldorei"), LHT("NightElfHighborne"), LHT("NightElfShenDralar")},
+		LHART_NIGHTELF,
+		{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFHIGHBORNE, LHART_NIGHTELFSHENDRALAR});
 	elseif varframe.age >= -1200 then--genocide of Shen'Dralar
-	varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
-	LHT("NightElfSociety"), 
-	{LHT("Kaldorei"), LHT("Shen'Dralar")}, 
-	{LHT("NightElfKaldorei"), LHT("NightElfShenDralar")},
-	LHART_NIGHTELF,
-	{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFSHENDRALAR});	
+		varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
+		LHT("NightElfSociety"), 
+		{LHT("Kaldorei"), LHT("Shen'Dralar")}, 
+		{LHT("NightElfKaldorei"), LHT("NightElfShenDralar")},
+		LHART_NIGHTELF,
+		{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFSHENDRALAR});	
 	else varframe.responses["Society"]="Kaldorei";--a bit of a hack 
 	end
 -------------------------------------------------
@@ -487,6 +487,7 @@ if varframe.responses["Shen'Dralar genocide"]==nil then
 			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("TaurenEventThirdWar"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
 			return varframe.curframe;
 		end
+	end
 end
 
 if varframe.responses["War of the Shifting Sands"]==nil then
@@ -678,6 +679,7 @@ function Lorehelper_Gnome_Events (ageticks, childage)
 local varframe = Lorehelper_VarFrame;
 local age = varframe.age;
 
+--FEATURE: all the crap below would be more memory-efficient to put under if here and in other functions
 standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
 
 kingmechadon_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventKingMechadonStandard"), standard_postanswers, true);	
@@ -935,7 +937,7 @@ function Lorehelper_Troll_Events (ageticks, childage)
 local varframe = Lorehelper_VarFrame;
 local age = varframe.age;
 
-standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+standard_postanswers = {LHT("TrollStandardAvoided"), LHT("TrollStandardLostSomeone"), LHT("TrollStandardParticipated"), LHT("TrollStandardLostEverything")};
 
 if varframe.responses["Tribe"] == "Bad tribe" then
 	gurubashiwar_postanswers = Lorehelper_FormEventPostanswers (LHT("TrollEventGurubashiWarBadTribe"),standard_postanswers, false);	
@@ -1030,7 +1032,7 @@ if varframe.age == nil then
 --Ask whether a tauren belongs to Grimtotem clan
 -------------------------------------------------
 elseif varframe.responses["Grimtotem"]==nil then
-	if varframe.class == "Druid" then
+	if varframe.class == "Druid" then--it's all ugly but I've typed it already
 		nongrimtotem_text = LHT("TaurenGrimtotemDruid");
 		grimtotem_text = LHT("TaurenNonGrimtotemDruid");
 	elseif varframe.class == "Shaman" then		
@@ -1056,7 +1058,7 @@ elseif varframe.responses["War with Theramore"]==nil then--title of the last of 
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_GNOME, {"Grimtotem", "Third War", "War with Theramore"});--the order of questions is passed 
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_TAUREN, {"Grimtotem", "Third War", "War with Theramore"});--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
