@@ -63,6 +63,7 @@
 	</OnDragStop>
 	<OnMouseDown>
 	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	Lorehelper_SimpleFrame:Hide()
 	</OnMouseDown>
   </Scripts>
   
@@ -132,6 +133,7 @@
     </OnLoad>
 	<OnMouseDown>
 	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	Lorehelper_SimpleFrame:Hide()
 	</OnMouseDown>
   </Scripts>
   
@@ -162,7 +164,7 @@
 	  self.text:SetJustifyH("LEFT")
 	  self.text:SetJustifyV("TOP")
 	  self.text:SetWidth(framewidth);
-	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
+	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 14, "OUTLINE")
 	  self.text:SetTextColor(0.15, 1, 0.2, 1)
 	  self.text:Show()<!-- shown by default -->
 	  
@@ -208,6 +210,43 @@
 	<!-- hides all the "error" messages -->
 	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
 	</OnMouseDown>
+</Scripts>
+</Button>
+
+<Button name="Lorehelper_UnlockableButton_Template" inherits="UIPanelButtonTemplate" virtual = "true">
+<Size x="80" y="40"/>
+<Scripts>
+	<OnLoad>
+    <!--self:SetHighlightTexture("interface\\addons\\Lorehelper\\BUTTONS\\UI-SILVER-BUTTON-UP.blp")-->
+	self:SetHighlightTexture(LHART_BUTTONUP)
+    self:GetHighlightTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+    self:SetNormalTexture(LHART_BUTTONUP)
+    self:GetNormalTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+    self:SetPushedTexture(LHART_BUTTONDOWN)
+    self:GetPushedTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+	
+	<!--local t = self:CreateTexture(nil,"BACKGROUND")	
+	t:SetTexture("Interface\\BUTTONS\\UI-Panel-Button-Disabled")
+	t:SetAllPoints(self)
+	t:SetWidth(self:GetWidth());
+	t:SetHeight(self:GetHeight());
+ 	self.texture = t-->
+	self.unlocked = true;
+	</OnLoad>
+	<OnMouseDown>
+	<!-- hides all the "error" messages -->
+	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	</OnMouseDown>
+	<OnEnter>
+	if not self.unlocked then
+		GameTooltip:SetOwner(self or UIParent, "ANCHOR_LEFT")
+		GameTooltip:SetText("You must visit the zone to access its lore.");
+		GameTooltip:Show();
+	end
+	</OnEnter>
+	<OnLeave>
+	GameTooltip:Hide();
+	</OnLeave>
 </Scripts>
 </Button>
 
@@ -331,7 +370,7 @@
 				Lorehelper_MinimapButton_DraggingFrame:Hide()
 			</OnDragStop>
 			<OnClick>
-				Lorehelper_MinimapButton_OnClick() -- do your thing in here, arg1 is mouse button clicked
+				Lorehelper_MinimapButton_OnClick() <!-- do your thing in here, arg1 is mouse button clicked-->
 			</OnClick>
 		</Scripts>
 	</Button>

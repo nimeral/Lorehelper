@@ -173,6 +173,57 @@ function Lorehelper_LowerFirstLetter(str)
     return (str:gsub("^%u", string.lower))
 end
 ------------------------------------------
+function Lorehelper_BreakLineOnSpace(str)
+    return (str:gsub(" ", "|n"))
+end
+------------------------------------------
+function Lorehelper_Weight_Importance(text)--function that gives standard weights to player's participation in events
+if text=="Avoided" then
+	return 0;
+elseif text=="Lost|nsomeone" then
+	return 12;
+elseif text=="Participated" then
+	return 6;
+elseif text=="Lost|neverything" then
+	return 24;
+else
+	print("Lorehelper internal error: can't assign weight to the wrong text");
+	return 0;
+end
+end
+------------------------------------------
+function Lorehelper_Link_Zone_with_Answer (zones, thezone, thequestion, theanswer, prefix, weight)
+--adds a weight depending on player's answer to an event, and a text
+local varframe = Lorehelper_VarFrame; --global variable frame
+
+--find "thezone" key in the table "zones" (which is stored in first column actually)
+for i,z in ipairs(zones) do
+	if z[1]==thezone then
+		thekey=i;
+	end
+end
+
+if varframe.responses[thequestion] == theanswer then
+	zones[thekey][2]=zones[thekey][2] + weight;
+	zones[thekey][3]=zones[thekey][3].."|n|n"..LHT(prefix..thequestion..theanswer);--eg TaurenZoneGrimtotemYes
+end
+--return zones happens implicitly - the function modifies the table "zones"
+end
+------------------------------------------
+function Lorehelper_Link_Zone_with_Event (zones, thezone, theevent, prefix)--adds a weight of player's participance to an event, and a text
+local varframe = Lorehelper_VarFrame; --global variable frame
+--find "thezone" key in the table "zones" (which is stored in first column actually)
+for i,z in ipairs(zones) do
+	if z[1]==thezone then
+		thekey=i;
+	end
+end
+
+zones[thekey][2]=zones[thekey][2] + Lorehelper_Weight_Importance(varframe.responses[theevent]);
+zones[thekey][3]=zones[thekey][3].."|n|n"..LHT(prefix..varframe.responses[theevent]);
+--return zones happens implicitly - the function modifies the table "zones"
+end
+------------------------------------------
 ------------------------------------------
 ------------------------------------------
 --Function that handles all the "test" questions
@@ -339,7 +390,7 @@ end
 --Function that presents the players answers, its expected relations with other races (IN PROGRESS), and highlights the important zones (IN PROGRESS)
 ------------------------------------------
 -------------------------------------------------
-function Lorehelper_PresentAnswers(picture, sortorder)--no other input because LorehelperVarFrame.responses is global
+function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input because LorehelperVarFrame.responses is global
 	local varframe = Lorehelper_VarFrame; --global variable frame
 	local fr = CreateFrame ("Frame",nil,self,"Lorehelper_MainFrame_Template"); --the frame to be shown and interacted with
 	local framewidth = fr:GetWidth() - 10;
@@ -375,6 +426,7 @@ function Lorehelper_PresentAnswers(picture, sortorder)--no other input because L
 			varframe.responses = {};
 			varframe.testdone = false;
 			varframe.curtestquestionnumber = 1;
+			Lorehelper_SimpleFrame:Hide();
 			fr:Hide();
 			Lorehelper_DoTest();
 		end,
@@ -386,25 +438,37 @@ function Lorehelper_PresentAnswers(picture, sortorder)--no other input because L
 		end
 		);
 	----------------------------------------
+	if zones == nil then
+		print("Lorehelper internal error: no zones to highlight!");
+		return fr;
+	end	
 	--frame with buttons for important zones	
 	fr.highlightsframe = CreateFrame ("Frame",nil,fr,"Lorehelper_ListFrame_Template")
 	fr.highlightsframe:SetPoint("TOPRIGHT",fr,"TOPRIGHT",95,-20)
 	
 	fr.highlightsframe.buttonframes = {};
-	for i=1,#sortorder do
-		fr.highlightsframe.buttonframes[i] = CreateFrame("Button", nil, fr.highlightsframe, "Lorehelper_Button_Template");
-		fr.highlightsframe.buttonframes[i]:SetPoint("TOP",fr.highlightsframe,"TOP",0,35-45*i)
-		fr.highlightsframe.buttonframes[i]:SetFormattedText(sortorder[i]);--with SetText, I can't |n on buttons
-		fr.highlightsframe.buttonframes[i]:SetScript("OnClick", 
-			function()
-			--local zoneinfoframe = CreateFrame ("Frame",nil,self,"Lorehelper_SimpleFrame_Template");
-			Lorehelper_SimpleFrame.title:SetText("aa");
-			Lorehelper_SimpleFrame.text:SetText("bb");
-			Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,0)
-			Lorehelper_SimpleFrame:Show()
+	--[[for i,z in pairs(zones) do
+		print(i)
+		print(z[1])
+	end--]]
+	for i=1,#zones do
+		if zones[i][2]~=0 then --else it's an unimportant zone with zero weight
+			fr.highlightsframe.buttonframes[i] = CreateFrame("Button", nil, fr.highlightsframe, "Lorehelper_UnlockableButton_Template");
+			fr.highlightsframe.buttonframes[i]:SetPoint("TOP",fr.highlightsframe,"TOP",0,35-45*i)
+			fr.highlightsframe.buttonframes[i]:SetFormattedText(Lorehelper_BreakLineOnSpace(zones[i][1]));--with SetText, I can't |n on buttons
+			fr.highlightsframe.buttonframes[i]:SetScript("OnClick", 
+				function()
+				if fr.highlightsframe.buttonframes[i].unlocked then
+					--local zoneinfoframe = CreateFrame ("Frame",nil,self,"Lorehelper_SimpleFrame_Template");
+					Lorehelper_SimpleFrame.title:SetText(zones[i][1]);
+					Lorehelper_SimpleFrame.text:SetText(zones[i][3]);
+					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,0)
+					Lorehelper_SimpleFrame:Show()
+				end
 
-			end
-			);
+				end
+				);
+		end
 	end
 
 return fr;
@@ -1084,7 +1148,8 @@ elseif varframe.responses["War with Theramore"]==nil then--title of the last of 
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_TAUREN, {"Grimtotem", "Third War", "War with Theramore"});--the order of questions is passed 
+	local zones = Lorehelper_Tauren_Zones();
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_TAUREN, {"Grimtotem", "Third War", "War with Theramore"}, zones);--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -1127,6 +1192,54 @@ if varframe.responses["War with Theramore"]==nil then
 end
 
 return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Tauren_Zones ()
+local varframe = Lorehelper_VarFrame;
+
+--[[local zones = {
+		["Thousand Needles"] = {0, ""},
+		["Dustwallow Marsh"] = {10, ""},
+		["Desolace"] = {30, ""},
+		["Ashenvale"] = {20, ""},
+		["The Barrens"] = {40, ""}
+		};--]]
+		
+local zones = {
+		{"Thousand Needles", 0, ""},
+		{"Dustwallow Marsh", 10, ""},
+		{"Desolace", 30, ""},
+		{"Ashenvale", 20, ""},
+		{"The Barrens", 40, ""}
+		};
+
+function compare(a, b)    
+    if tonumber(a[2]) > tonumber(b[2]) then    
+        return true    
+    end
+end
+
+table.sort(zones, compare)
+for i,n in ipairs(zones) do print(n[1]); print(n[2]); print(n[3]); print("--"); end
+
+print("------");	 
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("TaurenZone"..z[1]);
+end
+
+Lorehelper_Link_Zone_with_Answer (zones, "Thousand Needles", "Grimtotem", "Yes", "TaurenZone", 24)
+Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "TaurenZone")
+Lorehelper_Link_Zone_with_Event (zones, "Dustwallow Marsh", "War with Theramore", "TaurenZone");
+
+
+table.sort(zones, compare)
+for i,n in ipairs(zones) do print(n[1]); print(n[2]); print(n[3]); print("--"); end
+
+print("------");
+
+return zones;
 end
 -------------------------------------------------
 -------------------------------------------------
@@ -1234,6 +1347,7 @@ function Lorehelper_MinimapButton_OnClick()
 		Lorehelper_SimpleMessage ("No Lorehelper frame to display.");
 	elseif Lorehelper_VarFrame.curframe:IsShown() then
 		Lorehelper_VarFrame.curframe:Hide();
+		Lorehelper_SimpleFrame:Hide();
 	else Lorehelper_VarFrame.curframe:Show();
 	end
 end
