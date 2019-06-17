@@ -94,11 +94,15 @@ Lorehelper_EventFrame:SetScript("OnEvent", Lorehelper_EventFrame.OnEvent);
 function Lorehelper_SimpleMessage (text)
 StaticPopupDialogs["LOREHELPER_SIMPLEMESSAGE"] = {
   text = text,
+  --showAlert = true,
   button1 = "OK",
   timeout = 0,
   whileDead = true,
   hideOnEscape = true,
   preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+  --[[OnShow = function(self)
+	print(self.icon)
+	end,--]]
 }
 
 StaticPopup_Show ("LOREHELPER_SIMPLEMESSAGE");
@@ -381,11 +385,28 @@ function Lorehelper_PresentAnswers(picture, sortorder)--no other input because L
 		StaticPopup_Show ("LOREHELPER_RETAKEMESSAGE");
 		end
 		);
+	----------------------------------------
 	--frame with buttons for important zones	
 	fr.highlightsframe = CreateFrame ("Frame",nil,fr,"Lorehelper_ListFrame_Template")
-	fr.highlightsframe:SetPoint("TOPRIGHT",fr,"TOPRIGHT",100,-20)
-	--fr.highlightsframe:SetHeight(fr:GetHeight())
-	--fr.highlightsframe:SetWidth(100)
+	fr.highlightsframe:SetPoint("TOPRIGHT",fr,"TOPRIGHT",95,-20)
+	
+	fr.highlightsframe.buttonframes = {};
+	for i=1,#sortorder do
+		fr.highlightsframe.buttonframes[i] = CreateFrame("Button", nil, fr.highlightsframe, "Lorehelper_Button_Template");
+		fr.highlightsframe.buttonframes[i]:SetPoint("TOP",fr.highlightsframe,"TOP",0,35-45*i)
+		fr.highlightsframe.buttonframes[i]:SetFormattedText(sortorder[i]);--with SetText, I can't |n on buttons
+		fr.highlightsframe.buttonframes[i]:SetScript("OnClick", 
+			function()
+			--local zoneinfoframe = CreateFrame ("Frame",nil,self,"Lorehelper_SimpleFrame_Template");
+			Lorehelper_SimpleFrame.title:SetText("aa");
+			Lorehelper_SimpleFrame.text:SetText("bb");
+			Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,0)
+			Lorehelper_SimpleFrame:Show()
+
+			end
+			);
+	end
+
 return fr;
 end
 -------------------------------------------------
