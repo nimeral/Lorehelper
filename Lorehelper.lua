@@ -132,8 +132,8 @@ local varframe = Lorehelper_VarFrame; --global variable frame
 --local fr = nil;--the frame to be created and shown  
 
 if waschild==true then
-	varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost|nsomeone")}, postanswertexts, picture);--no postpictures
-else varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost|nsomeone"), LHT("Participated"), LHT("Lost|neverything")}, postanswertexts, picture);
+	varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost someone")}, postanswertexts, picture);--no postpictures
+else varframe.curframe = Lorehelper_TestQuestion (title, text, {LHT("Avoided"), LHT("Lost someone"), LHT("Participated"), LHT("Lost everything")}, postanswertexts, picture);
 end
 
 return varframe.curframe;
@@ -180,11 +180,11 @@ end
 function Lorehelper_Weight_Importance(text)--function that gives standard weights to player's participation in events
 if text=="Avoided" then
 	return 0;
-elseif text=="Lost|nsomeone" then
+elseif text=="Lost someone" then
 	return 12;
 elseif text=="Participated" then
 	return 6;
-elseif text=="Lost|neverything" then
+elseif text=="Lost everything" then
 	return 24;
 else
 	print("Lorehelper internal error: can't assign weight to the wrong text");
@@ -246,7 +246,7 @@ function Lorehelper_TestQuestion(title, text, answers, postanswertexts, picture,
 	for i=1,#answers do
 		fr.buttonframes[i] = CreateFrame("Button", nil, fr, "Lorehelper_Button_Template");
 		Lorehelper_PositionButtons (fr.buttonframes[i], i, framewidth, fr.text:GetHeight());
-		fr.buttonframes[i]:SetFormattedText(answers[i]);--with SetText, I can't |n on buttons
+		fr.buttonframes[i]:SetFormattedText(Lorehelper_BreakLineOnSpace(answers[i]));--with SetText, I can't |n on buttons
 		fr.buttonframes[i]:SetScript("OnClick", 
 			function()
 			--hide the old text and buttons
@@ -406,7 +406,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 
 	for _,question in ipairs(sortorder) do
 		if varframe.responses[question] ~= nil then
-			text = text..question..": "..string.gsub(varframe.responses[question], "|n", " ").."|n";
+			text = text..question..": "..string.gsub(varframe.responses[question], "|n", " ").."|n";--the gsub shouldn't be needed, as responses themselves no longer contain |n, but I'll keep it
 		end
 	end
 
@@ -462,8 +462,8 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 					--local zoneinfoframe = CreateFrame ("Frame",nil,self,"Lorehelper_SimpleFrame_Template");
 					Lorehelper_SimpleFrame.title:SetText(zones[i][1]);
 					Lorehelper_SimpleFrame.text:SetText(zones[i][3]);
-					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,0)
-					Lorehelper_SimpleFrame:Show()
+					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,60);
+					Lorehelper_SimpleFrame:Show();
 				end
 
 				end

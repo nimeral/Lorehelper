@@ -85,10 +85,10 @@ function Lorehelper_Text (key)
 ------------------------------------------------------------	
 ------------------------------------------------------------
 ------------------------------------------------------------
-	elseif key=="TaurenZoneLost|neverything" then text="You be not there back then, mon."
-	elseif key=="TrollStandardLostSomeone" then text="You be losing someone when it all be."
-	elseif key=="TrollStandardParticipated" then text="You be fighting dis war. Good for you you be live."
-	elseif key=="TrollStandardLostEverything" then text="You be suffering a lot in dis war. Some wounds never heal. Bwonsamdi be watching da spirits of da many dead..."
+	elseif key=="TaurenZoneAvoided" then text=""
+	elseif key=="TaurenZoneLost someone" then text="This is where the life of someone you loved has come to an end."
+	elseif key=="TaurenZoneParticipated" then text="You have been fighting here. Looks peaceful now, but is it for long?"
+	elseif key=="TaurenZoneLost everything" then text="This is where you suffered a terrible loss..."
 
 	elseif key=="TaurenAgeYoung" then text="\"Four years have passed since the mortal races banded together and stood united against the might of the Burning Legion\".|n|nYou were just a child then. Now you have grown up. We have defeated the demons, because we were united - Horde and Alliance stood together to protect the world. We have then enjoyed a few years of peace.|n|nBut the eternal peace is impossible. Walk with the Earthmother, young tauren, when you face the challenges of today."
 	elseif key=="TaurenAgeThirdWar" then text="\"Four years have passed since the mortal races banded together and stood united against the might of the Burning Legion\".|n|nYou were an adult already, were you not? Orcs have come from across the Sea, lead by the wise shaman Thrall. With the help of the Horde, we got an upper hand in our centuries-old conflict with the centaur. We then repaid the debt by fighting together with the Horde against the demons who sought to destroy our world.|n|nA lot is so different for tauren now. No longer we are nomads, we have lands of Mulgore to call our home - and protect our home we shall..."
