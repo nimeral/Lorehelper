@@ -87,9 +87,11 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 		end
 	end
 	if event == "ZONE_CHANGED_NEW_AREA" then
-		local thezone = GetRealZoneText();
+		--local thezone = GetRealZoneText();
 		--thezone = Lorehelper_DelocalizeZone(thezone);
-		thezone = thezone:gsub(" ", "");
+		local zoneid = C_Map.GetBestMapForUnit("player");
+		local thezone = C_Map.GetMapInfo(zoneid)["name"];--should be locale-independent now
+		thezone = thezone:gsub(" ", "");--i.e. "TheBarrens"
 		if _G["Lorehelper_ZoneButton"..thezone] then
 			local zonebutton = _G["Lorehelper_ZoneButton"..thezone];
 			if zonebutton.unlocked == false then--only one to popup once
