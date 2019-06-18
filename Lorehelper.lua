@@ -68,6 +68,8 @@ Lorehelper_VarFrame = nil;
 local Lorehelper_EventFrame = CreateFrame("FRAME"); -- Need a frame to respond to events
 Lorehelper_EventFrame:RegisterEvent("ADDON_LOADED"); -- Fired when saved variables are loaded
 Lorehelper_EventFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
+--Lorehelper_EventFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
+Lorehelper_EventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 
 function Lorehelper_EventFrame:OnEvent(event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "Lorehelper" then
@@ -83,6 +85,20 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 			Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
 			Lorehelper_VarFrame.curframe = Lorehelper_DoTest();
 		end
+	end
+	if event == "ZONE_CHANGED_NEW_AREA" then
+		local thezone = GetRealZoneText();
+		--thezone = Lorehelper_DelocalizeZone(thezone);
+		thezone = thezone:gsub(" ", "");
+		if _G["Lorehelper_ZoneButton"..thezone] then
+			local zonebutton = _G["Lorehelper_ZoneButton"..thezone];
+			if zonebutton.unlocked == false then--only one to popup once
+				zonebutton.unlocked = true;
+				Lorehelper_VarFrame.unlockedzones[thezone] = true;
+				zonebutton:GetScript("OnClick")();
+			end
+		end
+		print(thezone);
 	end
 end
 
@@ -453,7 +469,13 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 	end--]]
 	for i=1,#zones do
 		if zones[i][2]~=0 then --else it's an unimportant zone with zero weight
-			fr.highlightsframe.buttonframes[i] = CreateFrame("Button", nil, fr.highlightsframe, "Lorehelper_UnlockableButton_Template");
+			local thezone = zones[i][1]:gsub(" ","");--i.e. "TheBarrens"
+			fr.highlightsframe.buttonframes[i] = CreateFrame("Button", "Lorehelper_ZoneButton"..thezone, fr.highlightsframe, "Lorehelper_UnlockableButton_Template");
+			
+			if varframe.unlockedzones[thezone]==true then--if the player unlocked zone once, the button will be clickable
+				fr.highlightsframe.buttonframes[i].unlocked = true;
+			end
+			
 			fr.highlightsframe.buttonframes[i]:SetPoint("TOP",fr.highlightsframe,"TOP",0,35-45*i)
 			fr.highlightsframe.buttonframes[i]:SetFormattedText(Lorehelper_BreakLineOnSpace(zones[i][1]));--with SetText, I can't |n on buttons
 			fr.highlightsframe.buttonframes[i]:SetScript("OnClick", 
@@ -471,6 +493,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 		end
 	end
 
+print(Lorehelper_ZoneButtonDustwallowMarsh.unlocked);
 return fr;
 end
 -------------------------------------------------
@@ -1207,7 +1230,7 @@ local varframe = Lorehelper_VarFrame;
 		};--]]
 		
 local zones = {
-		{"Thousand Needles", 0, ""},
+		{"Thousand Needles", 1, ""},
 		{"Dustwallow Marsh", 10, ""},
 		{"Desolace", 30, ""},
 		{"Ashenvale", 20, ""},
@@ -1372,6 +1395,8 @@ function Lorehelper_Init()--creates Lorehelper_VarFrame and fills it with defaul
 	Lorehelper_VarFrame.responses = {};
 	Lorehelper_VarFrame.curtestquestionnumber = 1;
 	Lorehelper_VarFrame.testdone = false;
+	
+	Lorehelper_VarFrame.unlockedzones = {};
 	
 	print("Welcome to Lorehelper, "..Lorehelper_VarFrame.name.."!");
 	
