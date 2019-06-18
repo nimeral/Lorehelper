@@ -243,6 +243,12 @@ zones[thekey][3]=zones[thekey][3].."|n|n"..LHT(prefix..varframe.responses[theeve
 --return zones happens implicitly - the function modifies the table "zones"
 end
 ------------------------------------------
+function Lorehelper_CompareBy2ndElement(a, b)--don't pass anything but arrays with 2+ elements here :)    
+    if tonumber(a[2]) > tonumber(b[2]) then    
+        return true    
+    end
+end 
+------------------------------------------
 ------------------------------------------
 ------------------------------------------
 --Function that handles all the "test" questions
@@ -914,7 +920,8 @@ elseif varframe.responses["Third War: Kalimdor"]==nil then--title of the last of
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_HUMAN, {"Home Kingdom", "Gurubashi War", "First War", "Second War", "Third War: Plague", "Third War: Kalimdor"});--the order of questions is passed 
+	local zones = Lorehelper_Human_Zones();
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_HUMAN, {"Home Kingdom", "Gurubashi War", "First War", "Second War", "Third War: Plague", "Third War: Kalimdor"}, zones);--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -1000,6 +1007,48 @@ end
 
 return varframe.curframe;
 end
+-------------------------------------------------
+function Lorehelper_Human_Zones ()
+local varframe = Lorehelper_VarFrame;
+		
+local zones = {
+		{"Dustwallow Marsh", 5, ""},
+--		{"Tirisfal Glades", 1, ""},
+--		{"Eastern Plaguelands", 1, ""},
+--too many zones otherwise - all Lordaeron/Plague lore will be focused in WPL
+		{"Western Plaguelands", 2, ""},
+		{"Silverpine Forest", 2, ""},
+		{"Alterac Mountains", 2, ""},
+		{"Arathi Highlands", 2, ""},
+		{"The Blasted Lands", 3, ""},
+		{"Burning Steppes", 3, ""},
+		{"Westfall", 40, ""},
+		{"Ashenvale", 1, ""}
+		};
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("HumanZone"..z[1]);
+end
+
+--Lorehelper_Link_Zone_with_Answer (zones, "Tirisfal Glades", "Home Kingdom", "Lordaeron", "HumanZone", 24);
+--Lorehelper_Link_Zone_with_Answer (zones, "Eastern Plaguelands", "Home Kingdom", "Lordaeron", "HumanZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Western Plaguelands", "Home Kingdom", "Lordaeron", "HumanZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Silverpine Forest", "Home Kingdom", "Gilneas", "HumanZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Alterac Mountains", "Home Kingdom", "Alterac", "HumanZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Alterac Mountains", "Home Kingdom", "Dalaran", "HumanZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Arathi Highlands", "Home Kingdom", "Stromgarde", "HumanZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Dustwallow Marsh", "Home Kingdom", "Kul Tiras", "HumanZone", 24);
+Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War: Kalimdor", "HumanZone");
+Lorehelper_Link_Zone_with_Event (zones, "Western Plaguelands", "Third War: Plague", "HumanZone")
+Lorehelper_Link_Zone_with_Event (zones, "Alterac Mountains", "Third War: Plague", "HumanZone")
+Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Second War", "HumanZone");
+Lorehelper_Link_Zone_with_Event (zones, "The Blasted Lands", "First War", "HumanZone");
+
+table.sort(zones, Lorehelper_CompareBy2ndElement)
+
+return zones;
+end
+-------------------------------------------------
 -------------------------------------------------
 -------------------------------------------------
 -------------------------------------------------
@@ -1231,17 +1280,6 @@ local zones = {
 		{"Ashenvale", 20, ""},
 		{"The Barrens", 40, ""}
 		};
-
-function compare(a, b)    
-    if tonumber(a[2]) > tonumber(b[2]) then    
-        return true    
-    end
-end
-
-table.sort(zones, compare)
-for i,n in ipairs(zones) do print(n[1]); print(n[2]); print(n[3]); print("--"); end
-
-print("------");	 
 	 
 for i,z in ipairs(zones) do
 	z[3]=LHT("TaurenZone"..z[1]);
@@ -1252,9 +1290,7 @@ Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "TaurenZone")
 Lorehelper_Link_Zone_with_Event (zones, "Dustwallow Marsh", "War with Theramore", "TaurenZone");
 --Lorehelper_Link_Zone_with_Class (zones, "Wailing Caverns", "Druid", "TaurenZone");
 
-
-
-table.sort(zones, compare)
+table.sort(zones, Lorehelper_CompareBy2ndElement)
 for i,n in ipairs(zones) do print(n[1]); print(n[2]); print(n[3]); print("--"); end
 
 print("------");
