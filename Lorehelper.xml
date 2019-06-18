@@ -147,7 +147,7 @@
 </Frame>
 
 <Frame name="Lorehelper_SimpleFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="false" clampedToScreen="false" virtual = "false">
-<Size x="200" y="300"/>
+<Size x="200" y="420"/>
   
   <Scripts>
     <OnLoad>

@@ -86,6 +86,7 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 			Lorehelper_VarFrame.curframe = Lorehelper_DoTest();
 		end
 	end
+--------------------------------------------------------
 	if event == "ZONE_CHANGED_NEW_AREA" then
 		--local thezone = GetRealZoneText();
 		--thezone = Lorehelper_DelocalizeZone(thezone);
@@ -486,7 +487,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 					--local zoneinfoframe = CreateFrame ("Frame",nil,self,"Lorehelper_SimpleFrame_Template");
 					Lorehelper_SimpleFrame.title:SetText(zones[i][1]);
 					Lorehelper_SimpleFrame.text:SetText(zones[i][3]);
-					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,60);
+					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,0);
 					Lorehelper_SimpleFrame:Show();
 				end
 
@@ -1222,14 +1223,6 @@ end
 -------------------------------------------------
 function Lorehelper_Tauren_Zones ()
 local varframe = Lorehelper_VarFrame;
-
---[[local zones = {
-		["Thousand Needles"] = {0, ""},
-		["Dustwallow Marsh"] = {10, ""},
-		["Desolace"] = {30, ""},
-		["Ashenvale"] = {20, ""},
-		["The Barrens"] = {40, ""}
-		};--]]
 		
 local zones = {
 		{"Thousand Needles", 1, ""},
@@ -1257,6 +1250,8 @@ end
 Lorehelper_Link_Zone_with_Answer (zones, "Thousand Needles", "Grimtotem", "Yes", "TaurenZone", 24)
 Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "TaurenZone")
 Lorehelper_Link_Zone_with_Event (zones, "Dustwallow Marsh", "War with Theramore", "TaurenZone");
+--Lorehelper_Link_Zone_with_Class (zones, "Wailing Caverns", "Druid", "TaurenZone");
+
 
 
 table.sort(zones, compare)
