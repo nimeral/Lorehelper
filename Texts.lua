@@ -31,6 +31,16 @@ function Lorehelper_Text (key)
 	elseif key=="HumanStandardParticipated" then text="You did fight in this war. Luckily, survived."
 	elseif key=="HumanStandardLostEverything" then text="You have suffered a lot during these horrible events. The scars of this war will forever remind you of those you loved and lost, of burnt houses, of crying children, of fresh graves..."
 	
+	elseif key=="HumanZoneWestern Plaguelands" then text="Plaguelands... All the way from here to the east are the lands haunted by the undead Scourge. To the west, in Tirisfal Glades, the undead of Horde reside.|n|nBefore the Plague, these were lands of Lordaeron. But then the humans of the area have been decimated by the undead. Most of the survivors fled, some have joined the Scarlet Crusade - the order devoted to exterminating the undead. Their fanatism might have caused just as many human deaths as the ruthlessness of the Scourge..."
+	elseif key=="HumanZoneTooltipWestern Plaguelands" then text="An exiled paladin is rumored to live far to the north, on the shores of the Thondroril River."
+	elseif key=="HumanZoneDustwallow Marsh" then text="."
+	elseif key=="HumanZoneSilverpine Forest" then text="."
+	elseif key=="HumanZoneAlterac Mountains" then text="."
+	elseif key=="HumanZoneArathi Highlands" then text="."
+	elseif key=="HumanZoneThe Blasted Lands" then text="."
+	elseif key=="HumanZoneBurning Steppes" then text="."
+	elseif key=="HumanZoneWestfall" then text="."
+	
 	elseif key=="HumanEventGurubashiWar" then text="The short but violent conflict between the Kingdom of Stormwind and trolls of Stranglethorn is known as Gurubashi War."
 	elseif key=="HumanEventGurubashiWarStandard" then text="The Gurubashi War was fought in lands of Stormwind, far from your home Kingdom."	
 	elseif key=="HumanEventGurubashiWarStormwind" then text="Trolls laid siege to Stormwind City. The army of mutated soldiers created by Warlord Zan'non rushed into the city, and many humans, including King Barathen Wrynn himself, were killed in battle.|n|nBut then, Medivh the Guardian, a friend of Prince Llane and Commander Anduin Lothar, laid waste to the troll forces with unmatched fire, frost, and arcane magics.|n|nMedivh, Llane and Lothar were praised as heroes, and indeed they were. But some rumor that it was actually due to their recklessness that the war was sparked in the first place..."	
@@ -95,6 +105,7 @@ function Lorehelper_Text (key)
 	elseif key=="TaurenZoneGrimtotemYes" then text="And you won't have to fight your own tribe."
 	elseif key=="TaurenZoneDustwallow Marsh" then text="Our allies, the ogres of Stonemaul, live nearby, in Brackenwall Village. Our enemies, humans, have a city of Theramore in the area, and fortified guard towers along the road.|n|nRight now, at least officially, there is a truce in this region. But just few years ago, human admiral Proudmoore and his Kul Tiras marines have launched a violent attack on the Horde."
 	elseif key=="TaurenZoneDesolace" then text="Legends say that Desolace was a once fertile grassland frequented by the shaman of the tauren tribes. They sought the Earthmother herself here. During this search, they have awakened an enormous earth elemental - Princess Theradras - whose insatiable hunger drought the land.|n|nWhat is worse, the centaurs were born by this horrible creature. Our war with centaurs would come to last for many centuries.|n|nPrincess Theradras is still rumored to exist in Maraudon, the place sacred by centaur. Some say she is behind them recently becoming even more agressive than ever."
+	elseif key=="TaurenZoneTooltipDesolace" then text="Rumors are, the Centaur Pariah in southern Desolace|nseeks someone to enter Maraudon."--redundant I think:|nThere are also those in Orgrimmar and, of course,|nin Shadowprey Village interested in this place.|nFinally, you may want to speak with an undead, Willow,|nwho lives in a hut nearby."
 	elseif key=="TaurenZoneAshenvale" then text="Forests of Ashenvale is where the Horde has first met the night elves. The contact was not a peaceful one... But later, understanding that demons of Burning Legion are a greater evil, night elves have joined forces with Alliance and Horde to repel the demonic invasion."
 
 	elseif key=="TaurenAgeYoung" then text="\"Four years have passed since the mortal races banded together and stood united against the might of the Burning Legion\".|n|nYou were just a child then. Now you have grown up. We have defeated the demons, because we were united - Horde and Alliance stood together to protect the world. We have then enjoyed a few years of peace.|n|nBut the eternal peace is impossible. Walk with the Earthmother, young tauren, when you face the challenges of today."

@@ -493,6 +493,11 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 					--local zoneinfoframe = CreateFrame ("Frame",nil,self,"Lorehelper_SimpleFrame_Template");
 					Lorehelper_SimpleFrame.title:SetText(zones[i][1]);
 					Lorehelper_SimpleFrame.text:SetText(zones[i][3]);
+					if zones[i][4] then
+						Lorehelper_SimpleFrame.tooltip = zones[i][4];
+					else Lorehelper_SimpleFrame.tooltip = nil;
+					end
+					
 					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,0);
 					Lorehelper_SimpleFrame:Show();
 				end
@@ -606,7 +611,7 @@ if varframe.responses["Shen'Dralar genocide"]==nil then
 	if varframe.responses["Society"]=="Shen'Dralar" then
 		shendralargenocide_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventShenDralarGenocideShenDralar"),standard_postanswers, false);
 		if age+childage >= ageticks[5] then
-			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("TaurenEventThirdWar"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
+			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("NightElfEventThirdWar"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
 			return varframe.curframe;
 		end
 	end
@@ -1016,7 +1021,7 @@ local zones = {
 --		{"Tirisfal Glades", 1, ""},
 --		{"Eastern Plaguelands", 1, ""},
 --too many zones otherwise - all Lordaeron/Plague lore will be focused in WPL
-		{"Western Plaguelands", 2, ""},
+		{"Western Plaguelands", 2, "", true},
 		{"Silverpine Forest", 2, ""},
 		{"Alterac Mountains", 2, ""},
 		{"Arathi Highlands", 2, ""},
@@ -1028,6 +1033,9 @@ local zones = {
 	 
 for i,z in ipairs(zones) do
 	z[3]=LHT("HumanZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("HumanZoneTooltip"..z[1]);
+	end
 end
 
 --Lorehelper_Link_Zone_with_Answer (zones, "Tirisfal Glades", "Home Kingdom", "Lordaeron", "HumanZone", 24);
@@ -1276,13 +1284,16 @@ local varframe = Lorehelper_VarFrame;
 local zones = {
 		{"Thousand Needles", 1, ""},
 		{"Dustwallow Marsh", 10, ""},
-		{"Desolace", 30, ""},
+		{"Desolace", 30, "", true},
 		{"Ashenvale", 20, ""},
 		{"The Barrens", 40, ""}
 		};
 	 
 for i,z in ipairs(zones) do
 	z[3]=LHT("TaurenZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("TaurenZoneTooltip"..z[1]);
+	end
 end
 
 Lorehelper_Link_Zone_with_Answer (zones, "Thousand Needles", "Grimtotem", "Yes", "TaurenZone", 24)
@@ -1291,9 +1302,9 @@ Lorehelper_Link_Zone_with_Event (zones, "Dustwallow Marsh", "War with Theramore"
 --Lorehelper_Link_Zone_with_Class (zones, "Wailing Caverns", "Druid", "TaurenZone");
 
 table.sort(zones, Lorehelper_CompareBy2ndElement)
-for i,n in ipairs(zones) do print(n[1]); print(n[2]); print(n[3]); print("--"); end
+--for i,n in ipairs(zones) do print(n[1]); print(n[2]); print(n[3]); print("--"); end
 
-print("------");
+--print("------");
 
 return zones;
 end

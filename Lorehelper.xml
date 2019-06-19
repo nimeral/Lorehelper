@@ -168,15 +168,26 @@
 	  self.text:SetTextColor(0.15, 1, 0.2, 1)
 	  self.text:Show()<!-- shown by default -->
 	  
-	  <!--self.background = self:CreateTexture(nil, "BACKGROUND")
+	  self.background = self:CreateTexture(nil, "BACKGROUND")
 	  self.background:SetPoint("TOPLEFT")
 	  self.background:SetWidth(self:GetWidth());
 	  self.background:SetHeight(self:GetHeight());
-	  self.background:SetTexture(LHART_DEFAULTPICTURE)-->
+	  self.background:SetTexture(LHART_ZONEPICTURE)
     </OnLoad>
 	<OnMouseDown>
 	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
 	</OnMouseDown>
+	
+	<OnEnter>
+	if self.tooltip then
+		GameTooltip:SetOwner(self or UIParent, "ANCHOR_LEFT");
+		GameTooltip:SetText(self.tooltip);
+		GameTooltip:Show();
+	end
+	</OnEnter>
+	<OnLeave>
+	GameTooltip:Hide();
+	</OnLeave>
   </Scripts>
   
 	<Layers>

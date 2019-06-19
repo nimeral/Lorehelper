@@ -2,6 +2,8 @@
 --credits to Blizzard and to WoWWiki. Some WoWWiki pictures were resized. Licence CC BY-SA 3.0.
 LHART_DEFAULTPICTURE = "Interface\\TALENTFRAME\\PriestDiscipline-TopLeft"
 
+LHART_ZONEPICTURE = "Interface\\Glues\\Credits\\Ocean3"
+
 LHART_BUTTONUP = "Interface\\BUTTONS\\UI-SILVER-BUTTON-UP"
 LHART_BUTTONDOWN = "Interface\\BUTTONS\\UI-SILVER-BUTTON-DOWN"
 
