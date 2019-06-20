@@ -147,7 +147,7 @@
 </Frame>
 
 <Frame name="Lorehelper_SimpleFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="false" clampedToScreen="false" virtual = "false">
-<Size x="200" y="420"/>
+<Size x="250" y="420"/>
   
   <Scripts>
     <OnLoad>
@@ -242,7 +242,7 @@
 	t:SetWidth(self:GetWidth());
 	t:SetHeight(self:GetHeight());
  	self.texture = t-->
-	self.unlocked = false;
+	self.unlocked = true;
 	</OnLoad>
 	<OnMouseDown>
 	<!-- hides all the "error" messages -->

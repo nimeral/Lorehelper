@@ -231,6 +231,11 @@ end
 ------------------------------------------
 function Lorehelper_Link_Zone_with_Event (zones, thezone, theevent, prefix)--adds a weight of player's participance to an event, and a text
 local varframe = Lorehelper_VarFrame; --global variable frame
+
+if not varframe.responses[theevent] then--player didn't answer this question - most likely because of age
+	return;
+end
+
 --find "thezone" key in the table "zones" (which is stored in first column actually)
 for i,z in ipairs(zones) do
 	if z[1]==thezone then
@@ -498,7 +503,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 					else Lorehelper_SimpleFrame.tooltip = nil;
 					end
 					
-					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",205,0);
+					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",255,0);
 					Lorehelper_SimpleFrame:Show();
 				end
 
@@ -506,8 +511,6 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 				);
 		end
 	end
-
-print(Lorehelper_ZoneButtonDustwallowMarsh.unlocked);
 return fr;
 end
 -------------------------------------------------
@@ -1025,10 +1028,11 @@ local zones = {
 		{"Silverpine Forest", 2, ""},
 		{"Alterac Mountains", 2, ""},
 		{"Arathi Highlands", 2, ""},
-		{"The Blasted Lands", 3, ""},
+		{"Blasted Lands", 3, ""},
 		{"Burning Steppes", 3, ""},
-		{"Westfall", 40, ""},
-		{"Ashenvale", 1, ""}
+		{"Westfall", 40, "", true},
+		{"Ashenvale", 1, ""},
+		{"Stranglethorn Vale", 1, ""}
 		};
 	 
 for i,z in ipairs(zones) do
@@ -1050,7 +1054,8 @@ Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War: Kalimdor", "Hum
 Lorehelper_Link_Zone_with_Event (zones, "Western Plaguelands", "Third War: Plague", "HumanZone")
 Lorehelper_Link_Zone_with_Event (zones, "Alterac Mountains", "Third War: Plague", "HumanZone")
 Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Second War", "HumanZone");
-Lorehelper_Link_Zone_with_Event (zones, "The Blasted Lands", "First War", "HumanZone");
+Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "First War", "HumanZone");
+Lorehelper_Link_Zone_with_Event (zones, "Stranglethorn Vale", "Gurubashi War", "HumanZone");
 
 table.sort(zones, Lorehelper_CompareBy2ndElement)
 
@@ -1312,14 +1317,94 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function Lorehelper_Undead ()
---local age = Lorehelpre_AskAge();
 
-Lorehelper_TestQuestion ("Home city", 
-"Where're you from? Human lol, orc lol, whoever the fuck you are hahah peo peo poe poepro poekiinguhiasudhye", 
-{"haha", "yes", "no"}, 
-{"haha indeed", "yes indeed", "no way"});
+local varframe = Lorehelper_VarFrame;
+-------------------------------------------------
+--Ask about age
+-------------------------------------------------
+if varframe.age == nil then
+	varframe.age = "N/A";--since it's an undead
+	Lorehelper_DoTest();--formally relaunch the function for symmetry with all the other races
+-------------------------------------------------
+--Ask if undead was a human or elf
+-------------------------------------------------
+elseif varframe.responses["Former race"]==nil then
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Former race"), 
+	LHT("UndeadFormerRace"), 
+	{LHT("Human"), LHT("Elf")}, 
+	{LHT("UndeadFormerRaceHuman"), LHT("UndeadFormerRaceElf")},
+	LHART_UNDEAD,
+	{LHART_UNDEADHUMAN, LHART_UNDEADELF});
+-------------------------------------------------
+--Ask where did they die
+-------------------------------------------------
+elseif varframe.responses["Last living moment"]==nil then
 
-return fr;
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Last living moment"), 
+	LHT("UndeadLastLivingMoment"), 
+	{LHT("Brill"), LHT("Andorhal"), LHT("Hearthglen"), LHT("Stratholme"), LHT("Lordaeron city"), LHT("Vandermar Village"), LHT("Quel'Thalas"), LHT("Dalaran")}, 
+	{LHT("UndeadLastMomentBrill"), LHT("UndeadLastMomentAndorhal"), LHT("UndeadLastMomentHearthglen"), LHT("UndeadLastMomentStratholme"), LHT("UndeadLastMomentLordaeron"), LHT("UndeadLastMomentVandermar"), LHT("UndeadLastMomentQuelThalas"), LHT("UndeadLastMomentDalaran")},
+	LHART_UNDEAD);
+-------------------------------------------------
+elseif varframe.responses["Dreadlords' fall"]==nil then--title of the last of the frames to be generated line below
+	varframe.curframe = Lorehelper_Undead_Events ();--function generating a few frames (maybe 1)
+-------------------------------------------------
+-------------------------------------------------
+else 
+	local zones = Lorehelper_Undead_Zones();
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_UNDEAD, {"Former race", "Last living moment", "Dreadlords' fall"}, zones);--the order of questions is passed 
+	if varframe.testdone == true then --if the test was done before and we're just relogging again
+		varframe.curframe:Hide ();
+		print (LHT("MsgAccessLoreProfile"));
+	end
+	varframe.testdone = true;
+end
+
+return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Undead_Events ()
+local varframe = Lorehelper_VarFrame;
+
+standard_postanswers = {LHT("UndeadStandardAvoided"), LHT("UndeadStandardLostSomeone"), LHT("UndeadStandardParticipated"), LHT("UndeadStandardLostEverything")};
+
+dreadlords_postanswers = Lorehelper_FormEventPostanswers (LHT("UndeadEventDreadlordsFallStandard"),standard_postanswers, false);	
+-------
+if varframe.responses["Dreadlords' fall"]==nil then
+	varframe.curframe = Lorehelper_EventTestQuestion (LHT("Dreadlords' fall"), LHT("UndeadEventDreadlordsFall"), false, dreadlords_postanswers, LHART_DREADLORDS);
+	return varframe.curframe;
+end
+
+return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Undead_Zones ()
+local varframe = Lorehelper_VarFrame;
+		
+local zones = {
+		{"Western Plaguelands", 3, "", true},
+		{"Eastern Plaguelands", 4, ""},
+		{"Silverpine Forest", 2, ""},
+		{"Alterac Mountains", 1, ""},
+		};
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("UndeadZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("UndeadZoneTooltip"..z[1]);
+	end
+end
+
+Lorehelper_Link_Zone_with_Answer (zones, "Western Plaguelands", "Last living moment", "Andorhal", "UndeadZone", 24)
+Lorehelper_Link_Zone_with_Answer (zones, "Western Plaguelands", "Last living moment", "Hearthglen", "UndeadZone", 24)
+Lorehelper_Link_Zone_with_Answer (zones, "Eastern Plaguelands", "Last living moment", "Stratholme", "UndeadZone", 24)
+Lorehelper_Link_Zone_with_Answer (zones, "Alterac Mountains", "Last living moment", "Dalaran", "UndeadZone", 24)
+
+table.sort(zones, Lorehelper_CompareBy2ndElement)
+
+return zones;
 end
 -------------------------------------------------
 -------------------------------------------------
