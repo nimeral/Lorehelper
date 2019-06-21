@@ -1518,7 +1518,17 @@ SLASH_LOREHELPER_SLASHCMD4 = '/loreh'
 -- Call this in a mod's initialization to move the minimap button to its saved position (also used in its movement)
 -- ** do not call from the mod's OnLoad, VARIABLES_LOADED or later is fine. **
 function Lorehelper_MinimapButton_Reposition()
-	Lorehelper_MinimapButton:SetPoint("TOPLEFT","Minimap","TOPLEFT",52-(80*cos(Lorehelper_VarFrame.minimappos)),(80*sin(Lorehelper_VarFrame.minimappos))-52)
+	local mmpos = Lorehelper_VarFrame.minimappos;
+
+	if mmpos > 120 and mmpos < 170 then--just want it to jump over the default UI's time-of-the-day-circle
+		if mmpos-120<170-mmpos then
+			mmpos = 120;
+		else
+			mmpos = 170;
+		end
+	end
+	
+	Lorehelper_MinimapButton:SetPoint("TOPLEFT","Minimap","TOPLEFT",52-(80*cos(mmpos)),(80*sin(mmpos))-52)
 end
 
 -- Only while the button is dragged this is called every frame
