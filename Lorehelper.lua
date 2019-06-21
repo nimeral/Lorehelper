@@ -1551,11 +1551,11 @@ function Lorehelper_Init()--creates Lorehelper_VarFrame and fills it with defaul
 			
 	Lorehelper_VarFrame.minimappos = 45; --default position in degrees
 			
-	--[[Lorehelper_VarFrame.mainframepoint = "CENTER";
-	Lorehelper_VarFrame.relativeTo=UIParent;
+	Lorehelper_VarFrame.mainframepoint = "CENTER";
+	--Lorehelper_VarFrame.relativeTo=UIParent;
 	Lorehelper_VarFrame.relativePoint="CENTER";
 	Lorehelper_VarFrame.xOfs=0;
-	Lorehelper_VarFrame.yOfs=0;--]]--the position saving feature bugs too often, idk
+	Lorehelper_VarFrame.yOfs=0;
 			
 	Lorehelper_VarFrame.race = UnitRace("player");
 	Lorehelper_VarFrame.class = UnitClass("player");

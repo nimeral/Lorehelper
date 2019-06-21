@@ -11,10 +11,11 @@
 	  self:RegisterForDrag("LeftButton")
       self:Show();
 	  
-	  <!--bugs time to time, think of rewriting
 	  if Lorehelper_VarFrame then
-		self:SetPoint(Lorehelper_VarFrame.mainframepoint, Lorehelper_VarFrame.relativeTo, Lorehelper_VarFrame.relativePoint, Lorehelper_VarFrame.xOfs, Lorehelper_VarFrame.yOfs)
-	  end-->
+		if Lorehelper_VarFrame.mainframepoint and Lorehelper_VarFrame.relativePoint and Lorehelper_VarFrame.xOfs and Lorehelper_VarFrame.yOfs then<!--trying to make it bug-safe-->
+			self:SetPoint(Lorehelper_VarFrame.mainframepoint, UIParent, Lorehelper_VarFrame.relativePoint, Lorehelper_VarFrame.xOfs, Lorehelper_VarFrame.yOfs)
+		end
+	  end
 	  
 	  local framewidth = self:GetWidth() - 10 <!--so the text fits nicely-->
 	  
@@ -57,7 +58,8 @@
 	</OnDragStart>
 	<OnDragStop>
 		self:StopMovingOrSizing()
-		if Lorehelper_VarFrame then
+		
+		if Lorehelper_VarFrame then<!--save the position-->
 			Lorehelper_VarFrame.mainframepoint, Lorehelper_VarFrame.relativeTo, Lorehelper_VarFrame.relativePoint, Lorehelper_VarFrame.xOfs, Lorehelper_VarFrame.yOfs = self:GetPoint();
 		end
 	</OnDragStop>
