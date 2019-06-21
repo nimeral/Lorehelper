@@ -413,6 +413,15 @@ function Lorehelper_AskAge(agelowrange, agehighrange, ageticks, postanswertexts,
 			end	
 		end
 		);
+		
+	fr.disclaimerbutton = CreateFrame("Button", nil, fr, "Lorehelper_Button_Template");
+	fr.disclaimerbutton:SetPoint("BOTTOMLEFT",5,5)
+	fr.disclaimerbutton:SetText(LHT("Disclaimer"));
+	fr.disclaimerbutton:SetScript("OnClick", 
+		function()
+		Lorehelper_SimpleMessage(LHT("MsgDisclaimer"));
+		end
+		);
 return fr;
 end
 -------------------------------------------------
@@ -651,7 +660,7 @@ function Lorehelper_Dwarf ()
 local varframe = Lorehelper_VarFrame;
 --local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
 local childage = 20;
-local oldage = 400;
+local oldage = 500;
 local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -210})--will still be partially hardcoded
 --the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of Three Hammers + 20 years (no one knows its length)
 for i=1,#ageticks do
@@ -770,11 +779,11 @@ local varframe = Lorehelper_VarFrame;
 local zones = {
 		{"Western Plaguelands", 3, "", true},
 		{"Wetlands", 6, ""},
-		{"Searing Gorge", 9, ""},
+		{"Searing Gorge", 15, "", true},
 		{"The Hinterlands", 4, ""},
 		{"Blasted Lands", 1, ""},
 		{"Ashenvale", 2, ""},
-		{"Badlands", 5, ""}
+		{"Badlands", 10, "", true}
 		};
 	 
 for i,z in ipairs(zones) do
@@ -1061,7 +1070,7 @@ function Lorehelper_Human_Zones ()
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
-		{"Dustwallow Marsh", 5, ""},
+		{"Dustwallow Marsh", 20, ""},
 --		{"Tirisfal Glades", 1, ""},
 --		{"Eastern Plaguelands", 1, ""},
 --too many zones otherwise - all Lordaeron/Plague lore will be focused in WPL
@@ -1140,7 +1149,8 @@ elseif varframe.responses["War with Theramore"]==nil then--title of the last of 
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_TROLL, {"Tribe", "Gurubashi War", "First War", "Second War", "Third War", "War with Theramore"});--the order of questions is passed 
+	local zones = Lorehelper_Troll_Zones ();
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_TROLL, {"Tribe", "Gurubashi War", "First War", "Second War", "Third War", "War with Theramore"}, zones);--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -1226,6 +1236,33 @@ end
 
 
 return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Troll_Zones ()
+local varframe = Lorehelper_VarFrame;
+		
+local zones = {
+		{"Dustwallow Marsh", 10, ""},
+		{"Ashenvale", 3, ""},
+		{"Stranglethorn Vale", 15, ""}
+		};
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("TrollZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("TrollZoneTooltip"..z[1]);
+	end
+end
+
+Lorehelper_Link_Zone_with_Answer (zones, "Stranglethorn Vale", "Tribe", "Darkspear", "TrollZone", 24)
+Lorehelper_Link_Zone_with_Answer (zones, "Stranglethorn Vale", "Tribe", "Bad tribe", "TrollZone", 12)
+Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "TrollZone")
+Lorehelper_Link_Zone_with_Event (zones, "Dustwallow Marsh", "War with Theramore", "TrollZone");
+
+table.sort(zones, Lorehelper_CompareBy2ndElement)
+
+return zones;
 end
 -------------------------------------------------
 -------------------------------------------------
@@ -1329,9 +1366,9 @@ local varframe = Lorehelper_VarFrame;
 		
 local zones = {
 		{"Thousand Needles", 1, ""},
-		{"Dustwallow Marsh", 10, ""},
-		{"Desolace", 30, "", true},
-		{"Ashenvale", 20, ""},
+		{"Dustwallow Marsh", 2, ""},
+		{"Desolace", 20, "", true},
+		{"Ashenvale", 3, ""},
 		{"The Barrens", 40, ""}
 		};
 	 

@@ -1,4 +1,4 @@
---credits to Blizzard, to WoWWiki, to Gamepedia for some of the texts. Licence CC BY-SA 3.0.
+--credits to Blizzard, to Wowpedia and WoWWiki for some of the texts. Licence CC BY-SA 3.0.
 function Lorehelper_Text (key)
 	local text = nil;
 	
@@ -29,6 +29,7 @@ function Lorehelper_Text (key)
 	elseif key=="DwarfZoneWetlandsClanWildhammer" then text="If not for Dark Irons, Wildhammers might have still called this land ye home."
 	
 	elseif key=="DwarfZoneSearing Gorge" then text="One of the fiercest battles of Second War took place here, the Siege of Blackrock Spire. After their defeat in the siege, Horde was an easy prey.|n|nUnfortunately, remnants of the old Horde still dominate Burning Steppes to the south of the Mountain.|n|nAnd Dark Irons dominate the Searing Gorge. The only base where we won't be killed on sight is Thorium Point. Thorium Brotherhood, a group of Dark Irons who no longer belong to the clan, resides there."
+	elseif key=="DwarfZoneTooltipSearing Gorge" then text="A gigantic beast known as Margol the Rager|nroams near its cave in the southeastern region|nof Searing Gorge."
 	elseif key=="DwarfZoneClanDark Iron" then text="Ye were one of them maybe? Or did ye escape the Blackrock Mountain together with them? In any case, probably one day ye will earn their respect."
 	elseif key=="DwarfZoneThe Hinterlands" then text="Our Wildhammer friends live here. Formally, Wildhammers are not a part of the reformed after Third War Alliance, but they do cooperate with us.|n|nWildhammers created their own small alliance - with the high elves of Quel'Danil, much to the ire of their common enemy, the Revantusk trolls. These trolls are in similar relations with Horde - declined to rejoin it, but did agree to a pact of friendship and mutual assistance.|n|nYe see - so far from the big cities, but the politics is just as messy as in a capital!"
 	
@@ -210,6 +211,7 @@ function Lorehelper_Text (key)
 	elseif key=="MsgAnswersLoaded" then text="Lorehelper: your past answers loaded."
 	elseif key=="MsgRetakeTest" then text="Are you sure you want to do the lore test again? Your old answers will be lost."
 	elseif key=="MsgAccessLoreProfile" then text="Lorehelper: you can access your lore profile via the minimap icon, or by typing /lore"
+	elseif key=="MsgDisclaimer" then text="Lorehelper compiles the official lore disclosed by Blizzard, various texts from Wowpedia and WoWWiki, and my own humble efforts into a lore-focused race-specific \"test\". Once you finish it, you will have access to your lore profile.|n|nAdditionally, when you first time enter a zone that is important from the lore standpoint, you will see a popup text about this zone, slightly different depending on your character's backstory. You may also receieve some tips about quests you should not miss.|n|nIn situations when the official lore is uncertain, I tried to come up with the most sensible solution. For example, we do not know when dwarves normally become old, but since Muradin Bronzebeard was 221 years old during the Third War, I came up with a guesstimate of 500 as a \"maximum\" age of a dwarf. Another example is, it is unclear when Darkspear trolls were driven from Stranglethorn, the addon supposes it is after the Second War when an ogre-mage was more likely to roam around Azeroth, seeking a troll tribe to seize their land.|n|nI sincerely apologise to those who wanted to RP a 501-years-old dwarf, as well as to anyone who find the \"test\" limiting.|n|nHuge thanks to Wowpedia and WoWWiki authors for immensive efforts on lore collection. And, of course, to Blizzard for creating this wonderful World!|n|nYours,|nNimeral"
 ------------------------------------------------------------	
 ------------------------------------------------------------
 ------------------------------------------------------------

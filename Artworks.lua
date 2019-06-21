@@ -1,5 +1,5 @@
 --just a bunch of constants referencing beautiful art
---credits to Blizzard, to WoWWiki, to Gamepedia. Some pictures were resized. Licence CC BY-SA 3.0.
+--credits to Blizzard, to Wowpedia and WoWWiki. Some pictures were resized. Licence CC BY-SA 3.0.
 LHART_DEFAULTPICTURE = "Interface\\TALENTFRAME\\PriestDiscipline-TopLeft"
 
 LHART_ZONEPICTURE = "Interface\\Glues\\Credits\\Ocean3"
