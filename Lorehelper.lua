@@ -683,7 +683,8 @@ elseif varframe.responses["Third War"]==nil then--title of the last of the frame
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_DWARF, {"Clan", "War of the Three Hammers", "First War", "Second War", "Third War"});--the order of questions is passed 
+	local zones = Lorehelper_Dwarf_Zones ();
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_DWARF, {"Clan", "War of the Three Hammers", "First War", "Second War", "Third War"}, zones);--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -763,6 +764,41 @@ return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
+function Lorehelper_Dwarf_Zones ()
+local varframe = Lorehelper_VarFrame;
+		
+local zones = {
+		{"Western Plaguelands", 3, "", true},
+		{"Wetlands", 6, ""},
+		{"Searing Gorge", 9, ""},
+		{"The Hinterlands", 4, ""},
+		{"Blasted Lands", 1, ""},
+		{"Ashenvale", 2, ""},
+		{"Badlands", 5, ""}
+		};
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("DwarfZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("DwarfZoneTooltip"..z[1]);
+	end
+end
+
+Lorehelper_Link_Zone_with_Answer (zones, "Badlands", "Clan", "Bronzebeard", "DwarfZone", 5);
+Lorehelper_Link_Zone_with_Answer (zones, "Wetlands", "Clan", "Wildhammer", "DwarfZoneWetlands", 12);--non-standard prefix format!	
+Lorehelper_Link_Zone_with_Answer (zones, "Searing Gorge", "Clan", "Dark Iron", "DwarfZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "The Hinterlands", "Clan", "Wildhammer", "DwarfZoneThe Hinterlands", 24);--non-standard prefix format!
+Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "DwarfZone");
+Lorehelper_Link_Zone_with_Event (zones, "Western Plaguelands", "Third War", "DwarfZone");
+Lorehelper_Link_Zone_with_Event (zones, "Searing Gorge", "Second War", "DwarfZone");
+Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "First War", "DwarfZone");
+
+table.sort(zones, Lorehelper_CompareBy2ndElement)
+
+return zones;
+end
+-------------------------------------------------
+-------------------------------------------------
 -------------------------------------------------
 function Lorehelper_Gnome ()
 
@@ -797,7 +833,7 @@ elseif varframe.responses["Third War"]==nil then--title of the last of the frame
 -------------------------------------------------
 -------------------------------------------------
 else 
-	local zones = Lorehelper_Dwarf_Zones ();
+	local zones = Lorehelper_Gnome_Zones ();
 	varframe.curframe = Lorehelper_PresentAnswers(LHART_GNOME, {"Engineer", "King Mechagon disappearance", "War of the Three Hammers", "First War", "Second War", "Fighting for Gnomeregan", "Third War"}, zones);--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
@@ -807,41 +843,6 @@ else
 end
 
 return varframe.curframe;
-end
--------------------------------------------------
--------------------------------------------------
-function Lorehelper_Dwarf_Zones ()
-local varframe = Lorehelper_VarFrame;
-		
-local zones = {
-		{"Western Plaguelands", 3, "", true},
-		{"Wetlands", 6, ""},
-		{"Searing Gorge", 9, ""},
-		{"The Hinterlands", 4, ""},
-		{"Blasted Lands", 1, ""},
-		{"Ashenvale", 2, ""},
-		{"Badlands", 5, ""}
-		};
-	 
-for i,z in ipairs(zones) do
-	z[3]=LHT("DwarfZone"..z[1]);
-	if z[4] then
-		z[4]=LHT("DwarfZoneTooltip"..z[1]);
-	end
-end
-
-Lorehelper_Link_Zone_with_Answer (zones, "Badlands", "Clan", "Bronzebeard", "DwarfZone", 5);
-Lorehelper_Link_Zone_with_Answer (zones, "Wetlands", "Clan", "Wildhammer", "DwarfZone", 12);
-Lorehelper_Link_Zone_with_Answer (zones, "Searing Gorge", "Clan", "Dark Iron", "DwarfZone", 24);
-Lorehelper_Link_Zone_with_Answer (zones, "The Hinterlands", "Clan", "Wildhammer", "DwarfZone", 24);
-Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "DwarfZone");
-Lorehelper_Link_Zone_with_Event (zones, "Western Plaguelands", "Third War", "DwarfZone");
-Lorehelper_Link_Zone_with_Event (zones, "Searing Gorge", "Second War", "DwarfZone");
-Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "First War", "DwarfZone");
-
-table.sort(zones, Lorehelper_CompareBy2ndElement)
-
-return zones;
 end
 -------------------------------------------------
 -------------------------------------------------

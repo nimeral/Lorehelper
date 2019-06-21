@@ -146,7 +146,7 @@
 	</Layers>
 </Frame>
 
-<Frame name="Lorehelper_SimpleFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="false" clampedToScreen="false" virtual = "false">
+<Frame name="Lorehelper_SimpleFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="false" clampedToScreen="true" virtual = "false">
 <Size x="250" y="420"/>
   
   <Scripts>

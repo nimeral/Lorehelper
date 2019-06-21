@@ -14,22 +14,29 @@ function Lorehelper_Text (key)
 	elseif key=="DwarfStandardLostEverything" then text="Ye have suffered a lot during these horrible events. The scars of this war will forever remind ye of those ye loved and lost, of burnt houses, of crying gnomes, of fresh graves..."
 
 	elseif key=="DwarfZoneAvoided" then text=""
-	elseif key=="DwarfZoneLost someone" then text="This is where someone you loved perished."
-	elseif key=="DwarfZoneParticipated" then text="Yer've been fighting here. Looks peaceful now, but is it for long?"
-	elseif key=="DwarfZoneLost everything" then text="This is where yer suffered a terrible loss..."
+	elseif key=="DwarfZoneLost someone" then text="This is where someone ye loved perished."
+	elseif key=="DwarfZoneParticipated" then text="Ye've been fighting here. Looks peaceful now, but is it for long?"
+	elseif key=="DwarfZoneLost everything" then text="This is where ye suffered a terrible loss..."
 	
-	elseif key=="DwarfZoneWestern Plaguelands" then text="All the way from here to the east are the lands haunted by the undead Scourge. To the west, in Tirisfal Glades, the undead of Horde reside.|n|nBefore the plague, these were lands of Lordaeron. But then the people of the area have been decimated by the undead. Most of the survivors fled, some have joined the Scarlet Crusade - the order devoted to exterminating the undead. Their fanatism might have caused just as many human deaths as the ruthlessness of the Scourge..."
+	elseif key=="DwarfZoneWestern Plaguelands" then text="All the way from here to the east are the lands haunted by the undead Scourge. To the west, in Tirisfal Glades, the undead of Horde reside.|n|nBefore the plague, these were human lands of Lordaeron. But then the people of the area have been decimated by the undead. Most of the survivors fled, some have joined the Scarlet Crusade - the order devoted to exterminating the undead. Their fanatism might have caused just as many human deaths as the ruthlessness of the Scourge..."
 	elseif key=="DwarfZoneTooltipWestern Plaguelands" then text="A human paladin is rumored to live in an exile far to|nthe north, on the shores of the Thondroril River."
-	elseif key=="DwarfZoneBadlands" then text=""
-	elseif key=="DwarfZoneClanBronzebeard" then text=""
+	elseif key=="DwarfZoneBadlands" then text="Despite its position between Stormwind and Dun Morogh, the Badlands have been Horde territory, so to say, \"traditionally\" - since Horde invaded Azeroth anyway. For us, the important place in this land is Uldaman.|n|nIt was partially excavated by the explorers from Ironforge prior to Third War, but has since fallen into the hands of the troggs and Dark Irons. These brutes use this ancient place, that may hold secrets of universal importance, as a mere mine!"
+	elseif key=="DwarfZoneClanBronzebeard" then text="Ironforge's entire population is eager to see what's down there. Maybe one day ye will honor yer clan by helping to crush the intruders and unlock the mysteries of our ancient past."
 	elseif key=="DwarfZoneTooltipBadlands" then text="Uldaman is a mistery that many try to uncover - both|nin the libraries of Ironforge and here in Badlands, in the field."
-	elseif key=="DwarfZoneWetlands" then text=""
-	elseif key=="DwarfZoneClanWildhammer" then text="??mention both Wetlands and Hinterlands??"
-	elseif key=="DwarfZoneSearing Gorge" then text=""
-	elseif key=="DwarfZoneClanDark Iron" then text=""
-	elseif key=="DwarfZoneThe Hinterlands" then text=""
-	elseif key=="DwarfZoneBlasted Lands" then text=""
-	elseif key=="DwarfZoneAshenvale" then text=""
+	elseif key=="DwarfZoneWetlands" then text="The Wetlands have been the site of many battles through the times.|n|nAfter the first round of War of the Three Hammers, Grim Batol was founded here by Wildhammers. Later, Dark Irons invaded the town. They were driven back, but not before leaving a curse on the fortress, making it uninhabitable.|n|nDuring Second War, the orcs took Grim Batol for a time. Later on though, they were subject to the wrath of the red dragonflight who, when freed of their enslavement from the orcs, destroyed their bases, killing orcs en masse. The surviving orcs fled south to the mountains, where they live to this day."
+	
+--non-standard key format!	
+	elseif key=="DwarfZoneWetlandsClanWildhammer" then text="If not for Dark Irons, Wildhammers might have still called this land ye home."
+	
+	elseif key=="DwarfZoneSearing Gorge" then text="One of the fiercest battles of Second War took place here, the Siege of Blackrock Spire. After their defeat in the siege, Horde was an easy prey.|n|nUnfortunately, remnants of the old Horde still dominate Burning Steppes to the south of the Mountain.|n|nAnd Dark Irons dominate the Searing Gorge. The only base where we won't be killed on sight is Thorium Point. Thorium Brotherhood, a group of Dark Irons who no longer belong to the clan, resides there."
+	elseif key=="DwarfZoneClanDark Iron" then text="Ye were one of them maybe? Or did ye escape the Blackrock Mountain together with them? In any case, probably one day ye will earn their respect."
+	elseif key=="DwarfZoneThe Hinterlands" then text="Our Wildhammer friends live here. Formally, Wildhammers are not a part of the reformed after Third War Alliance, but they do cooperate with us.|n|nWildhammers created their own small alliance - with the high elves of Quel'Danil, much to the ire of their common enemy, the Revantusk trolls. These trolls are in similar relations with Horde - declined to rejoin it, but did agree to a pact of friendship and mutual assistance.|n|nYe see - so far from the big cities, but the politics is just as messy as in a capital!"
+	
+--non-standard key format!
+	elseif key=="DwarfZoneThe HinterlandsClanWildhammer" then text="Aerie Peak is yer home. Yer a free adventurer now, but perhaps you stop here for some time to help yer home clan with their daily struggles."
+	
+	elseif key=="DwarfZoneBlasted Lands" then text="This is the area where the orcish Horde first entered Azeroth through the Dark Portal, followed soon by their attack on the human lands to the northwest, and, ultimately, by their victory in First War."
+	elseif key=="DwarfZoneAshenvale" then text="Forests of Ashenvale is where the Alliance has first met the night elves. The contact was not a peaceful one... But later, understanding that demons of Burning Legion are a greater evil, night elves have joined forces with Alliance and Horde to repel the demonic invasion."
 ------------------------------------------------------------
 	elseif key=="DwarfAgeYoung" then text="\"Four years have passed since the mortal races banded together and stood united against the might of the Burning Legion\".|n|nYer childhood was quite peaceful, but during yer teenage years the world was shackled by the demonic invasion - Third War they call it. Perhaps the stories of the Hijal veterans have made ye hungry for heroic deeds, or maybe the horrors of the war have influenced yer decision to become an independent adventurer.|n|nIn any case, yer an adult now, and yer future is in your hands..."	
 	elseif key=="DwarfAgeThirdWar" then text="\"Four years have passed since the mortal races banded together and stood united against the might of the Burning Legion\".|n|nYe were an adult when these events, known as Third War, took place.|n|nSome might have said before that the orcs are the greatest enemy the Alliance have ever faced, but we now know that there are greater horrors."	
