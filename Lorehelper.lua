@@ -416,10 +416,10 @@ function Lorehelper_AskAge(agelowrange, agehighrange, ageticks, postanswertexts,
 		
 	fr.disclaimerbutton = CreateFrame("Button", nil, fr, "Lorehelper_Button_Template");
 	fr.disclaimerbutton:SetPoint("BOTTOMLEFT",5,5)
-	fr.disclaimerbutton:SetText(LHT("Disclaimer"));
+	fr.disclaimerbutton:SetFormattedText(Lorehelper_BreakLineOnSpace(LHT("About Lorehelper")));
 	fr.disclaimerbutton:SetScript("OnClick", 
 		function()
-		Lorehelper_SimpleMessage(LHT("MsgDisclaimer"));
+		Lorehelper_SimpleMessage(LHT("MsgAboutLH"));
 		end
 		);
 return fr;
@@ -544,21 +544,23 @@ if varframe.age == nil then
 --Ask whether a night elf was once Highborne
 -------------------------------------------------
 elseif varframe.responses["Society"]==nil then
-	if varframe.age >= -6800 then--end of High Elves exile
+	if varframe.age >= 6825 then--end of High Elves exile
 		varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
 		LHT("NightElfSociety"), 
 		{LHT("Kaldorei"), LHT("Highborne"), LHT("Shen'Dralar")}, 
 		{LHT("NightElfKaldorei"), LHT("NightElfHighborne"), LHT("NightElfShenDralar")},
 		LHART_NIGHTELF,
 		{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFHIGHBORNE, LHART_NIGHTELFSHENDRALAR});
-	elseif varframe.age >= -1200 then--genocide of Shen'Dralar
+	elseif varframe.age >= 1225 then--genocide of Shen'Dralar
 		varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
 		LHT("NightElfSociety"), 
 		{LHT("Kaldorei"), LHT("Shen'Dralar")}, 
 		{LHT("NightElfKaldorei"), LHT("NightElfShenDralar")},
 		LHART_NIGHTELF,
 		{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFSHENDRALAR});	
-	else varframe.responses["Society"]="Kaldorei";--a bit of a hack 
+	else 
+		varframe.responses["Society"]="Kaldorei";--a bit of a hack 
+		Lorehelper_DoTest();
 	end
 -------------------------------------------------
 elseif varframe.responses["The Betrayer Ascendant"]==nil then--title of the last of the frames to be generated line below
@@ -623,7 +625,7 @@ if varframe.responses["Shen'Dralar genocide"]==nil then
 	if varframe.responses["Society"]=="Shen'Dralar" then
 		shendralargenocide_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventShenDralarGenocideShenDralar"),standard_postanswers, false);
 		if age+childage >= ageticks[5] then
-			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("NightElfEventThirdWar"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
+			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("NightElfEventShenDalarGenocide"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
 			return varframe.curframe;
 		end
 	end
@@ -631,7 +633,7 @@ end
 
 if varframe.responses["War of the Shifting Sands"]==nil then
 	if age+childage >= ageticks[4] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Shifting Sands"), LHT("NightElfEventShiftingSands"), (age < ageticks[4]), thirdwar_postanswers, LHART_SHIFTINGSANDS);
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Shifting Sands"), LHT("NightElfEventShiftingSands"), (age < ageticks[4]), warshiftingsands_postanswers, LHART_SHIFTINGSANDS);
 		return varframe.curframe;
 	end
 end
@@ -781,7 +783,7 @@ local zones = {
 		{"Wetlands", 6, ""},
 		{"Searing Gorge", 15, "", true},
 		{"The Hinterlands", 4, ""},
-		{"Blasted Lands", 1, ""},
+		{"Redridge Mountains", 1, ""},
 		{"Ashenvale", 2, ""},
 		{"Badlands", 10, "", true}
 		};
@@ -800,7 +802,7 @@ Lorehelper_Link_Zone_with_Answer (zones, "The Hinterlands", "Clan", "Wildhammer"
 Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "DwarfZone");
 Lorehelper_Link_Zone_with_Event (zones, "Western Plaguelands", "Third War", "DwarfZone");
 Lorehelper_Link_Zone_with_Event (zones, "Searing Gorge", "Second War", "DwarfZone");
-Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "First War", "DwarfZone");
+Lorehelper_Link_Zone_with_Event (zones, "Redridge Mountains", "First War", "DwarfZone");
 
 table.sort(zones, Lorehelper_CompareBy2ndElement)
 
@@ -925,6 +927,40 @@ if varframe.responses["Third War"]==nil then
 end
 
 return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_Gnome_Zones ()
+local varframe = Lorehelper_VarFrame;
+		
+local zones = {
+		{"Badlands", 2, "", true},
+		{"Un'goro Crater", 1, ""},
+		{"Tanaris", 3, "", true},
+		{"Stonetalon Mountains", 4, ""},
+		{"Ashenvale", 7, ""},
+		{"Redridge Mountains", 5, ""},
+		{"Burning Steppes", 6, ""},
+		};
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("GnomeZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("GnomeZoneTooltip"..z[1]);
+	end
+end
+
+Lorehelper_Link_Zone_with_Answer (zones, "Badlands", "Engineer", "Yes", "GnomeZone", 6);
+Lorehelper_Link_Zone_with_Answer (zones, "Tanaris", "Engineer", "Yes", "GnomeZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Stonetalon Mountains", "Engineer", "Yes", "GnomeZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Un'goro Crater", "Engineer", "Yes", "GnomeZone", 24);
+Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "GnomeZone");
+Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Second War", "GnomeZone");
+Lorehelper_Link_Zone_with_Event (zones, "Redridge Mountains", "First War", "GnomeZone");
+
+table.sort(zones, Lorehelper_CompareBy2ndElement)
+
+return zones;
 end
 -------------------------------------------------
 -------------------------------------------------
@@ -1078,7 +1114,7 @@ local zones = {
 		{"Silverpine Forest", 2, ""},
 		{"Alterac Mountains", 2, ""},
 		{"Arathi Highlands", 2, ""},
-		{"Blasted Lands", 3, ""},
+		{"Redridge Mountains", 3, ""},
 		{"Burning Steppes", 3, ""},
 		{"Westfall", 40, "", true},
 		{"Ashenvale", 1, ""},
@@ -1104,7 +1140,7 @@ Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War: Kalimdor", "Hum
 Lorehelper_Link_Zone_with_Event (zones, "Western Plaguelands", "Third War: Plague", "HumanZone")
 Lorehelper_Link_Zone_with_Event (zones, "Alterac Mountains", "Third War: Plague", "HumanZone")
 Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Second War", "HumanZone");
-Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "First War", "HumanZone");
+Lorehelper_Link_Zone_with_Event (zones, "Redridge Mountains", "First War", "HumanZone");
 Lorehelper_Link_Zone_with_Event (zones, "Stranglethorn Vale", "Gurubashi War", "HumanZone");
 
 table.sort(zones, Lorehelper_CompareBy2ndElement)
@@ -1244,8 +1280,15 @@ local varframe = Lorehelper_VarFrame;
 		
 local zones = {
 		{"Dustwallow Marsh", 10, ""},
-		{"Ashenvale", 3, ""},
-		{"Stranglethorn Vale", 15, ""}
+		{"Ashenvale", 5, ""},
+		{"Stranglethorn Vale", 15, ""},
+		{"The Hinterlands", 7, "", true},
+		{"Dun Morogh", 2, ""},
+		{"Swamp of Sorrows", 6, "", true},
+		{"Tanaris", 9, "", true},
+		{"Eastern Plaguelands", 4, "", true},
+		{"Darkshore", 1, ""},
+		{"Hillsbrad Foothills", 3, ""}
 		};
 	 
 for i,z in ipairs(zones) do
@@ -1255,8 +1298,22 @@ for i,z in ipairs(zones) do
 	end
 end
 
-Lorehelper_Link_Zone_with_Answer (zones, "Stranglethorn Vale", "Tribe", "Darkspear", "TrollZone", 24)
+Lorehelper_Link_Zone_with_Answer (zones, "Stranglethorn Vale", "Tribe", "Darkspear", "TrollZone", 18)
+Lorehelper_Link_Zone_with_Answer (zones, "Stranglethorn Vale", "Tribe", "Zandalari", "TrollZone", 18)
 Lorehelper_Link_Zone_with_Answer (zones, "Stranglethorn Vale", "Tribe", "Bad tribe", "TrollZone", 12)
+Lorehelper_Link_Zone_with_Answer (zones, "The Hinterlands", "Tribe", "Bad tribe", "TrollZone", 12)
+Lorehelper_Link_Zone_with_Answer (zones, "Eastern Plaguelands", "Tribe", "Bad tribe", "TrollZone", 12)
+Lorehelper_Link_Zone_with_Answer (zones, "Tanaris", "Tribe", "Bad tribe", "TrollZone", 12)
+Lorehelper_Link_Zone_with_Answer (zones, "Dun Morogh", "Tribe", "Bad tribe", "TrollZone", 12)
+Lorehelper_Link_Zone_with_Answer (zones, "Swamp of Sorrows", "Tribe", "Bad tribe", "TrollZone", 12)
+Lorehelper_Link_Zone_with_Answer (zones, "The Hinterlands", "Tribe", "Revantusk", "TrollZone", 24)
+Lorehelper_Link_Zone_with_Answer (zones, "Darkshore", "Tribe", "Shatterspear", "TrollZone", 18)
+--Lorehelper_Link_Zone_with_Event (zones, "Stranglethorn Vale", "Gurubashi War", "TrollZone")
+--if varframe.responses["Gurubashi War"]=="Avoided" then--to not link twice
+--screw linking Gurubashi War to a zone actually
+Lorehelper_Link_Zone_with_Event (zones, "Stranglethorn Vale", "First War", "TrollZone")
+--end
+Lorehelper_Link_Zone_with_Event (zones, "Hillsbrad Foothills", "Second War", "TrollZone")
 Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "TrollZone")
 Lorehelper_Link_Zone_with_Event (zones, "Dustwallow Marsh", "War with Theramore", "TrollZone");
 
@@ -1418,10 +1475,28 @@ elseif varframe.responses["Former race"]==nil then
 -------------------------------------------------
 elseif varframe.responses["Last living moment"]==nil then
 
+	if varframe.class == "Priest" then
+		lordaeron_text = LHT("UndeadLastMomentLordaeronPriest");
+	else
+		lordaeron_text = LHT("UndeadLastMomentLordaeronNonPriest");
+	end
+	
+	if varframe.class == "Mage" then
+		dalaran_text = LHT("UndeadLastMomentDalaranMage");
+	else
+		dalaran_text = LHT("UndeadLastMomentDalaranNonMage");
+	end
+	
+	if varframe.responses["Former race"] == "Elf" then
+		quelthalas_text = LHT("UndeadLastMomentQuelThalasElf");
+	else
+		quelthalas_text = LHT("UndeadLastMomentQuelThalasHuman");
+	end
+
 	varframe.curframe = Lorehelper_TestQuestion (LHT("Last living moment"), 
 	LHT("UndeadLastLivingMoment"), 
 	{LHT("Brill"), LHT("Andorhal"), LHT("Hearthglen"), LHT("Stratholme"), LHT("Lordaeron city"), LHT("Vandermar Village"), LHT("Quel'Thalas"), LHT("Dalaran")}, 
-	{LHT("UndeadLastMomentBrill"), LHT("UndeadLastMomentAndorhal"), LHT("UndeadLastMomentHearthglen"), LHT("UndeadLastMomentStratholme"), LHT("UndeadLastMomentLordaeron"), LHT("UndeadLastMomentVandermar"), LHT("UndeadLastMomentQuelThalas"), LHT("UndeadLastMomentDalaran")},
+	{LHT("UndeadLastMomentBrill"), LHT("UndeadLastMomentAndorhal"), LHT("UndeadLastMomentHearthglen"), LHT("UndeadLastMomentStratholme"), lordaeron_text, LHT("UndeadLastMomentVandermar"), quelthalas_text, dalaran_text},
 	LHART_UNDEAD);
 -------------------------------------------------
 elseif varframe.responses["Dreadlords' fall"]==nil then--title of the last of the frames to be generated line below

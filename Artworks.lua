@@ -52,6 +52,7 @@ LHART_TAURENNONGRIMTOTEM = "Interface\\Glues\\Credits\\ThunderBluff1"
 LHART_TAURENGRIMTOTEM = "Interface\\Addons\\Lorehelper\\Art\\Grimtotem"
 
 LHART_UNDEAD = "Interface\\DRESSUPFRAME\\DressUpBackground-Scourge1"
+LHART_DREADLORDS = "Interface\\AddOns\\Lorehelper\\Art\\Dreadlord"
 
 LHART_ORC = "Interface\\DRESSUPFRAME\\DressUpBackground-Orc1"
 --unused artworks below
