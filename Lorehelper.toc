@@ -4,6 +4,7 @@
 ## Version: 0.1
 ## Notes: Lorehelper guides you through the lore of your race and allows you to choose your character's past.
 ## SavedVariablesPerCharacter: Lorehelper_VarFrame
+MapIDsNames.lua
 Texts.lua
 Artworks.lua
 Lorehelper.xml

@@ -91,11 +91,12 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 		--local thezone = GetRealZoneText();
 		--thezone = Lorehelper_DelocalizeZone(thezone);
 		local zoneid = C_Map.GetBestMapForUnit("player");
-		local thezone = C_Map.GetMapInfo(zoneid)["name"];--should be locale-independent now
-		thezone = thezone:gsub(" ", "");--i.e. "TheBarrens"
+		--local thezone = C_Map.GetMapInfo(zoneid)["name"];
+		local thezone = Lorehelper_MapIDsNames[zoneid];--have to store zone names with IDs in a file to make them locale-independent
+		--thezone = thezone:gsub(" ", "");--e.g. "TheBarrens" - no longer needed because I store them without spaces (Indian code in its best)
 		if _G["Lorehelper_ZoneButton"..thezone] then
 			local zonebutton = _G["Lorehelper_ZoneButton"..thezone];
-			if zonebutton.unlocked == false then--only one to popup once
+			if zonebutton.unlocked == false then--only to popup once
 				zonebutton.unlocked = true;
 				Lorehelper_VarFrame.unlockedzones[thezone] = true;
 				zonebutton:GetScript("OnClick")();
@@ -935,7 +936,7 @@ local varframe = Lorehelper_VarFrame;
 		
 local zones = {
 		{"Badlands", 2, "", true},
-		{"Un'goro Crater", 1, ""},
+		{"Un'Goro Crater", 1, ""},
 		{"Tanaris", 3, "", true},
 		{"Stonetalon Mountains", 4, ""},
 		{"Ashenvale", 7, ""},
@@ -966,7 +967,6 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function Lorehelper_Human ()
-
 local varframe = Lorehelper_VarFrame;
 --local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
 local childage = 18;
@@ -1023,6 +1023,20 @@ else
 	varframe.testdone = true;
 	--Lorehelper_SimpleMessage ("Click the Lorehelper button near your minimap, or type /lore to see your answers.");
 end
+
+--below is the temporary nonsense to export map IDs
+--[[for zoneid = 111,10000 do
+	local thezone = ""
+	if C_Map.GetMapInfo(zoneid) then
+		thezone = C_Map.GetMapInfo(zoneid)["name"];
+		thezone = thezone:gsub(" ", "");--i.e. "TheBarrens"
+		Lorehelper_MapIDsNames[zoneid]=thezone;
+	end
+	if _G["Lorehelper_ZoneButton"..thezone] then
+		print(thezone)
+	end
+end
+;--]]
 
 return varframe.curframe;
 end
