@@ -143,7 +143,9 @@ end
 function Lorehelper_PositionButtons (buttonframe, buttonnumber, framewidth, textheight)
 	if -75+80*(buttonnumber+1) < framewidth then
 		buttonframe:SetPoint("TOPLEFT",-75+80*buttonnumber,-35-textheight)--80 is the hardcoded button width
-	else buttonframe:SetPoint("TOPLEFT",-75+80*(buttonnumber-4),-80-textheight)--and 4 is 390/80, where 390 is the standard framewidth. I'll make it more flexible one day
+	elseif -75+80*(buttonnumber-3) < framewidth then
+		buttonframe:SetPoint("TOPLEFT",-75+80*(buttonnumber-4),-80-textheight)--and 4 is 390/80, where 390 is the standard framewidth. I'll make it more flexible one day
+	else buttonframe:SetPoint("TOPLEFT",-75+80*(buttonnumber-8),-125-textheight)
 	end
 end
 ------------------------------------------
@@ -374,10 +376,11 @@ function Lorehelper_AskAge(agelowrange, agehighrange, ageticks, postanswertexts,
 				Lorehelper_SimpleMessage ("Your age should be a number between "..agelowrange.." and "..agehighrange);		
 				
 			else 
-			--hide the old text and editbox and button
+			--hide the old text and editbox and buttons
 			fr.text:Hide();
 			fr.agebox:Hide();
 			fr.okbutton:Hide();
+			fr.disclaimerbutton:Hide();
 
 			--display the lore about player's date of birth
 			fr.newtext:SetText(Lorehelper_TextFromAgeTicks (age, ageticks, postanswertexts));
@@ -1169,7 +1172,7 @@ function Lorehelper_Troll ()
 
 local varframe = Lorehelper_VarFrame;
 local childage = 14;
-local oldage = 100;
+local oldage = 120;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 10, 4, 0, -18})--will still be partially hardcoded
 --war with Theramore, the end of Third War, the beginning of it, end of Second, beginning, beginning of First (only for jungle trolls really), beginning of Gurubasi War (same)
 for i=1,#ageticks do
@@ -1180,7 +1183,7 @@ end
 -------------------------------------------------
 if varframe.age == nil then
 	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
-	{LHT("TrollAgeYoung"), LHT("TrollAgeThirdWar"), LHT("TrollAgeThirdWar"), LHT("TrollAgeThirdWar"), LHT("TrollAgeBetweenWar"), LHT("TrollAgeSecondWar"), LHT("TrollAgeOld"), LHT("TrollAgeOld")},
+	{LHT("TrollAgeYoung"), LHT("TrollAgeYoung"), LHT("TrollAgeThirdWar"), LHT("TrollAgeThirdWar"), LHT("TrollAgeBetweenWar"), LHT("TrollAgeSecondWar"), LHT("TrollAgeOld"), LHT("TrollAgeOld")},
 	LHART_TROLL); --also updates varframe.age
 -------------------------------------------------
 --Ask about home tribe
@@ -1277,7 +1280,7 @@ if varframe.responses["Third War"]==nil then--age of 18 is enough to possibly pa
 	end
 end
 
-if varframe.responses["War with Theramore"]==nil then--age of 17 is enough to possibly participate in Third
+if varframe.responses["War with Theramore"]==nil then--age of 17 is enough to possibly participate in it
 	if age+childage >= ageticks[1] then
 		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War with Theramore"), LHT("TrollEventWarTheramore"), (age < ageticks[1]), wartheramore_postanswers, LHART_WARWITHTHERAMORE);
 		return varframe.curframe;
@@ -1577,15 +1580,186 @@ end
 -------------------------------------------------
 -------------------------------------------------
 function Lorehelper_Orc ()
---local age = Lorehelpre_AskAge();
 
-Lorehelper_TestQuestion ("Home city", 
-"Where're you from? Human lol, orc lol, whoever the fuck you are hahah peo peo poe poepro poekiinguhiasudhye", 
-{"haha", "yes", "no"}, 
-{"haha indeed", "yes indeed", "no way"});
-
-return fr;
+local varframe = Lorehelper_VarFrame;
+local childage = 12;
+local oldage = 90;
+local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 15, 8, 6, 0, -4})--will still be partially hardcoded
+--war with Theramore, the end of Third War, the beginning of it, the New Horde formation, destruction of Draenor, destruction of Dark Portal, beginning of First War, beginning of open war with draenei
+for i=1,#ageticks do
+	print(ageticks[i])
 end
+-------------------------------------------------
+--Ask about age
+-------------------------------------------------
+if varframe.age == nil then
+	varframe.curframe = Lorehelper_AskAge(childage, oldage, ageticks, 
+	{LHT("OrcAgeYoung"), LHT("OrcAgeYoung"), LHT("OrcAgeThirdWar"), LHT("OrcAgeThirdWar"), LHT("OrcAgeBetweenWar"), LHT("OrcAgeWarsinAzeroth"), LHT("OrcAgeWarsinAzeroth"), LHT("OrcAgeWarsinAzeroth"),LHT("OrcAgeMiddleAge")},
+	LHART_ORC); --also updates varframe.age
+-------------------------------------------------
+--Ask about home clan
+-------------------------------------------------
+elseif varframe.responses["Clan"]==nil then
+
+	if varframe.class == "Rogue" then
+		shatteredhand_text = LHT("OrcClanShatteredHandRogue");
+	else
+		shatteredhand_text = LHT("OrcClanShatteredHandNonRogue");	
+	end
+	
+	if varframe.class == "Warlock" then
+		burningblade_text = LHT("OrcClanBurningBladeWarlock");
+		twilighthsammer_text = LHT("OrcClanTwilightsHammerWarlock");
+	else
+		burningblade_text = LHT("OrcClanBurningBladeNonWarlock");
+		twilighthsammer_text = LHT("OrcClanTwilightsHammerNonWarlock");
+	end
+	
+	varframe.curframe = Lorehelper_TestQuestion (LHT("Clan"), 
+	LHT("OrcClan"), 
+	{LHT("Blackrock"), LHT("Bleeding Hollow"), LHT("Burning Blade"), LHT("Dragonmaw"), LHT("Frostwolf"), LHT("Shattered Hand"), LHT("Twilight's Hammer"), LHT("Warsong"), LHT("Minor clan")}, 
+	{LHT("OrcClanBlackrock"), LHT("OrcClanBleedingHollow"), burningblade_text, LHT("OrcClanDragonmaw"), LHT("OrcClanFrostwolf"), shatteredhand_text, twilighthsammer_text, LHT("OrcClanWarsong"), LHT("OrcClanMinor")},
+	LHART_ORC,
+	{LHART_ORCBLACKROCK, LHART_ORCBLEEDINGHOLLOW, LHART_ORCBURNINGBLADE, LHART_ORCDRAGONMAW, LHART_ORCFROSTWOLF, LHART_ORCSHATTEREDHAND, LHART_ORCTWILIGHTSHAMMER, LHART_ORCWARSONG, LHART_ORCMINOR});
+--[[
+    Black Tooth Grin clan + Blackrock clan
+    Bleeding Hollow clan
+    Burning Blade clan
+    Dragonmaw clan
+    Frostwolf clan
+    Shattered Hand clan
+    Twilight's Hammer clan
+    Warsong clan --]]
+-------------------------------------------------
+-------------------------------------------------
+elseif varframe.responses["War with Theramore"]==nil then--title of the last of the frames to be generated line below
+	varframe.curframe = Lorehelper_Orc_Events (ageticks, childage);--function generating a few frames, depending on age
+-------------------------------------------------
+-------------------------------------------------
+else 
+	local zones = Lorehelper_Orc_Zones ();
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_ORC, {"Clan", "War with draenei", "Wars in Azeroth", "End of Draenor", "Liberation", "Third War", "War with Theramore"}, zones);--the order of questions is passed 
+	if varframe.testdone == true then --if the test was done before and we're just relogging again
+		varframe.curframe:Hide ();
+		print (LHT("MsgAccessLoreProfile"));
+	end
+	varframe.testdone = true;
+end
+
+return varframe.curframe;
+end
+-------------------------------------------------
+function Lorehelper_Orc_Events (ageticks, childage)
+local varframe = Lorehelper_VarFrame;
+local age = varframe.age;
+
+standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+
+warwithdraenei_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventWarwithdraeneiStandard"),standard_postanswers, false);	
+
+if varframe.responses["Clan"] == "Frostwolf" then
+	warsinazeroth_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventWarsinAzerothFrostwolf"),standard_postanswers, true);	
+else
+	warsinazeroth_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventWarsinAzerothStandard"),standard_postanswers, false);	
+end
+
+if varframe.responses["Clan"] == "Frostwolf" then
+	endofdraenor_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventEndofDraenorFrostwolf"),standard_postanswers, true);	
+else
+	endofdraenor_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventEndofDraenorStandard"),standard_postanswers, false);	
+end
+
+liberation_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventLiberationStandard"),standard_postanswers, false);	
+
+thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventThirdWarStandard"),standard_postanswers, false);	
+
+warwiththeramore_postanswers = Lorehelper_FormEventPostanswers (LHT("OrcEventWarwithTheramoreStandard"), standard_postanswers, false);	
+-------
+--ageticks are
+--war with Theramore, the end of Third War, the beginning of it, the New Horde formation, destruction of Draenor, destruction of Dark Portal, beginning of First War, beginning of open war with draenei
+
+--varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
+--(varframe.age < ageticks[#ageticks]) is the logical waschild variable
+if varframe.responses["War with draenei"]==nil then
+	if age+childage >= ageticks[#ageticks] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War with draenei"), LHT("OrcEventWarwithdraenei"), (age < ageticks[#ageticks]), warwithdraenei_postanswers, LHART_WARWITHDRAENEI);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Wars in Azeroth"]==nil then
+	if age+childage >= ageticks[#ageticks-2] then--age of 12 by destruction of Dark Portal is enough to possibly participate in Wars in Azeroth
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Wars in Azeroth"), LHT("OrcEventWarsinAzeroth"), (age < ageticks[#ageticks-2]), warsinazeroth_postanswers, LHART_SECONDWARHORDE);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["End of Draenor"]==nil then
+	if age+childage >= ageticks[#ageticks-3] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("End of Draenor"), LHT("OrcEventEndofDraenor"), (age < ageticks[#ageticks-3]), endofdraenor_postanswers, LHART_ENDOFDRAENOR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Liberation"]==nil then
+	if age+childage >= ageticks[#ageticks-4] then--asks orc to be 12 by the beginning of liberation, which is inconsistent but meh
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Liberation"), LHT("OrcEventLiberation"), (age < ageticks[#ageticks-4]), liberation_postanswers, LHART_NEWHORDE);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["Third War"]==nil then
+	if age+childage >= ageticks[2] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("Third War"), LHT("OrcEventThirdWar"), (age < ageticks[2]), thirdwar_postanswers, LHART_THIRDWARKALIMDOR);
+		return varframe.curframe;
+	end
+end
+
+if varframe.responses["War with Theramore"]==nil then
+	if age+childage >= ageticks[1] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War with Theramore"), LHT("OrcEventWarTheramore"), (age < ageticks[1]), warwiththeramore_postanswers, LHART_WARWITHTHERAMORE);
+		return varframe.curframe;
+	end
+end
+
+return varframe.curframe;
+end
+-------------------------------------------------
+function Lorehelper_Orc_Zones ()
+local varframe = Lorehelper_VarFrame;
+		
+local zones = {
+		{"Dustwallow Marsh", 7, ""},
+		{"Alterac Mountains", 5, ""},
+		{"Wetlands", 2, ""},
+		{"Blasted Lands", 20, "", true},
+		{"Burning Steppes", 10, ""},
+		{"Ashenvale", 1, ""},
+		};
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("OrcZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("OrcZoneTooltip"..z[1]);
+	end
+end
+
+Lorehelper_Link_Zone_with_Answer (zones, "Alterac Mountains", "Clan", "Frostwolf", "OrcZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Ashenvale", "Clan", "Warsong", "OrcZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Wetlands", "Clan", "Dragonmaw", "OrcZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Burning Steppes", "Clan", "Blackrock", "OrcZone", 24);
+Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "OrcZone");
+Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Wars in Azeroth", "OrcZone");
+Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "Wars in Azeroth", "OrcZone");
+if varframe.responses["Wars in Azeroth"]=="Avoided" then--to not link twice
+	Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "End of Draenor", "OrcZone");
+end
+
+table.sort(zones, Lorehelper_CompareBy2ndElement)
+
+return zones;
+end
+-------------------------------------------------
 -------------------------------------------------
 --Start OR continue the lore test
 -------------------------------------------------
