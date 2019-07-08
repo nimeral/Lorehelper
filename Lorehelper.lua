@@ -102,7 +102,7 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 				zonebutton:GetScript("OnClick")();
 			end
 		end
-		print(thezone);
+--		print(thezone);
 	end
 end
 
@@ -408,7 +408,7 @@ function Lorehelper_AskAge(agelowrange, agehighrange, ageticks, postanswertexts,
 				function()
 					--the age confirmed by player - update the global age variable
 					varframe.age = age;
-					print (varframe.age);
+					--print (varframe.age);
 					--hide everything related to this question
 					fr:Hide();	
 					Lorehelper_DoTest ();
@@ -535,7 +535,7 @@ local oldage = 15000;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, -975, -1200, -7050, -9300, -10000, -12000})--will still be partially hardcoded
 --conflict with Illidan and naga, the end of Third War, the beginning of it, War of the Shifting Sands, genocide of Shen'Dralar, middle of Exile of the High Elves, War of the Satyr, War of the Ancients, founding of Eldre'Thalas
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -670,7 +670,7 @@ local oldage = 500;
 local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -210})--will still be partially hardcoded
 --the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of Three Hammers + 20 years (no one knows its length)
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -823,7 +823,7 @@ local oldage = 500;
 local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -230, -400})--will still be partially hardcoded
 --the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of Three Hammers, King Mechagon disappearance
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -977,7 +977,7 @@ local oldage = 80;
 local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -18})--will still be partially hardcoded
 --the end of Third War, the beginning of it, end of Second, beginning, beginning of First, Gurubashi War year
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -1176,7 +1176,7 @@ local oldage = 120;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 10, 4, 0, -18})--will still be partially hardcoded
 --war with Theramore, the end of Third War, the beginning of it, end of Second, beginning, beginning of First (only for jungle trolls really), beginning of Gurubasi War (same)
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -1349,7 +1349,7 @@ local oldage = 120;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 0})--will still be partially hardcoded
 --war with Theramore, the end of Third War, the beginning of it, beginning of First War just to have something 
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -1587,7 +1587,7 @@ local oldage = 90;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 15, 8, 6, 0, -4})--will still be partially hardcoded
 --war with Theramore, the end of Third War, the beginning of it, the New Horde formation, destruction of Draenor, destruction of Dark Portal, beginning of First War, beginning of open war with draenei
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
