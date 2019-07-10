@@ -59,6 +59,9 @@ function Lorehelper_OnUpdate(self, elapsed)
 end--]]
 ------------------------------------------
 ------------------------------------------
+--RaceIDs		=> https://wow.gamepedia.com/RaceId
+--ClassIDs	=> https://wow.gamepedia.com/ClassId
+------------------------------------------
 ------------------------------------------
 --a global shortcut
 local LHT = Lorehelper_Text;--function to get a long, possibly Lorehelper_VarFrame-dependant text from a key
@@ -726,7 +729,7 @@ elseif varframe.responses["Clan"] == "Dark Iron" then
 	warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventWarofThreeHammersDarkIron"),standard_postanswers, false);	
 end
 
-if varframe.class == "Priest" or varframe.class == "Paladin" then
+if varframe.class == C_CreatureInfo.GetClassInfo(5).className or varframe.class == C_CreatureInfo.GetClassInfo(2).className then
 	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventFirstWarPriestPaladin"),standard_postanswers, true);	
 else 
 	firstwar_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventFirstWarStandard"),standard_postanswers, true);	
@@ -990,7 +993,7 @@ if varframe.age == nil then
 --Ask about home kingdom
 -------------------------------------------------
 elseif varframe.responses["Home Kingdom"]==nil then
-	if varframe.class == "Mage" then
+	if varframe.class == C_CreatureInfo.GetClassInfo(8).className then
 		dalaran_text = LHT("HumanDalaranMage");
 	else dalaran_text = LHT("HumanDalaranNonMage");
 	end
@@ -998,7 +1001,7 @@ elseif varframe.responses["Home Kingdom"]==nil then
 		stormwind_text = LHT("HumanHomeKingdomStormwind35+");
 	else stormwind_text = LHT("HumanHomeKingdomStormwind35-");
 	end
-	if varframe.class == "Warrior" then
+	if varframe.class == C_CreatureInfo.GetClassInfo(1).className then
 		stromgarde_text = LHT("HumanHomeKingdomStromgardeWarrior");
 	else stromgarde_text = LHT("HumanHomeKingdomStromgardeNonWarrior");
 	end
@@ -1362,16 +1365,16 @@ if varframe.age == nil then
 --Ask whether a tauren belongs to Grimtotem clan
 -------------------------------------------------
 elseif varframe.responses["Grimtotem"]==nil then
-	if varframe.class == "Druid" then--it's all ugly but I've typed it already
+	if varframe.class == C_CreatureInfo.GetClassInfo(11).className then--it's all ugly but I've typed it already
 		grimtotem_text = LHT("TaurenGrimtotemDruid");
 		nongrimtotem_text = LHT("TaurenNonGrimtotemDruid");
-	elseif varframe.class == "Shaman" then		
+	elseif varframe.class == C_CreatureInfo.GetClassInfo(7).className then		
 		grimtotem_text = LHT("TaurenGrimtotemShaman");
 		nongrimtotem_text = LHT("TaurenNonGrimtotemShaman");
-	elseif varframe.class == "Hunter" then		
+	elseif varframe.class == C_CreatureInfo.GetClassInfo(3).className then		
 		grimtotem_text = LHT("TaurenGrimtotemHunter");
 		nongrimtotem_text = LHT("TaurenNonGrimtotemHunter");
-	elseif varframe.class == "Warrior" then		
+	elseif varframe.class == C_CreatureInfo.GetClassInfo(1).className then		
 		grimtotem_text = LHT("TaurenGrimtotemWarrior");
 		nongrimtotem_text = LHT("TaurenNonGrimtotemWarrior");
 	end
@@ -1492,13 +1495,13 @@ elseif varframe.responses["Former race"]==nil then
 -------------------------------------------------
 elseif varframe.responses["Last living moment"]==nil then
 
-	if varframe.class == "Priest" then
+	if varframe.class == C_CreatureInfo.GetClassInfo(5).className then
 		lordaeron_text = LHT("UndeadLastMomentLordaeronPriest");
 	else
 		lordaeron_text = LHT("UndeadLastMomentLordaeronNonPriest");
 	end
 	
-	if varframe.class == "Mage" then
+	if varframe.class == C_CreatureInfo.GetClassInfo(8).className then
 		dalaran_text = LHT("UndeadLastMomentDalaranMage");
 	else
 		dalaran_text = LHT("UndeadLastMomentDalaranNonMage");
@@ -1601,13 +1604,13 @@ if varframe.age == nil then
 -------------------------------------------------
 elseif varframe.responses["Clan"]==nil then
 
-	if varframe.class == "Rogue" then
+	if varframe.class == C_CreatureInfo.GetClassInfo(4).className then
 		shatteredhand_text = LHT("OrcClanShatteredHandRogue");
 	else
 		shatteredhand_text = LHT("OrcClanShatteredHandNonRogue");	
 	end
 	
-	if varframe.class == "Warlock" then
+	if varframe.class == C_CreatureInfo.GetClassInfo(9).className then
 		burningblade_text = LHT("OrcClanBurningBladeWarlock");
 		twilighthsammer_text = LHT("OrcClanTwilightsHammerWarlock");
 	else
@@ -1767,14 +1770,14 @@ function Lorehelper_DoTest ()
 local varframe = Lorehelper_VarFrame;
 local fr = nil;
 
-if varframe.race == "Night Elf" then fr = Lorehelper_NightElf ();
-elseif varframe.race == "Dwarf" then fr = Lorehelper_Dwarf ();
-elseif varframe.race == "Gnome" then fr = Lorehelper_Gnome ();
-elseif varframe.race == "Human" then fr = Lorehelper_Human ();
-elseif varframe.race == "Troll" then fr = Lorehelper_Troll ();
-elseif varframe.race == "Tauren" then fr = Lorehelper_Tauren ();
-elseif varframe.race == "Undead" then fr = Lorehelper_Undead ();
-elseif varframe.race == "Orc" then fr = Lorehelper_Orc ();
+if varframe.race == C_CreatureInfo.GetRaceInfo(4).raceName then fr = Lorehelper_NightElf ();
+elseif varframe.race == C_CreatureInfo.GetRaceInfo(3).raceName then fr = Lorehelper_Dwarf ();
+elseif varframe.race == C_CreatureInfo.GetRaceInfo(7).raceName then fr = Lorehelper_Gnome ();
+elseif varframe.race == C_CreatureInfo.GetRaceInfo(1).raceName then fr = Lorehelper_Human ();
+elseif varframe.race == C_CreatureInfo.GetRaceInfo(8).raceName then fr = Lorehelper_Troll ();
+elseif varframe.race == C_CreatureInfo.GetRaceInfo(6).raceName then fr = Lorehelper_Tauren ();
+elseif varframe.race == C_CreatureInfo.GetRaceInfo(5).raceName then fr = Lorehelper_Undead ();
+elseif varframe.race == C_CreatureInfo.GetRaceInfo(2).raceName then fr = Lorehelper_Orc ();
 else print ("Unknown race");
 end
 
@@ -1858,19 +1861,19 @@ end
 -----------------------------
 function Lorehelper_Init()--creates Lorehelper_VarFrame and fills it with defaults
 	Lorehelper_VarFrame = CreateFrame ("Frame")
-			
+
 	Lorehelper_VarFrame.minimappos = 45; --default position in degrees
-			
+
 	Lorehelper_VarFrame.mainframepoint = "CENTER";
 	--Lorehelper_VarFrame.relativeTo=UIParent;
 	Lorehelper_VarFrame.relativePoint="CENTER";
 	Lorehelper_VarFrame.xOfs=0;
 	Lorehelper_VarFrame.yOfs=0;
-			
+
 	Lorehelper_VarFrame.race = UnitRace("player");
 	Lorehelper_VarFrame.class = UnitClass("player");
 	Lorehelper_VarFrame.name = UnitName("player");
-			
+
 	Lorehelper_VarFrame.age = nil;
 	Lorehelper_VarFrame.responses = {};
 	Lorehelper_VarFrame.curtestquestionnumber = 1;
