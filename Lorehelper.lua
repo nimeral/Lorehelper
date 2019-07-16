@@ -1480,8 +1480,9 @@ function Lorehelper_Tauren_Zones ()
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
-		{"Thousand Needles", 1, ""},
-		{"Dustwallow Marsh", 2, ""},
+		{"Stonetalon Mountains", 2, ""},
+		{"Thousand Needles", 5, ""},
+		{"Dustwallow Marsh", 1, ""},
 		{"Desolace", 20, "", true},
 		{"Ashenvale", 3, ""},
 		{"The Barrens", 40, ""}
