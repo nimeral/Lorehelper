@@ -864,7 +864,7 @@ local oldage = 500;
 local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -230, -400})--will still be partially hardcoded
 --the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of Three Hammers, King Mechagon disappearance
 for i=1,#ageticks do
---	print(ageticks[i])
+	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -907,9 +907,9 @@ local varframe = Lorehelper_VarFrame;
 local age = varframe.age;
 
 --FEATURE: all the crap below would be more memory-efficient to put under if here and in other functions
-standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+standard_postanswers = {LHT("GnomeStandardAvoided"), LHT("GnomeStandardLostSomeone"), LHT("GnomeStandardParticipated"), LHT("GnomeStandardLostEverything")};
 
-kingmechadon_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventKingMechadonStandard"), standard_postanswers, true);	
+kingmechagon_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventKingMechagonStandard"), standard_postanswers, true);	
 
 warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventWarofThreeHammersStandard"),standard_postanswers, true);	
 
@@ -922,7 +922,7 @@ gnomeregan_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventGnomere
 thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("GnomeEventThirdWarStandard"),standard_postanswers, true);	
 -------
 --ageticks are
---the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of the Three Hammers, King Mechadon disappearance
+--the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of the Three Hammers, King Mechagon disappearance
 
 --varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
 --(varframe.age < ageticks[#ageticks]) is the logical waschild variable
