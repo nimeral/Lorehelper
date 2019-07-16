@@ -23,7 +23,8 @@
 	  self.title:SetPoint("TOPLEFT", 0, -5);
 	  self.title:SetWidth(framewidth);
 	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
-	  self.title:SetTextColor(0.15, 1, 0.2, 1)
+	  <!--self.title:SetTextColor(0.15, 1, 0.2, 1) old green-->
+	  self.title:SetTextColor(0.9, 0.9, 0.9, 1)
 	  
 	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
 	  self.text:SetPoint("TOPLEFT",5,-30)
@@ -31,7 +32,7 @@
 	  self.text:SetJustifyV("TOP")
 	  self.text:SetWidth(framewidth);
 	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
-	  self.text:SetTextColor(0.15, 1, 0.2, 1)
+	  self.text:SetTextColor(0.9, 0.9, 0.9, 1)
 	  self.text:Show()<!-- shown by default -->
 	  
 	  <!--most of the frames will have newtext as well, displayed after the player chooses an answer-->
@@ -41,7 +42,7 @@
 	  self.newtext:SetJustifyV("TOP")
 	  self.newtext:SetWidth(framewidth);
 	  self.newtext:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
-	  self.newtext:SetTextColor(0.15, 1, 0.2, 1)
+	  self.newtext:SetTextColor(0.9, 0.9, 0.9, 1)
 	  <!--self.newtext:SetTextColor(1, 0.7, 0.3, 1)-->
 	  self.newtext:Hide()<!-- hidden by default -->
 	  
@@ -107,31 +108,6 @@
   
   <Scripts>
     <OnLoad>
-	  <!--self.CloseButton:Hide()
-	  self.TopRightCorner:Hide()-->
-
-	  local framewidth = self:GetWidth() - 10 <!--so the text fits nicely-->
-	  
-	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-	  self.title:SetPoint("TOPLEFT", 0, -5);
-	  self.title:SetWidth(framewidth);
-	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
-	  self.title:SetTextColor(0.15, 1, 0.2, 1)
-	  
-	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
-	  self.text:SetPoint("TOPLEFT",5,-30)
-	  self.text:SetJustifyH("LEFT")
-	  self.text:SetJustifyV("TOP")
-	  self.text:SetWidth(framewidth);
-	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
-	  self.text:SetTextColor(0.15, 1, 0.2, 1)
-	  self.text:Show()<!-- shown by default -->
-	  
-	  <!--self.background = self:CreateTexture(nil, "BACKGROUND")
-	  self.background:SetPoint("TOPLEFT")
-	  self.background:SetWidth(self:GetWidth());
-	  self.background:SetHeight(self:GetHeight());
-	  self.background:SetTexture(LHART_DEFAULTPICTURE)-->
     </OnLoad>
 	<OnMouseDown>
 	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
@@ -159,7 +135,7 @@
 	  self.title:SetPoint("TOPLEFT", 0, -5);
 	  self.title:SetWidth(framewidth);
 	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
-	  self.title:SetTextColor(0.15, 1, 0.2, 1)
+	  self.title:SetTextColor(0.9, 0.9, 0.9, 1)
 	  
 	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
 	  self.text:SetPoint("TOPLEFT",5,-30)
@@ -167,7 +143,7 @@
 	  self.text:SetJustifyV("TOP")
 	  self.text:SetWidth(framewidth);
 	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 14, "OUTLINE")
-	  self.text:SetTextColor(0.15, 1, 0.2, 1)
+	  self.text:SetTextColor(0.9, 0.9, 0.9, 1)
 	  self.text:Show()<!-- shown by default -->
 	  
 	  self.background = self:CreateTexture(nil, "BACKGROUND")
@@ -244,7 +220,7 @@
 	t:SetWidth(self:GetWidth());
 	t:SetHeight(self:GetHeight());
  	self.texture = t-->
-	self.unlocked = false;
+	self.unlocked = true;
 	</OnLoad>
 	<OnMouseDown>
 	<!-- hides all the "error" messages -->

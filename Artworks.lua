@@ -55,5 +55,19 @@ LHART_UNDEAD = "Interface\\DRESSUPFRAME\\DressUpBackground-Scourge1"
 LHART_DREADLORDS = "Interface\\AddOns\\Lorehelper\\Art\\Dreadlord"
 
 LHART_ORC = "Interface\\DRESSUPFRAME\\DressUpBackground-Orc1"
+LHART_WARWITHDRAENEI = "Interface\\Glues\\Credits\\Draenei_Paladin2"
+LHART_ENDOFDRAENOR = "Interface\\Glues\\Credits\\Hellfire_Concept6"
+LHART_NEWHORDE = "Interface\\Glues\\Credits\\Orcshield1"
+LHART_ORCBLACKROCK = "Interface\\AddOns\\Lorehelper\\Art\\Bannerblackrock"
+LHART_ORCBLEEDINGHOLLOW = "Interface\\AddOns\\Lorehelper\\Art\\Bannerbleedinghollow"
+LHART_ORCBURNINGBLADE = "Interface\\AddOns\\Lorehelper\\Art\\Bannerburningblade"
+LHART_ORCDRAGONMAW = "Interface\\AddOns\\Lorehelper\\Art\\Bannerdragonmaw"
+LHART_ORCFROSTWOLF = "Interface\\AddOns\\Lorehelper\\Art\\Bannerfrostwolf"
+LHART_ORCSHATTEREDHAND = "Interface\\AddOns\\Lorehelper\\Art\\Bannershatteredhand"
+LHART_ORCTWILIGHTSHAMMER = "Interface\\AddOns\\Lorehelper\\Art\\Bannertwilightshammer"
+LHART_ORCWARSONG = "Interface\\AddOns\\Lorehelper\\Art\\Bannerwarsong"
+LHART_ORCMINOR = "Interface\\Glues\\Credits\\Orcshield2"
+
+
 --unused artworks below
 LHART_FACTIONICONS = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Factions.blp"

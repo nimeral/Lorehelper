@@ -1587,7 +1587,7 @@ local oldage = 90;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 15, 8, 6, 0, -4})--will still be partially hardcoded
 --war with Theramore, the end of Third War, the beginning of it, the New Horde formation, destruction of Draenor, destruction of Dark Portal, beginning of First War, beginning of open war with draenei
 for i=1,#ageticks do
---	print(ageticks[i])
+	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -1748,11 +1748,16 @@ Lorehelper_Link_Zone_with_Answer (zones, "Alterac Mountains", "Clan", "Frostwolf
 Lorehelper_Link_Zone_with_Answer (zones, "Ashenvale", "Clan", "Warsong", "OrcZone", 24);
 Lorehelper_Link_Zone_with_Answer (zones, "Wetlands", "Clan", "Dragonmaw", "OrcZone", 24);
 Lorehelper_Link_Zone_with_Answer (zones, "Burning Steppes", "Clan", "Blackrock", "OrcZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Burning Steppes", "Clan", "Twilight's Hammer", "OrcZone", 24);
+
 Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "OrcZone");
 Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Wars in Azeroth", "OrcZone");
-Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "Wars in Azeroth", "OrcZone");
+Lorehelper_Link_Zone_with_Event (zones, "Wetlands", "Wars in Azeroth", "OrcZone");
+
 if varframe.responses["Wars in Azeroth"]=="Avoided" then--to not link twice
 	Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "End of Draenor", "OrcZone");
+else
+	Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "Wars in Azeroth", "OrcZone");
 end
 
 table.sort(zones, Lorehelper_CompareBy2ndElement)
