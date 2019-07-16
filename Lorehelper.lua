@@ -572,7 +572,8 @@ elseif varframe.responses["The Betrayer Ascendant"]==nil then--title of the last
 -------------------------------------------------
 -------------------------------------------------
 else 
-	varframe.curframe = Lorehelper_PresentAnswers(LHART_NIGHTELF, {"Society", "War of the Ancients", "War of the Satyr", "Shen'Dralar genocide", "War of the Shifting Sands", "Third War", "The Betrayer Ascendant"});--the order of questions is passed 
+	local zones = Lorehelper_NightElf_Zones ();
+	varframe.curframe = Lorehelper_PresentAnswers(LHART_NIGHTELF, {"Society", "War of the Ancients", "War of the Satyr", "Shen'Dralar genocide", "War of the Shifting Sands", "Third War", "The Betrayer Ascendant"}, zones);--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
 		print (LHT("MsgAccessLoreProfile"));
@@ -657,6 +658,46 @@ if varframe.responses["The Betrayer Ascendant"]==nil then
 end
 
 return varframe.curframe;
+end
+-------------------------------------------------
+-------------------------------------------------
+function Lorehelper_NightElf_Zones ()
+local varframe = Lorehelper_VarFrame;
+		
+local zones = {
+		{"Stonetalon Mountains", 1, ""},
+		{"Moonglade", 10, ""},
+		{"Azshara", 2, "", true},
+		{"Feralas", 20, "", true},
+		{"Ashenvale", 40, ""},
+		{"Silithus", 5, ""}
+		};
+	 
+for i,z in ipairs(zones) do
+	z[3]=LHT("NightElfZone"..z[1]);
+	if z[4] then
+		z[4]=LHT("NightElfZoneTooltip"..z[1]);
+	end
+end
+
+Lorehelper_Link_Zone_with_Answer (zones, "Feralas", "Society", "Shen'Dralar", "NightElfZone", 24)
+Lorehelper_Link_Zone_with_Answer (zones, "Azshara", "Society", "Highborne", "NightElfZone", 24)
+
+Lorehelper_Link_Zone_with_Event (zones, "Silithus", "War of the Shifting Sands", "NightElfZone")
+Lorehelper_Link_Zone_with_Event (zones, "Azshara", "War of the Ancients", "NightElfZone")
+
+if varframe.responses["War of the Satyr"] == "Avoided" or varframe.responses["War of the Satyr"] == nil then--to not link twice
+	Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "NightElfZone")
+else 
+	Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "War of the Satyr", "NightElfZone")
+end
+
+table.sort(zones, Lorehelper_CompareBy2ndElement)
+--for i,n in ipairs(zones) do print(n[1]); print(n[2]); print(n[3]); print("--"); end
+
+--print("------");
+
+return zones;
 end
 -------------------------------------------------
 -------------------------------------------------
