@@ -437,7 +437,7 @@ return fr;
 end
 -------------------------------------------------
 ------------------------------------------
---Function that presents the players answers, its expected relations with other races (IN PROGRESS), and highlights the important zones (IN PROGRESS)
+--Function that presents the players answers, its expected relations with other races (maybe furute FEATURE), and highlights the important zones. Afterwards it calls Lorehelper_AddHelpfulButtons (IN PROGRESS) 
 ------------------------------------------
 -------------------------------------------------
 function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input because LorehelperVarFrame.responses is global
@@ -488,6 +488,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 		end
 		);
 	----------------------------------------
+	----------------------------------------
 	if zones == nil then
 		print("Lorehelper internal error: no zones to highlight!");
 		return fr;
@@ -531,8 +532,61 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 				);
 		end
 	end
+	----------------------------------------
+	----------------------------------------
+	Lorehelper_AddHelpfulButtons (fr);
+	
 return fr;
 end
+-------------------------------------------------
+------------------------------------------
+--Function that adds a number of buttons to the left of frame fr: All zones, Options, About Lorehelper (IN PROGRESS) 
+------------------------------------------
+-------------------------------------------------
+function Lorehelper_AddHelpfulButtons (fr) 
+
+	if fr == nil then
+		print("Lorehelper internal error: no frame to attach buttons to!");
+		return fr;
+	end	
+
+	--frame with buttons 
+	fr.frameofbuttons = CreateFrame ("Frame",nil,fr,"Lorehelper_ListFrame_Template")
+	fr.frameofbuttons:SetPoint("TOPLEFT",fr,"TOPLEFT",-100,-20)
+	
+	fr.frameofbuttons.allzonesbutton = CreateFrame("Button", nil, fr.frameofbuttons, "Lorehelper_Button_Template");
+	fr.frameofbuttons.allzonesbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45)
+	fr.frameofbuttons.allzonesbutton:SetFormattedText("All zones");
+	fr.frameofbuttons.allzonesbutton:SetScript("OnClick", 
+				function()
+				
+				end
+				);
+		
+	fr.frameofbuttons.optionsbutton = CreateFrame("Button", nil, fr.frameofbuttons, "Lorehelper_Button_Template");		
+	fr.frameofbuttons.optionsbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45*2)
+	fr.frameofbuttons.optionsbutton:SetFormattedText("Options");
+	fr.frameofbuttons.optionsbutton:SetScript("OnClick", 
+				function()
+				
+				end
+				);
+				
+	fr.frameofbuttons.aboutbutton = CreateFrame("Button", nil, fr.frameofbuttons, "Lorehelper_Button_Template");					
+	fr.frameofbuttons.aboutbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45*3)
+	fr.frameofbuttons.aboutbutton:SetFormattedText(Lorehelper_BreakLineOnSpace("About Lorehelper"));--with SetText, I can't |n on buttons
+	fr.frameofbuttons.aboutbutton:SetScript("OnClick", 
+				function()
+				Lorehelper_SimpleMessage(LHT("MsgAboutLH"));
+				end
+				);
+	
+return fr;
+end
+-------------------------------------------------
+-------------------------------------------------
+-------------------------------------------------
+-------------------------------------------------
 -------------------------------------------------
 function Lorehelper_NightElf ()
 
