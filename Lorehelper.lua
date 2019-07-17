@@ -217,12 +217,19 @@ end
 function Lorehelper_Link_Zone_with_Answer (zones, thezone, thequestion, theanswer, prefix, weight)
 --adds a weight depending on player's answer to an event, and a text
 local varframe = Lorehelper_VarFrame; --global variable frame
+local nozone = true;
 
 --find "thezone" key in the table "zones" (which is stored in first column actually)
 for i,z in ipairs(zones) do
 	if z[1]==thezone then
+		nozone = false;
 		thekey=i;
 	end
+end
+
+if nozone then
+	print(LHT("Lorehelper internal error: wrong zone name."));
+	return;
 end
 
 if varframe.responses[thequestion] == theanswer then
@@ -535,7 +542,7 @@ local oldage = 15000;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, -975, -1200, -7050, -9300, -10000, -12000})--will still be partially hardcoded
 --conflict with Illidan and naga, the end of Third War, the beginning of it, War of the Shifting Sands, genocide of Shen'Dralar, middle of Exile of the High Elves, War of the Satyr, War of the Ancients, founding of Eldre'Thalas
 for i=1,#ageticks do
---	print(ageticks[i])
+	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -864,7 +871,7 @@ local oldage = 500;
 local ageticks = Lorehelper_FormAgeTicks(childage, {21, 20, 10, 4, 0, -230, -400})--will still be partially hardcoded
 --the end of Third War, the beginning of it, end of Second, beginning, beginning of First, beginning of War of Three Hammers, King Mechagon disappearance
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -998,7 +1005,11 @@ end
 Lorehelper_Link_Zone_with_Answer (zones, "Badlands", "Engineer", "Yes", "GnomeZone", 6);
 Lorehelper_Link_Zone_with_Answer (zones, "Tanaris", "Engineer", "Yes", "GnomeZone", 24);
 Lorehelper_Link_Zone_with_Answer (zones, "Stonetalon Mountains", "Engineer", "Yes", "GnomeZone", 24);
-Lorehelper_Link_Zone_with_Answer (zones, "Un'goro Crater", "Engineer", "Yes", "GnomeZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Un'Goro Crater", "Engineer", "Yes", "GnomeZone", 24);
+Lorehelper_Link_Zone_with_Answer (zones, "Badlands", "Engineer", "No", "GnomeZone", 3);
+Lorehelper_Link_Zone_with_Answer (zones, "Tanaris", "Engineer", "No", "GnomeZone", 6);
+Lorehelper_Link_Zone_with_Answer (zones, "Stonetalon Mountains", "Engineer", "No", "GnomeZone", 6);
+Lorehelper_Link_Zone_with_Answer (zones, "Un'Goro Crater", "Engineer", "No", "GnomeZone", 6);
 Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "GnomeZone");
 Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Second War", "GnomeZone");
 Lorehelper_Link_Zone_with_Event (zones, "Redridge Mountains", "First War", "GnomeZone");
@@ -1629,7 +1640,7 @@ local oldage = 90;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, 15, 8, 6, 0, -4})--will still be partially hardcoded
 --war with Theramore, the end of Third War, the beginning of it, the New Horde formation, destruction of Draenor, destruction of Dark Portal, beginning of First War, beginning of open war with draenei
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
