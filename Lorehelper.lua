@@ -65,6 +65,9 @@ local LHT = Lorehelper_Text;--function to get a long, possibly Lorehelper_VarFra
 --global frame for variables, won't actually be shown
 Lorehelper_VarFrame = nil;
 
+Lorehelper_ZoneDropDown = nil;
+Lorehelper_PerspectiveDropDown = nil;
+
 local Lorehelper_EventFrame = CreateFrame("FRAME"); -- Need a frame to respond to events
 Lorehelper_EventFrame:RegisterEvent("ADDON_LOADED"); -- Fired when saved variables are loaded
 Lorehelper_EventFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
@@ -83,6 +86,7 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 		else 
 			print(LHT("MsgAnswersLoaded"));
 			Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
+			Lorehelper_PopulateAllZonesFrame ();
 			Lorehelper_VarFrame.curframe = Lorehelper_DoTest();
 		end
 	end
@@ -263,6 +267,269 @@ function Lorehelper_CompareBy2ndElement(a, b)--don't pass anything but arrays wi
         return true    
     end
 end 
+------------------------------------------
+function Lorehelper_Contains (array, value)
+    for i, v in ipairs(array) do
+        if v == value then
+            return true
+        end
+    end
+
+    return false
+end
+------------------------------------------
+------------------------------------------
+function Lorehelper_FindZoneInRawZoneData (rawzonedatalist, zone)
+
+    for i=1,#rawzonedatalist do
+		for j=1,#rawzonedatalist[i] do
+			if rawzonedatalist[i][j][1] == zone then--technically j isn't needed - rawzonedatalist[i][1][1] would be enough
+				return rawzonedatalist[i];
+			end
+		end
+    end
+
+    return nil;
+end
+------------------------------------------
+function Lorehelper_FindRaceInRawZoneData (rawzonedata, race)--accepts a different argument than the previous function
+    for i=1,#rawzonedata do
+		if rawzonedata[i][5] == race then--technically j isn't needed - rawzonedatalist[i][1][1] would be enough
+			return rawzonedata[i];
+		end
+    end
+
+    return nil;
+end
+------------------------------------------
+function Lorehelper_PopulateAllZonesFrame ()
+	local fr = Lorehelper_AllZonesFrame;
+	
+	local zonelist = {["Eastern Kingdoms"] = {"Alterac Mountains", "Arathi Highlands", "Badlands", "Blasted Lands", "Burning Steppes", "Dun Morogh", "Eastern Plaguelands", "Hillsbrad Foothills", "Redridge Mountains", "Searing Gorge","Silverpine Forest", "Stranglethorn Vale", "Swamp of Sorrows", "The Hinterlands", "Western Plaguelands", "Westfall", "Wetlands"},
+	["Kalimdor"] = {"Ashenvale", "Azshara", "Darkshore", "Desolace", "Dustwallow Marsh", "Felwood", "Feralas", "Moonglade", "Silithus", "Stonetalon Mountains", "Tanaris", "The Barrens", "Thousand Needles", "Un'Goro Crater"}};--continental-alphabetic order, skipping those I have no texts about
+	
+	local rawzonedatalist = {};
+	
+	--super ugly but works
+	local zones = Lorehelper_Orc_Zones (true);
+	for _, z in pairs (zones) do
+		z[5] = "Orc";
+	end
+	local temp = Lorehelper_Undead_Zones (true);
+	for _, z in pairs (temp) do
+		z[5] = "Undead";
+	end
+	for _, v in pairs(temp) do table.insert(zones, v) end
+	temp = Lorehelper_Tauren_Zones (true);
+	for _, z in pairs (temp) do
+		z[5] = "Tauren";
+	end
+	for _, v in pairs(temp) do table.insert(zones, v) end
+	temp = Lorehelper_Troll_Zones (true);
+	for _, z in pairs (temp) do
+		z[5] = "Troll";
+	end
+	for _, v in pairs(temp) do table.insert(zones, v) end
+	temp = Lorehelper_Human_Zones (true);
+	for _, z in pairs (temp) do
+		z[5] = "Human";
+	end
+	for _, v in pairs(temp) do table.insert(zones, v) end
+	temp = Lorehelper_Gnome_Zones (true);
+	for _, z in pairs (temp) do
+		z[5] = "Gnome";
+	end
+	for _, v in pairs(temp) do table.insert(zones, v) end
+	temp = Lorehelper_Dwarf_Zones (true);
+	for _, z in pairs (temp) do
+		z[5] = "Dwarf";
+	end
+	for _, v in pairs(temp) do table.insert(zones, v) end
+	temp = Lorehelper_NightElf_Zones (true);
+	for _, z in pairs (temp) do
+		z[5] = "Night Elf";
+	end
+	for _, v in pairs(temp) do table.insert(zones, v) end
+	--so we now have a table with entries like {Zone_Name, nonsense number, Zone_Text_for_Race, Zone_Tooltip_for_Race, Race}
+
+---------------------
+	zonelistexpanded = {}
+	for i=1,#zonelist["Eastern Kingdoms"] do
+		zonelistexpanded[i] = zonelist["Eastern Kingdoms"][i];
+	end
+	for i=1,#zonelist["Kalimdor"] do
+		zonelistexpanded[i+#zonelist["Eastern Kingdoms"]] = zonelist["Kalimdor"][i];
+	end	
+	
+	for i=1,#zonelistexpanded do
+		local thezone = zonelistexpanded[i];
+		local rawzonedata = Lorehelper_GetRawZoneData (thezone, zones);
+		rawzonedatalist[i] = rawzonedata
+	end
+---------------------
+	
+	local curzone = "Alterac Mountains" -- A user-configurable setting
+
+	-- Create the dropdown, and configure its appearance
+	Lorehelper_ZoneDropDown = CreateFrame("FRAME", "WPDemoDropDown", fr, "UIDropDownMenuTemplate")
+	Lorehelper_ZoneDropDown:SetPoint("TOPLEFT", fr, "TOPLEFT", -20, 25)
+	UIDropDownMenu_SetWidth(Lorehelper_ZoneDropDown, 120)
+	UIDropDownMenu_SetText(Lorehelper_ZoneDropDown, curzone)
+
+	-- Create and bind the initialization function to the dropdown menu
+	UIDropDownMenu_Initialize(Lorehelper_ZoneDropDown, function(self, level, menuList)
+	local info = UIDropDownMenu_CreateInfo()
+	if (level or 1) == 1 then
+		-- Display the continents
+		info.text, info.checked = "Eastern Kingdoms", Lorehelper_Contains (zonelist["Eastern Kingdoms"], curzone)
+		info.menuList, info.hasArrow = "Eastern Kingdoms", true
+		UIDropDownMenu_AddButton(info)
+		info.text, info.checked = "Kalimdor", Lorehelper_Contains (zonelist["Kalimdor"], curzone)
+		info.menuList, info.hasArrow = "Kalimdor", true
+		UIDropDownMenu_AddButton(info)
+
+	else
+		-- Display a nested group of zones on the continent
+		info.func = self.SetValue
+		for i=1,#zonelist[menuList] do
+		info.text, info.arg1, info.checked = zonelist[menuList][i], zonelist[menuList][i], zonelist[menuList][i] == curzone
+		UIDropDownMenu_AddButton(info, level)
+		end
+	end
+	end)
+
+	-- Implement the function to change the zone
+	function Lorehelper_ZoneDropDown:SetValue(newValue)
+	curzone = newValue
+	-- Update the text; if we merely wanted it to display newValue, we would not need to do this
+	UIDropDownMenu_SetText(Lorehelper_ZoneDropDown, curzone)
+	-- Because this is called from a sub-menu, only that menu level is closed by default.
+	-- Close the entire menu with this next call
+	CloseDropDownMenus()
+	
+	--another dropdown needs update
+	local rawzonedata = Lorehelper_FindZoneInRawZoneData(rawzonedatalist, curzone);
+	Lorehelper_PerspectiveDropDown:SetValue(rawzonedata[1][5])
+	end
+	
+-------------------------------------
+-------------------------------------
+	
+	local curperspective = "Orc" -- A user-configurable setting
+
+	-- Create the dropdown, and configure its appearance
+	Lorehelper_PerspectiveDropDown = CreateFrame("FRAME", "WPDemoDropDown", fr, "UIDropDownMenuTemplate")
+	Lorehelper_PerspectiveDropDown:SetPoint("TOPRIGHT", fr, "TOPRIGHT", 15, 25)
+	UIDropDownMenu_SetWidth(Lorehelper_PerspectiveDropDown, 100)
+	UIDropDownMenu_SetText(Lorehelper_PerspectiveDropDown, curperspective)
+
+	-- Create and bind the initialization function to the dropdown menu
+	UIDropDownMenu_Initialize(Lorehelper_PerspectiveDropDown, function(self, level, menuList)
+	local info = UIDropDownMenu_CreateInfo()
+	
+	rawzonedata = Lorehelper_FindZoneInRawZoneData(rawzonedatalist, curzone)
+	
+	if (level or 1) == 1 then--not sure if this if is needed for non-nested list
+		-- Display the perspectives
+		info.func = self.SetValue
+		for i=1,#rawzonedata do
+			info.text, info.arg1, info.checked = rawzonedata[i][5], rawzonedata[i][5], rawzonedata[i][5] == curperspective
+			UIDropDownMenu_AddButton(info)
+		end
+	end
+	end)
+
+	-- Implement the function to change the zone
+	function Lorehelper_PerspectiveDropDown:SetValue(newValue)
+	curperspective = newValue
+	-- Update the text; if we merely wanted it to display newValue, we would not need to do this
+	UIDropDownMenu_SetText(Lorehelper_PerspectiveDropDown, curperspective)
+	
+	--actually update the text in the frame and the tooltip
+	rawzonedata = Lorehelper_FindZoneInRawZoneData(rawzonedatalist, curzone)
+	rawzonedata = Lorehelper_FindRaceInRawZoneData(rawzonedata, curperspective)
+	fr.text:SetText(rawzonedata[3]);
+	if rawzonedata[4] then
+		fr.tooltip = rawzonedata[4];
+	else fr.tooltip = nil;
+	end
+	end
+	
+-------------------------------------------------------------------
+	--[[fr.buttonframes = {};
+	
+	for i=1,#zonelistexpanded do	
+		if rawzonedatalist[i] ~= nil then
+			--print (rawzonedatalist[i][1][1])
+
+			fr.buttonframes[i] = CreateFrame("Button", nil, fr, "Lorehelper_SmallButton_Template");
+			
+			fr.buttonframes[i]:SetPoint("TOPLEFT",fr,"TOPLEFT",5+70*math.floor((i-1)/8),-30-45*((i-1)%8))
+			fr.buttonframes[i]:SetFormattedText(Lorehelper_BreakLineOnSpace(rawzonedatalist[i][1][1]));--with SetText, I can't |n on buttons
+			
+			fr.buttonframes[i]:SetNormalFontObject("GameFontHighlight");
+			local font = fr.buttonframes[i]:GetNormalFontObject();
+			font:SetTextColor(1, 0.5, 0.25, 1.0);
+			fr.buttonframes[i]:SetNormalFontObject(font);
+			
+			fr.buttonframes[i]:SetScript("OnClick", 
+				function()
+					Lorehelper_SimpleFrame.title:SetText(rawzonedatalist[i][1][5]);
+					Lorehelper_SimpleFrame.text:SetText(rawzonedatalist[i][1][3]);
+					if rawzonedatalist[i][1][4] then
+						Lorehelper_SimpleFrame.tooltip = rawzonedatalist[i][1][4];
+					else Lorehelper_SimpleFrame.tooltip = nil;
+					end
+					
+					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr,"RIGHT",805,0);
+					Lorehelper_SimpleFrame:Show();
+				end
+				);
+		end
+	end
+	
+	print("--")--]]
+	
+	--[[for i=1,#zones do
+		local thezone = zones[i][1]:gsub(" ","");--i.e. "TheBarrens"
+		fr.buttonframes[i] = CreateFrame("Button", nil, fr, "Lorehelper_Button_Template");
+		print(zones[i][1])
+		fr.buttonframes[i]:SetPoint("TOP",fr,"TOP",0,35-45*i)
+		fr.buttonframes[i]:SetFormattedText(Lorehelper_BreakLineOnSpace(zones[i][1]));--with SetText, I can't |n on buttons
+		fr.buttonframes[i]:SetScript("OnClick", 
+			function()
+				Lorehelper_SimpleFrame.title:SetText(zones[i][1]);
+				Lorehelper_SimpleFrame.text:SetText(zones[i][3]);
+				if zones[i][4] then
+					Lorehelper_SimpleFrame.tooltip = zones[i][4];
+				else Lorehelper_SimpleFrame.tooltip = nil;
+				end
+					
+				Lorehelper_SimpleFrame:SetPoint("RIGHT",fr,"RIGHT",255,0);
+				Lorehelper_SimpleFrame:Show();
+			end
+			);
+	end--]]
+
+end
+------------------------------------------
+function Lorehelper_GetRawZoneData (thezone, zones)
+	local rawzonedata = nil;
+
+	for i,z in pairs(zones) do
+		if z[1] == thezone then
+			if rawzonedata == nil then
+				rawzonedata = {};
+			end
+			table.insert (rawzonedata, z)
+			--print(z[1])
+			--print(z[5])
+		end
+	end
+	
+return rawzonedata;
+end
+------------------------------------------
 ------------------------------------------
 ------------------------------------------
 ------------------------------------------
@@ -477,6 +744,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 			varframe.testdone = false;
 			varframe.curtestquestionnumber = 1;
 			Lorehelper_SimpleFrame:Hide();
+			Lorehelper_AllZonesFrame:Hide();
 			fr:Hide();
 			Lorehelper_DoTest();
 		end,
@@ -503,7 +771,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 		print(z[1])
 	end--]]
 	for i=1,#zones do
-		if zones[i][2]~=0 then --else it's an unimportant zone with zero weight
+		if zones[i][2]~=0 then --else it's an unimportant zone with zero weight (NOT USED at the moment)
 			local thezone = zones[i][1]:gsub(" ","");--i.e. "TheBarrens"
 			fr.highlightsframe.buttonframes[i] = CreateFrame("Button", "Lorehelper_ZoneButton"..thezone, fr.highlightsframe, "Lorehelper_UnlockableButton_Template");
 			
@@ -556,24 +824,26 @@ function Lorehelper_AddHelpfulButtons (fr)
 	
 	fr.frameofbuttons.allzonesbutton = CreateFrame("Button", nil, fr.frameofbuttons, "Lorehelper_Button_Template");
 	fr.frameofbuttons.allzonesbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45)
-	fr.frameofbuttons.allzonesbutton:SetFormattedText("All zones");
+	fr.frameofbuttons.allzonesbutton:SetFormattedText("Zonepedia");
 	fr.frameofbuttons.allzonesbutton:SetScript("OnClick", 
 				function()
-				
+				--FEATURE: anchor on curframe instead..?
+				Lorehelper_AllZonesFrame:SetPoint("LEFT",fr.frameofbuttons,"LEFT",-255,0);
+				Lorehelper_AllZonesFrame:Show();
 				end
 				);
 		
-	fr.frameofbuttons.optionsbutton = CreateFrame("Button", nil, fr.frameofbuttons, "Lorehelper_Button_Template");		
-	fr.frameofbuttons.optionsbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45*2)
+	--[[fr.frameofbuttons.optionsbutton = CreateFrame("Button", nil, fr.frameofbuttons, "Lorehelper_Button_Template");		
+	fr.frameofbuttons.optionsbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45*3)
 	fr.frameofbuttons.optionsbutton:SetFormattedText("Options");
 	fr.frameofbuttons.optionsbutton:SetScript("OnClick", 
 				function()
 				
 				end
-				);
+				);--]]
 				
 	fr.frameofbuttons.aboutbutton = CreateFrame("Button", nil, fr.frameofbuttons, "Lorehelper_Button_Template");					
-	fr.frameofbuttons.aboutbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45*3)
+	fr.frameofbuttons.aboutbutton:SetPoint("TOP",fr.frameofbuttons,"TOP",0,35-45*2)
 	fr.frameofbuttons.aboutbutton:SetFormattedText(Lorehelper_BreakLineOnSpace("About Lorehelper"));--with SetText, I can't |n on buttons
 	fr.frameofbuttons.aboutbutton:SetScript("OnClick", 
 				function()
@@ -722,11 +992,12 @@ return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
-function Lorehelper_NightElf_Zones ()
+function Lorehelper_NightElf_Zones (forzonepedia)
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
 		{"Stonetalon Mountains", 1, ""},
+		{"Felwood", 7, ""},
 		{"Moonglade", 10, ""},
 		{"Azshara", 2, "", true},
 		{"Feralas", 20, "", true},
@@ -739,6 +1010,10 @@ for i,z in ipairs(zones) do
 	if z[4] then
 		z[4]=LHT("NightElfZoneTooltip"..z[1]);
 	end
+end
+
+if forzonepedia then
+	return zones;
 end
 
 Lorehelper_Link_Zone_with_Answer (zones, "Feralas", "Society", "Shen'Dralar", "NightElfZone", 24)
@@ -881,7 +1156,7 @@ return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
-function Lorehelper_Dwarf_Zones ()
+function Lorehelper_Dwarf_Zones (forzonepedia)
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
@@ -899,6 +1174,10 @@ for i,z in ipairs(zones) do
 	if z[4] then
 		z[4]=LHT("DwarfZoneTooltip"..z[1]);
 	end
+end
+
+if forzonepedia then
+	return zones;
 end
 
 Lorehelper_Link_Zone_with_Answer (zones, "Badlands", "Clan", "Bronzebeard", "DwarfZone", 5);
@@ -950,7 +1229,7 @@ elseif varframe.responses["Third War"]==nil then--title of the last of the frame
 -------------------------------------------------
 -------------------------------------------------
 else 
-	local zones = Lorehelper_Gnome_Zones ();
+	local zones = Lorehelper_Gnome_Zones (forzonepedia);
 	varframe.curframe = Lorehelper_PresentAnswers(LHART_GNOME, {"Engineer", "King Mechagon disappearance", "War of the Three Hammers", "First War", "Second War", "Fighting for Gnomeregan", "Third War"}, zones);--the order of questions is passed 
 	if varframe.testdone == true then --if the test was done before and we're just relogging again
 		varframe.curframe:Hide ();
@@ -1054,6 +1333,10 @@ for i,z in ipairs(zones) do
 	if z[4] then
 		z[4]=LHT("GnomeZoneTooltip"..z[1]);
 	end
+end
+
+if forzonepedia then
+	return zones;
 end
 
 Lorehelper_Link_Zone_with_Answer (zones, "Badlands", "Engineer", "Yes", "GnomeZone", 6);
@@ -1225,7 +1508,7 @@ end
 return varframe.curframe;
 end
 -------------------------------------------------
-function Lorehelper_Human_Zones ()
+function Lorehelper_Human_Zones (forzonepedia)
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
@@ -1249,6 +1532,10 @@ for i,z in ipairs(zones) do
 	if z[4] then
 		z[4]=LHT("HumanZoneTooltip"..z[1]);
 	end
+end
+
+if forzonepedia then
+	return zones;
 end
 
 --Lorehelper_Link_Zone_with_Answer (zones, "Tirisfal Glades", "Home Kingdom", "Lordaeron", "HumanZone", 24);
@@ -1398,7 +1685,7 @@ return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
-function Lorehelper_Troll_Zones ()
+function Lorehelper_Troll_Zones (forzonepedia)
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
@@ -1419,6 +1706,10 @@ for i,z in ipairs(zones) do
 	if z[4] then
 		z[4]=LHT("TrollZoneTooltip"..z[1]);
 	end
+end
+
+if forzonepedia then
+	return zones;
 end
 
 Lorehelper_Link_Zone_with_Answer (zones, "Stranglethorn Vale", "Tribe", "Darkspear", "TrollZone", 18)
@@ -1541,7 +1832,7 @@ return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
-function Lorehelper_Tauren_Zones ()
+function Lorehelper_Tauren_Zones (forzonepedia)
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
@@ -1558,6 +1849,10 @@ for i,z in ipairs(zones) do
 	if z[4] then
 		z[4]=LHT("TaurenZoneTooltip"..z[1]);
 	end
+end
+
+if forzonepedia then
+	return zones;
 end
 
 Lorehelper_Link_Zone_with_Answer (zones, "Thousand Needles", "Grimtotem", "Yes", "TaurenZone", 24)
@@ -1641,7 +1936,7 @@ return varframe.curframe;
 end
 -------------------------------------------------
 -------------------------------------------------
-function Lorehelper_Undead_Events ()
+function Lorehelper_Undead_Events (forzonepedia)
 local varframe = Lorehelper_VarFrame;
 
 standard_postanswers = {LHT("UndeadStandardAvoided"), LHT("UndeadStandardLostSomeone"), LHT("UndeadStandardParticipated"), LHT("UndeadStandardLostEverything")};
@@ -1672,6 +1967,10 @@ for i,z in ipairs(zones) do
 	if z[4] then
 		z[4]=LHT("UndeadZoneTooltip"..z[1]);
 	end
+end
+
+if forzonepedia then
+	return zones;
 end
 
 Lorehelper_Link_Zone_with_Answer (zones, "Western Plaguelands", "Last living moment", "Andorhal", "UndeadZone", 24)
@@ -1832,7 +2131,7 @@ end
 return varframe.curframe;
 end
 -------------------------------------------------
-function Lorehelper_Orc_Zones ()
+function Lorehelper_Orc_Zones (forzonepedia)
 local varframe = Lorehelper_VarFrame;
 		
 local zones = {
@@ -1851,6 +2150,10 @@ for i,z in ipairs(zones) do
 	end
 end
 
+if forzonepedia then
+	return zones;
+end
+
 Lorehelper_Link_Zone_with_Answer (zones, "Alterac Mountains", "Clan", "Frostwolf", "OrcZone", 24);
 Lorehelper_Link_Zone_with_Answer (zones, "Ashenvale", "Clan", "Warsong", "OrcZone", 24);
 Lorehelper_Link_Zone_with_Answer (zones, "Wetlands", "Clan", "Dragonmaw", "OrcZone", 24);
@@ -1861,7 +2164,7 @@ Lorehelper_Link_Zone_with_Event (zones, "Ashenvale", "Third War", "OrcZone");
 Lorehelper_Link_Zone_with_Event (zones, "Burning Steppes", "Wars in Azeroth", "OrcZone");
 Lorehelper_Link_Zone_with_Event (zones, "Wetlands", "Wars in Azeroth", "OrcZone");
 
-if varframe.responses["Wars in Azeroth"]=="Avoided" then--to not link twice
+if varframe.responses["Wars in Azeroth"]=="Avoided" or varframe.responses["Wars in Azeroth"]==nil then--to not link twice
 	Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "End of Draenor", "OrcZone");
 else
 	Lorehelper_Link_Zone_with_Event (zones, "Blasted Lands", "Wars in Azeroth", "OrcZone");
@@ -1993,6 +2296,8 @@ function Lorehelper_Init()--creates Lorehelper_VarFrame and fills it with defaul
 	print("Welcome to Lorehelper, "..Lorehelper_VarFrame.name.."!");
 	
 	Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
+	
+	Lorehelper_PopulateAllZonesFrame ();
 end
 -----------------------------
 

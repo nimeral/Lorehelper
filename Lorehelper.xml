@@ -67,6 +67,7 @@
 	<OnMouseDown>
 	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
 	Lorehelper_SimpleFrame:Hide()
+	Lorehelper_AllZonesFrame:Hide()
 	</OnMouseDown>
   </Scripts>
   
@@ -177,6 +178,60 @@
 	</Layers>
 </Frame>
 
+<Frame name="Lorehelper_AllZonesFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="false" clampedToScreen="true" virtual = "false">
+<Size x="250" y="420"/>
+  
+  <Scripts>
+    <OnLoad>
+	  local framewidth = self:GetWidth() - 10 <!--so the text fits nicely-->
+	  
+	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+	  self.title:SetPoint("TOPLEFT", 0, -5);
+	  self.title:SetWidth(framewidth);
+	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
+	  self.title:SetTextColor(0.9, 0.9, 0.9, 1)
+	  self.title:SetText("Zonepedia")
+	  
+	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
+	  self.text:SetPoint("TOPLEFT",5,-30)
+	  self.text:SetJustifyH("LEFT")
+	  self.text:SetJustifyV("TOP")
+	  self.text:SetWidth(framewidth);
+	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 14, "OUTLINE")
+	  self.text:SetTextColor(0.9, 0.9, 0.9, 1)
+	  self.text:Show()<!-- shown by default -->
+	  
+	  self.background = self:CreateTexture(nil, "BACKGROUND")
+	  self.background:SetPoint("TOPLEFT")
+	  self.background:SetWidth(self:GetWidth());
+	  self.background:SetHeight(self:GetHeight());
+	  self.background:SetTexture(LHART_ZONEPICTURE)
+    </OnLoad>
+	<OnMouseDown>
+	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	</OnMouseDown>
+	
+	<OnEnter>
+	if self.tooltip then
+		GameTooltip:SetOwner(self or UIParent, "ANCHOR_LEFT");
+		GameTooltip:SetText(self.tooltip);
+		GameTooltip:Show();
+	end
+	</OnEnter>
+	<OnLeave>
+	GameTooltip:Hide();
+	</OnLeave>
+  </Scripts>
+  
+	<Layers>
+		<Layer level="ARTWORK">
+			<Texture setAllPoints="true">
+			<Color r="1.0" g="0.5" b="0.0" a="0.5" />
+			</Texture>
+		</Layer>
+	</Layers>
+</Frame>
+
 <Button name="Lorehelper_Button_Template" inherits="UIPanelButtonTemplate" virtual = "true">
 <Size x="80" y="40"/>
 <Scripts>
@@ -188,6 +243,35 @@
     self:GetNormalTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
     self:SetPushedTexture(LHART_BUTTONDOWN)
     self:GetPushedTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+	
+	<!--this code actually works and adds a more visible texture to button
+	local t = self:CreateTexture(nil,"BACKGROUND")	
+	t:SetTexture("Interface\\BUTTONS\\RedGrad64")
+	t:SetAllPoints(self)
+ 	self.texture = t-->
+	</OnLoad>
+	<OnMouseDown>
+	<!-- hides all the "error" messages -->
+	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	</OnMouseDown>
+</Scripts>
+</Button>
+
+<Button name="Lorehelper_SmallButton_Template" inherits="UIPanelButtonTemplate" virtual = "true">
+<Size x="70" y="35"/>
+<Scripts>
+	<OnLoad>
+    <!--self:SetHighlightTexture("interface\\addons\\Lorehelper\\BUTTONS\\UI-SILVER-BUTTON-UP.blp")-->
+	self:SetHighlightTexture(LHART_BUTTONUP)
+    self:GetHighlightTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+    self:SetNormalTexture(LHART_BUTTONUP)
+    self:GetNormalTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+    self:SetPushedTexture(LHART_BUTTONDOWN)
+    self:GetPushedTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
+	
+	local fo = self:CreateFontString()
+	fo:SetFont("Fonts/FRIZQT__.TTF",10)
+	self:SetFontString(fo)
 	
 	<!--this code actually works and adds a more visible texture to button
 	local t = self:CreateTexture(nil,"BACKGROUND")	
