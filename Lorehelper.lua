@@ -371,10 +371,10 @@ function Lorehelper_PopulateAllZonesFrame ()
 	local curzone = "Alterac Mountains" -- A user-configurable setting
 
 	-- Create the dropdown, and configure its appearance
-	Lorehelper_ZoneDropDown = CreateFrame("FRAME", "WPDemoDropDown", fr, "UIDropDownMenuTemplate")
+	Lorehelper_ZoneDropDown = CreateFrame("FRAME", "Lorehelper_Global_ZoneDropDown", fr, "UIDropDownMenuTemplate")
 	Lorehelper_ZoneDropDown:SetPoint("TOPLEFT", fr, "TOPLEFT", -20, 25)
 	UIDropDownMenu_SetWidth(Lorehelper_ZoneDropDown, 120)
-	UIDropDownMenu_SetText(Lorehelper_ZoneDropDown, curzone)
+	UIDropDownMenu_SetText(Lorehelper_ZoneDropDown, "Zone")
 
 	-- Create and bind the initialization function to the dropdown menu
 	UIDropDownMenu_Initialize(Lorehelper_ZoneDropDown, function(self, level, menuList)
@@ -418,10 +418,10 @@ function Lorehelper_PopulateAllZonesFrame ()
 	local curperspective = "Orc" -- A user-configurable setting
 
 	-- Create the dropdown, and configure its appearance
-	Lorehelper_PerspectiveDropDown = CreateFrame("FRAME", "WPDemoDropDown", fr, "UIDropDownMenuTemplate")
+	Lorehelper_PerspectiveDropDown = CreateFrame("FRAME", "Lorehelper_Global_PerspectiveDropDown", fr, "UIDropDownMenuTemplate")
 	Lorehelper_PerspectiveDropDown:SetPoint("TOPRIGHT", fr, "TOPRIGHT", 15, 25)
 	UIDropDownMenu_SetWidth(Lorehelper_PerspectiveDropDown, 100)
-	UIDropDownMenu_SetText(Lorehelper_PerspectiveDropDown, curperspective)
+	UIDropDownMenu_SetText(Lorehelper_PerspectiveDropDown, "Perspective")
 
 	-- Create and bind the initialization function to the dropdown menu
 	UIDropDownMenu_Initialize(Lorehelper_PerspectiveDropDown, function(self, level, menuList)
@@ -434,6 +434,7 @@ function Lorehelper_PopulateAllZonesFrame ()
 		info.func = self.SetValue
 		for i=1,#rawzonedata do
 			info.text, info.arg1, info.checked = rawzonedata[i][5], rawzonedata[i][5], rawzonedata[i][5] == curperspective
+			--info.fontObject = "GameFontNormal"
 			UIDropDownMenu_AddButton(info)
 		end
 	end
@@ -453,6 +454,9 @@ function Lorehelper_PopulateAllZonesFrame ()
 		fr.tooltip = rawzonedata[4];
 	else fr.tooltip = nil;
 	end
+	
+	--need to update it in case it's done first time, so the text is no longer just "Zone"
+	UIDropDownMenu_SetText(Lorehelper_ZoneDropDown, curzone)
 	end
 	
 -------------------------------------------------------------------
@@ -2266,6 +2270,7 @@ function Lorehelper_MinimapButton_OnClick()
 	elseif Lorehelper_VarFrame.curframe:IsShown() then
 		Lorehelper_VarFrame.curframe:Hide();
 		Lorehelper_SimpleFrame:Hide();
+		Lorehelper_AllZonesFrame:Hide();
 	else Lorehelper_VarFrame.curframe:Show();
 	end
 end
