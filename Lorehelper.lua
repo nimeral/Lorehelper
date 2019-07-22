@@ -924,7 +924,7 @@ function Lorehelper_NightElf_Events (ageticks, childage)
 local varframe = Lorehelper_VarFrame;
 local age = varframe.age;
 
-standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+standard_postanswers = {LHT("NightElfStandardAvoided"), LHT("NightElfStandardLostSomeone"), LHT("NightElfStandardParticipated"), LHT("NightElfStandardLostEverything")};
 
 if varframe.responses["Society"]=="Kaldorei" then
 	warancients_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarAncientsKaldorei"),standard_postanswers, false);
@@ -948,15 +948,15 @@ betrayer_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventBetray
 --varframe.age+childage >= ageticks[#ageticks] indicates whether player was born during the event
 --(varframe.age < ageticks[#ageticks]) is the logical waschild variable
 if varframe.responses["War of the Ancients"]==nil then
-	if age+childage >= ageticks[7] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Ancients"), LHT("NightElfEventWarAncients"), (age < ageticks[7]), warancients_postanswers, LHART_WARANCIENTS);
+	if age+childage >= ageticks[8] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Ancients"), LHT("NightElfEventWarAncients"), (age < ageticks[8]), warancients_postanswers, LHART_WARANCIENTS);
 		return varframe.curframe;
 	end
 end
 
 if varframe.responses["War of the Satyr"]==nil then
-	if age+childage >= ageticks[6] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Satyr"), LHT("NightElfEventWarSatyr"), (age < ageticks[6]), warsatyr_postanswers, LHART_WARSATYR);
+	if age+childage >= ageticks[7] then
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Satyr"), LHT("NightElfEventWarSatyr"), (age < ageticks[7]), warsatyr_postanswers, LHART_WARSATYR);
 		return varframe.curframe;
 	end
 end
@@ -1006,7 +1006,9 @@ local zones = {
 		{"Azshara", 2, "", true},
 		{"Feralas", 20, "", true},
 		{"Ashenvale", 40, ""},
-		{"Silithus", 5, ""}
+		{"Silithus", 5, ""},
+		{"Duskwood", 3, ""},
+		{"Hinterlands", 4, ""}
 		};
 	 
 for i,z in ipairs(zones) do

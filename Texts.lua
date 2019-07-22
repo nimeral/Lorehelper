@@ -8,6 +8,52 @@ function Lorehelper_Text (key)
 ------------------------------------------------------------	
 ------------------------------------------------------------
 ------------------------------------------------------------
+	elseif key=="NightElfStandardAvoided" then text="You were blessed to not be affected by these events much."
+	elseif key=="NightElfStandardLostSomeone" then text="You have lost someone you loved during these events."
+	elseif key=="NightElfStandardParticipated" then text="You did fight in this war. Unlike the less lucky ones, you survived."
+	elseif key=="NightElfStandardLostEverything" then text="You have suffered a lot during these horrible events. Your dreams will forever be haunted by memories of those you loved and lost, of burnt trees, of wisps tragically ascending to the sky..."	
+	
+	elseif key=="NightElfZoneAvoided" then text=""
+	elseif key=="NightElfZoneLost someone" then text="This is where someone you loved perished."
+	elseif key=="NightElfZoneParticipated" then text="You've been fighting here. Looks peaceful now, but is it for long?"
+	elseif key=="NightElfZoneLost everything" then text="This is where you suffered a terrible loss..."
+------------------------------------------------------------	
+	elseif key=="NightElfZoneStonetalon Mountains" then text="Stonetalon Mountains have traditionally been the area where we coexisted with tauren. Stonetalon Peak has long been a sacred place for the two races. It was the home of the immortal Oracle, the being who saw the strands of fate as they were woven by Elune.|n|nDuring Third War, the mountains hosted human and orcish camps, and it was at Stonetalon Peak that the Alliance temporarily united with the Horde in order to fight the Burning Legion.|n|nThese days, the land is torn by war. We hold Stonetalon Peak, but Horde forces occupy most of the area. To make things worse, Venture Co ravages the land on the east, and southwest is infested with harpies."
+	elseif key=="NightElfZoneFelwood" then text="For thousands of years, these serene forests were a part of northern Ashenvale. The area bears its sinister name since the invasion of Burning Legion, when it was corrupted by the dreadlord Tichondrius and the Skull of Gul'dan.|n|nIllidan Stormrage, a brother of the great Archdruid Malfurion, braved the demonic forces, took the Skull, and defeated the dreadlord, stopping the corruption from spreading. But it was not love to the forests driving Illidan - rather, his desire for demonic magic and personal power. A \"demon hunter\", he betrayed his nature to become a demon himself, and for this, Malfurion banished him."
+	elseif key=="NightElfZoneMoonglade" then text="Moonglade serves as a haven for druids and Cenarion Circle. Here, we coexist peacefully with tauren, united by the reverence for the spirit of nature.|n|nThis sacred vale was the home of Cenarius, the son of Elune herself, the one who taught the first druids and shaped our society into what it is. Cenarius served as a commander of the forces of Kalimdor in War of the Ancients. He continued serving as a teacher and protector of all the kaldorei for ten thousand years - until he was killed by the demonically corrupted orcs...|n|nBut the land endures this tragedy. Cenarius's spirit still guides us from the Emerald Dream, while his Children help us in this realm."
+	elseif key=="NightElfZoneAzshara" then text="Once, this shattered stretch of coast was a part of our then-capital, Zin-Azshari. During the demons' expulsion from the world, the land was rent asunder and the sea thundered in, leaving nought but ruins of the city. Those who survived named the region Azshara, after the queen who was driven mad by demonic influence.|n|nMany rumors and tales surround this land, but one thing that most of us agree on is that the region is cursed." --A few whisper that the Dark Portal that first brought the demons to Azeroth yet remains and rests under the sea, waiting for someone to reopen it. Others assert that the ancient Sundering awakened something worse than demons, something that will eventually burst forth in a tidal wave of destruction. Whatever the truth, most of us agree that the region is cursed."
+	elseif key=="NightElfZoneSocietyHighborne" then text="The days of you prospering in Zin-Azshari are long gone, and the world is decimated by your and other Highborne's reckless use of arcane. Now you hopefully see how our new way of living is superior."
+	elseif key=="NightElfZoneTooltipAzshara" then text="On a small island far to the east, Duke Hydraxis|npits heroes of all calibers against his elemental foes."
+	elseif key=="NightElfZoneFeralas" then text="You are near the ruins of Eldre'Thalas, the city almost as ancient as the kaldorei society. Certain members of the nobility opted to live here and not in the capital. These arcanists became known as the Shen'Dralar.|n|nWhen the Sundering decimated the world, Shen'Dralar narrowly escaped destruction, only to realize that the Well of Eternity is no more here to draw arcane powers from. While most of us then chose to live arcane-free lives, Shen'Dralar took a different route. They enslaved a demon named Immol'thar to siphon off its dark energy...|n|nThese days, Eldre'Thalas is known as Dire Maul."--Not only Shen'Dralar, but also satyrs and ogres inhabit the city."
+	elseif key=="NightElfZoneSocietyShen'Dralar" then text="You would have never recovered from addiction to demonic energy if you had not escaped from the city."
+	elseif key=="NightElfZoneTooltipFeralas" then text="After you visit the once-proud city of Eldre'Thalas,|nyou may want to talk to Rabine Saturna in Moonglade."
+	elseif key=="NightElfZoneAshenvale" then text="Our very civilization was built in the forests of Ashenvale. War of the Satyr was fought here. Later, some of the Highborne foolishly unleashed a magical storm upon Ashenvale, and were consequently exiled. Thousands of years of peace followed until the demons of Burning Legion entered our world again, bent on destroying the World Tree Nordrassil.|n|nIn fact, for us and for Ashenvale, this war began a bit earlier, when orcs invaded the sacred forests and began to massacre the ancient trees. A temporary truce with orcs had to be made to defeat the demons, but now, this fight continues. Greedy Warsong orcs have no respect for Nature and must be repelled!"
+	elseif key=="NightElfZoneSilithus" then text="Around a thousand years ago, Archdruid Fandral Staghelm initiated an ambitious quest to regrow the desolate land of Silithus. The group led by his Valstann came across a mysterious fortress deep in the desert's interior. The fortress was inhabited by qiraji, an insectoid race even more ancient than the kaldorei. Inadvertently roused by presense of Valstann, they burst forth from the fortress in a murderous frenzy, and War of the Shifting Sands began.|n|nMany kaldorei, including the young Valstann, perished in this war. But eventually, not without help of bronze dragons, qiraji and their silithid minions were defeated and sealed inside their temple of Ahn'Qiraj."	
+	elseif key=="NightElfZoneDuskwood" then text="Almost five thousand years ago, an evil element, later called saronite, began to appear across the world. Archdruid Fandral Staghelm took branches from the World Tree Nordrassil and planted them over the patches of saronite, trying to prevent it from spreading further. Great Trees grown from the branches, each accompanied with a portal between Azeroth and Emerald Dream. One of them is in Duskwood.|n|nFandral's plan seemed to have worked, and saronite stopped to spread. However, each Great Tree bears signs of corruption. The portals are not used, and not even druids know exactly what happens beyond them, for the spirit world of Emerald Dream is an ever-changing one."	
+	elseif key=="NightElfZoneHinterlands" then text="Almost five thousand years ago, an evil element, later called saronite, began to appear across the world. Archdruid Fandral Staghelm took branches from the World Tree Nordrassil and planted them over the patches of saronite, trying to prevent it from spreading further. Great Trees grown from the branches, each accompanied with a portal between Azeroth and Emerald Dream. One of them is in Hinterlands.|n|nFandral's plan seemed to have worked, and saronite stopped to spread. However, each Great Tree bears signs of corruption. The portals are not used, and not even druids know exactly what happens beyond them, for the spirit world of Emerald Dream is an ever-changing one."	
+------------------------------------------------------------
+	elseif key=="NightElfEventWarAncients" then text=""	
+	elseif key=="NightElfEventWarAncientsKaldorei" then text=""	
+	elseif key=="NightElfEventWarAncientsHighborne" then text=""	
+	elseif key=="NightElfEventWarAncientsShenDralar" then text=""	
+	
+	elseif key=="NightElfEventWarSatyr" then text=""	
+	elseif key=="NightElfEventWarSatyrStandard" then text=""	
+
+	elseif key=="NightElfEventShenDralarGenocide" then text=""	
+	elseif key=="NightElfEventShenDralarGenocideShenDralar" then text=""	
+	
+	elseif key=="NightElfEventWarShiftingSands" then text=""	
+	elseif key=="NightElfEventWarShiftingSandsStandard" then text=""	
+
+	elseif key=="NightElfEventThirdWar" then text=""	
+	elseif key=="NightElfEventThirdWarStandard" then text=""		
+	
+	elseif key=="NightElfEventBetrayer" then text=""	
+	elseif key=="NightElfEventBetrayerStandard" then text=""	
+	------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
 	elseif key=="DwarfStandardAvoided" then text="Ye were not much affected by these events."
 	elseif key=="DwarfStandardLostSomeone" then text="Ye have lost someone you loved during these events."
 	elseif key=="DwarfStandardParticipated" then text="Ye did fight in this war. Luckily, survived."

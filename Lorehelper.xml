@@ -313,7 +313,7 @@
 	<OnEnter>
 	if not self.unlocked then
 		GameTooltip:SetOwner(self or UIParent, "ANCHOR_LEFT")
-		GameTooltip:SetText("You must visit the zone to access its lore.");
+		GameTooltip:SetText("You must visit the zone to access its lore|n(or use Zonepedia if you feel like cheating a bit)");
 		GameTooltip:Show();
 	end
 	</OnEnter>
