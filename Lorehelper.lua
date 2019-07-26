@@ -305,7 +305,7 @@ end
 function Lorehelper_PopulateAllZonesFrame ()
 	local fr = Lorehelper_AllZonesFrame;
 	
-	local zonelist = {["Eastern Kingdoms"] = {"Alterac Mountains", "Arathi Highlands", "Badlands", "Blasted Lands", "Burning Steppes", "Dun Morogh", "Eastern Plaguelands", "Hillsbrad Foothills", "Redridge Mountains", "Searing Gorge","Silverpine Forest", "Stranglethorn Vale", "Swamp of Sorrows", "The Hinterlands", "Western Plaguelands", "Westfall", "Wetlands"},
+	local zonelist = {["Eastern Kingdoms"] = {"Alterac Mountains", "Arathi Highlands", "Badlands", "Blasted Lands", "Burning Steppes", "Dun Morogh", "Duskwood", "Eastern Plaguelands", "Hillsbrad Foothills", "Redridge Mountains", "Searing Gorge","Silverpine Forest", "Stranglethorn Vale", "Swamp of Sorrows", "The Hinterlands", "Western Plaguelands", "Westfall", "Wetlands"},
 	["Kalimdor"] = {"Ashenvale", "Azshara", "Darkshore", "Desolace", "Dustwallow Marsh", "Felwood", "Feralas", "Moonglade", "Silithus", "Stonetalon Mountains", "Tanaris", "The Barrens", "Thousand Needles", "Un'Goro Crater"}};--continental-alphabetic order, skipping those I have no texts about
 	
 	local rawzonedatalist = {};
@@ -892,14 +892,18 @@ elseif varframe.responses["Society"]==nil then
 		{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFHIGHBORNE, LHART_NIGHTELFSHENDRALAR});
 	elseif varframe.age >= 1225 then--genocide of Shen'Dralar
 		varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
-		LHT("NightElfSociety"), 
+		LHT("NightElfSocietyMiddleAge"),--"Kaldorei" and "Shen'Dralar" are the options, but Highborne lore is given
 		{LHT("Kaldorei"), LHT("Shen'Dralar")}, 
 		{LHT("NightElfKaldorei"), LHT("NightElfShenDralar")},
 		LHART_NIGHTELF,
 		{LHART_NIGHTELFKALDOREI, LHART_NIGHTELFSHENDRALAR});	
-	else 
-		varframe.responses["Society"]="Kaldorei";--a bit of a hack 
-		Lorehelper_DoTest();
+	else
+		varframe.curframe = Lorehelper_TestQuestion (LHT("Society"), 
+		LHT("NightElfSocietyYoung"),--so only "Kaldorei" is an option, but lore is given
+		{LHT("Kaldorei")}, 
+		{LHT("NightElfKaldorei")},
+		LHART_NIGHTELF,
+		{LHART_NIGHTELFKALDOREI});	
 	end
 -------------------------------------------------
 elseif varframe.responses["The Betrayer Ascendant"]==nil then--title of the last of the frames to be generated line below
@@ -938,7 +942,11 @@ warsatyr_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarSat
 
 warshiftingsands_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarShiftingSandsStandard"),standard_postanswers, false);
 
-thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventThirdWarStandard"),standard_postanswers, false);		
+if varframe.class == "Druid" then
+	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventThirdWarDruid"),standard_postanswers, false);	
+else
+	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventThirdWarStandard"),standard_postanswers, false);	
+end	
 
 betrayer_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventBetrayerStandard"),standard_postanswers, false);	
 -------
@@ -965,7 +973,7 @@ if varframe.responses["Shen'Dralar genocide"]==nil then
 	if varframe.responses["Society"]=="Shen'Dralar" then
 		shendralargenocide_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventShenDralarGenocideShenDralar"),standard_postanswers, false);
 		if age+childage >= ageticks[5] then
-			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("NightElfEventShenDalarGenocide"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
+			varframe.curframe = Lorehelper_EventTestQuestion (LHT("Shen'Dralar genocide"), LHT("NightElfEventShenDralarGenocide"), (age < ageticks[5]), shendralargenocide_postanswers, LHART_SHENDRALARGENOCIDE);
 			return varframe.curframe;
 		end
 	end
@@ -973,7 +981,7 @@ end
 
 if varframe.responses["War of the Shifting Sands"]==nil then
 	if age+childage >= ageticks[4] then
-		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Shifting Sands"), LHT("NightElfEventShiftingSands"), (age < ageticks[4]), warshiftingsands_postanswers, LHART_SHIFTINGSANDS);
+		varframe.curframe = Lorehelper_EventTestQuestion (LHT("War of the Shifting Sands"), LHT("NightElfEventWarShiftingSands"), (age < ageticks[4]), warshiftingsands_postanswers, LHART_SHIFTINGSANDS);
 		return varframe.curframe;
 	end
 end
@@ -1008,7 +1016,7 @@ local zones = {
 		{"Ashenvale", 40, ""},
 		{"Silithus", 5, ""},
 		{"Duskwood", 3, ""},
-		{"Hinterlands", 4, ""}
+		{"The Hinterlands", 4, ""}
 		};
 	 
 for i,z in ipairs(zones) do
