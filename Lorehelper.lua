@@ -1411,7 +1411,7 @@ elseif varframe.responses["Home Kingdom"]==nil then
 	{LHT("Alterac"), LHT("Dalaran"), LHT("Gilneas"), LHT("Kul Tiras"), LHT("Lordaeron"), LHT("Stormwind"), LHT("Stromgarde")}, 
 	{LHT("HumanHomeKingdomAlterac"), dalaran_text, LHT("HumanHomeKingdomGilneas"), LHT("HumanHomeKingdomKulTiras"), LHT("HumanHomeKingdomLordaeron"), stormwind_text, stromgarde_text},
 	LHART_HUMAN,
-	{LHART_HUMANALTERAC, LHART_HUMANDALARAN, LHART_HUMANGILNEAS, LHART_HUMANKULTIRAS, LHART_HUMANLORDAERON, nil, LHART_HUMANSTROMGARDE});
+	{LHART_HUMANALTERAC, LHART_HUMANDALARAN, LHART_HUMANGILNEAS, LHART_HUMANKULTIRAS, LHART_HUMANLORDAERON, LHART_HUMANSTORMWIND, LHART_HUMANSTROMGARDE});
 -------------------------------------------------
 -------------------------------------------------
 elseif varframe.responses["Third War: Kalimdor"]==nil then--title of the last of the frames to be generated line below
