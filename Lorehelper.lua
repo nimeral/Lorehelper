@@ -870,7 +870,7 @@ local oldage = 15000;
 local ageticks = Lorehelper_FormAgeTicks(childage, {22, 21, 20, -975, -1200, -7050, -9300, -10000, -12000})--will still be partially hardcoded
 --conflict with Illidan and naga, the end of Third War, the beginning of it, War of the Shifting Sands, genocide of Shen'Dralar, middle of Exile of the High Elves, War of the Satyr, War of the Ancients, founding of Eldre'Thalas
 for i=1,#ageticks do
-	print(ageticks[i])
+--	print(ageticks[i])
 end
 -------------------------------------------------
 --Ask about age
@@ -1085,7 +1085,7 @@ elseif varframe.responses["Clan"]==nil then
 -------------------------------------------------
 elseif varframe.responses["Third War"]==nil then--title of the last of the frames to be generated line below
 	varframe.curframe = Lorehelper_Dwarf_Events (ageticks, childage);--function generating a few frames, depending on age
-	print (varframe.curframe.title:GetText())
+--	print (varframe.curframe.title:GetText())
 -------------------------------------------------
 -------------------------------------------------
 else 
@@ -1416,7 +1416,7 @@ elseif varframe.responses["Home Kingdom"]==nil then
 -------------------------------------------------
 elseif varframe.responses["Third War: Kalimdor"]==nil then--title of the last of the frames to be generated line below
 	varframe.curframe = Lorehelper_Human_Events (ageticks, childage);--function generating a few frames, depending on age
-	print (varframe.curframe.title:GetText())
+--	print (varframe.curframe.title:GetText())
 -------------------------------------------------
 -------------------------------------------------
 else 

@@ -304,7 +304,7 @@
 	t:SetWidth(self:GetWidth());
 	t:SetHeight(self:GetHeight());
  	self.texture = t-->
-	self.unlocked = true;
+	self.unlocked = false;
 	</OnLoad>
 	<OnMouseDown>
 	<!-- hides all the "error" messages -->

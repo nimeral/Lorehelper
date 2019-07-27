@@ -365,7 +365,7 @@ function Lorehelper_Text (key)
 	
 	
 	elseif key=="UndeadFormerRace" then text="Rise, my "..Lorehelper_VarFrame.class.."s! Rise, and fight once more!|n|nWhat made you think I've been talking to you?|n|nWhat made you think I am going to ask questions about you? The only relevant event of your past is that you, apparently, died, and was risen in undeath to serve the Lich King. Now, thanks to the Dark Lady, your will is free again. What else to discuss?|n|nOn a more careful thought, however, I am slightly curious. Were you a human or elf when you were alive?"	
-	elseif key=="UndeadFormerRaceHuman" then text="So you're a human, like most of us.|n|nThe Plague has ravaged human kingdom of Lordaeron. The Plague has made us what we are.|n|nArthas, prince of Lordaeron, betrayed his kingdom to become a death knight. It was a nail in the coffin for the kingdom. Or, shall I say, it teared the nails off the coffins so the dead can rise and fight..?"	
+	elseif key=="UndeadFormerRaceHuman" then text="So you're a human, like most of us.|n|nThe Plague has ravaged human kingdom of Lordaeron. The Plague has made us what we are.|n|nArthas, prince of Lordaeron, betrayed his kingdom to become a death knight. It was a nail in the coffin for the kingdom. Or, shall I say, it torn the nails off the coffins so the dead can rise and fight..?"	
 	elseif key=="UndeadFormerRaceElf" then text="So you're an elf, huh? I don't see your pointy ears! Oh well, guess they've rotten off.|n|nArthas, traitor prince of Lordaeron, then a death knight, ravaged elven kingdom of Quel'Thalas. Tainted your precious Sunwell, risen you to serve him. Not necessarily in this order."	
 	
 	elseif key=="UndeadLastLivingMoment" then text="So where exactly did you die?"
