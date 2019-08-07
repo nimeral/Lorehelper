@@ -258,7 +258,7 @@
 </Button>
 
 <Button name="Lorehelper_SmallButton_Template" inherits="UIPanelButtonTemplate" virtual = "true">
-<Size x="70" y="35"/>
+<Size x="50" y="25"/>
 <Scripts>
 	<OnLoad>
     <!--self:SetHighlightTexture("interface\\addons\\Lorehelper\\BUTTONS\\UI-SILVER-BUTTON-UP.blp")-->
@@ -269,7 +269,7 @@
     self:SetPushedTexture(LHART_BUTTONDOWN)
     self:GetPushedTexture():SetTexCoord( 0, 0.625, 0, 0.6875 )
 	
-	local fo = self:CreateFontString()
+	local fo = self:GetFontString()
 	fo:SetFont("Fonts/FRIZQT__.TTF",10)
 	self:SetFontString(fo)
 	
@@ -322,6 +322,128 @@
 	</OnLeave>
 </Scripts>
 </Button>
+
+<Frame name="Lorehelper_DungeonPlayerFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="true" clampedToScreen="true" virtual = "false">
+<Size x="200" y="120"/>
+  <Anchors>
+    <Anchor point="TOP"/>
+  </Anchors> 
+  
+  <Scripts>
+    <OnLoad>
+	  self:RegisterForDrag("LeftButton")
+		  
+	  local framewidth = self:GetWidth() - 10 <!--so the text fits nicely-->
+	  
+	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+	  self.title:SetPoint("TOPLEFT", 0, -5);
+	  self.title:SetWidth(framewidth);
+	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
+	  self.title:SetTextColor(0.9, 0.9, 0.9, 1)
+	  self.title:SetText("Dungeon Player")
+	  
+	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
+	  self.text:SetPoint("TOPLEFT",5,-75)
+	  self.text:SetJustifyH("LEFT")
+	  self.text:SetJustifyV("TOP")
+	  self.text:SetWidth(framewidth);
+	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
+	  self.text:SetTextColor(0.9, 0.9, 0.9, 1)
+	  self.text:Show()<!-- shown by default -->
+	    
+	  self.background = self:CreateTexture(nil, "BACKGROUND")
+	  self.background:SetPoint("TOPLEFT")
+	  self.background:SetWidth(self:GetWidth());
+	  self.background:SetHeight(self:GetHeight());
+	  self.background:SetTexture(LHART_GNOMEREGAN)
+    </OnLoad>
+	<OnDragStart>
+		if not self.isLocked then
+			self:StartMoving()
+		end
+	</OnDragStart>
+	<OnDragStop>
+		self:StopMovingOrSizing()
+		
+		<!--if Lorehelper_VarFrame then save the position
+			Lorehelper_VarFrame.mainframepoint, Lorehelper_VarFrame.relativeTo, Lorehelper_VarFrame.relativePoint, Lorehelper_VarFrame.xOfs, Lorehelper_VarFrame.yOfs = self:GetPoint();
+		end-->
+	</OnDragStop>
+	<OnMouseDown>
+	StaticPopup_Hide ("LOREHELPER_SIMPLEMESSAGE")
+	</OnMouseDown>	
+  </Scripts>
+  
+  <Frames>
+    <Button name="Lorehelper_PlayButton" inherits="Lorehelper_SmallButton_Template" text="Tell this">
+      <Anchors>
+        <Anchor point="LEFT" x="50"/>
+      </Anchors>
+	  <Scripts>
+		<OnClick>
+		Lorehelper_DungeonTextPlay ();
+		</OnClick>
+	  </Scripts>
+    </Button>	
+	<Button name="Lorehelper_PlayNextButton" inherits="Lorehelper_SmallButton_Template" text="Tell next">
+      <Anchors>
+        <Anchor point="LEFT" x="100"/>
+      </Anchors>
+	  <Scripts>
+		<OnClick>
+		Lorehelper_VarFrame.curdungeontextpos = Lorehelper_VarFrame.curdungeontextpos + 1;
+		
+		if Lorehelper_VarFrame.curdungeontextpos == Lorehelper_VarFrame.curdungeonmaxtextpos + 2 then
+			Lorehelper_VarFrame.curdungeontextpos = Lorehelper_VarFrame.curdungeonmaxtextpos + 1;
+		end
+		
+		Lorehelper_UpdateDungeonPlayerText ();<!--implicitly updates Lorehelper_VarFrame.curdungeonmaxtextpos too-->
+		Lorehelper_DungeonTextPlay ();
+		</OnClick>
+	  </Scripts>
+    </Button>	
+	<Button name="Lorehelper_DungeonBackButton" inherits="Lorehelper_SmallButton_Template" text="Back">
+      <Anchors>
+        <Anchor point="LEFT"/>
+      </Anchors>
+	  <Scripts>
+		<OnClick>
+		Lorehelper_VarFrame.curdungeontextpos = Lorehelper_VarFrame.curdungeontextpos - 1;
+		
+		if Lorehelper_VarFrame.curdungeontextpos == -1 then
+			Lorehelper_VarFrame.curdungeontextpos = 0;
+		end
+		
+		Lorehelper_UpdateDungeonPlayerText ();<!--implicitly updates Lorehelper_VarFrame.curdungeonmaxtextpos too-->
+		</OnClick>
+	  </Scripts>
+    </Button>	
+	<Button name="Lorehelper_DungeonNextButton" inherits="Lorehelper_SmallButton_Template" text="Next">
+      <Anchors>
+        <Anchor point="LEFT" x="150"/>
+      </Anchors>
+	  <Scripts>
+		<OnClick>
+		Lorehelper_VarFrame.curdungeontextpos = Lorehelper_VarFrame.curdungeontextpos + 1;
+		
+		if Lorehelper_VarFrame.curdungeontextpos == Lorehelper_VarFrame.curdungeonmaxtextpos + 2 then
+			Lorehelper_VarFrame.curdungeontextpos = Lorehelper_VarFrame.curdungeonmaxtextpos + 1;
+		end
+		
+		Lorehelper_UpdateDungeonPlayerText ();<!--implicitly updates Lorehelper_VarFrame.curdungeonmaxtextpos too-->
+		</OnClick>
+	  </Scripts>
+    </Button>	
+  </Frames> 
+
+	<Layers>
+		<Layer level="ARTWORK">
+			<Texture setAllPoints="true">
+			<Color r="1.0" g="0.5" b="0.0" a="0.5" />
+			</Texture>
+		</Layer>
+	</Layers>
+</Frame>
 
 <!--    <Button name="BagBuddyItemTemplate" inherits="UIPanelButtonTemplate" virtual="true">
         <Size>
@@ -427,7 +549,7 @@
 			<OnEnter>
 				if (not self.dragging) then
 						GameTooltip:SetOwner(self or UIParent, "ANCHOR_LEFT")
-						GameTooltip:SetText("Lorehelper will guide you|nthrough the lore of your race");
+						GameTooltip:SetText("Lorehelper|nLeft click: Lore Profile|nRight click: Dungeon Player");
 						GameTooltip:Show();
 				end
 			</OnEnter>

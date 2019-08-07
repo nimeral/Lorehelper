@@ -453,7 +453,10 @@ function Lorehelper_Text (key)
 	elseif key=="MsgAnswersLoaded" then text="Lorehelper: your past answers loaded."
 	elseif key=="MsgRetakeTest" then text="Are you sure you want to do the lore test again? Your old answers will be lost."
 	elseif key=="MsgAccessLoreProfile" then text="Lorehelper: you can access your lore profile via the minimap icon, or by typing /lore"
-	elseif key=="MsgAboutLH" then text="Lorehelper compiles the official lore disclosed by Blizzard, various texts from Wowpedia and WoWWiki, and my own humble efforts into a lore-focused race-specific \"test\". Once you finish it, you will have access to your lore profile.|n|nAdditionally, when you first time enter a zone that is important from the lore standpoint, you will see a popup text about this zone, slightly different depending on your character's backstory. You may also receieve some tips about quests you should not miss.|n|nIn situations when the official lore is uncertain, I tried to come up with the most sensible solution. For example, we do not know when dwarves normally become old, but since Muradin Bronzebeard was 221 years old during the Third War, I came up with a guesstimate of 500 as a \"maximum\" age of a dwarf.|n|nI sincerely apologise to those who wanted to RP a 501-years-old dwarf, as well as to anyone who find the \"test\" limiting.|n|nHuge thanks to Wowpedia and WoWWiki authors for immensive efforts on lore collection. Thanks to Arctium team for creating a great sandbox that allowed me to make and test the addon. And, of course, to Blizzard for inventing this wonderful World!|n|nYours,|nNimeral"
+	elseif key=="MsgAboutLH" then text="Lorehelper compiles the official lore disclosed by Blizzard, various texts from Wowpedia and WoWWiki, and my own humble efforts into a lore-focused race-specific \"test\". Once you finish it, you will have access to your lore profile.|n|nThere is also Dungeon Player that gives you access to lore of dungeons and allows you to share it with your party. Dungeon Player will appear as soon as you enter a dungeon, or you can open it by right-clicking the icon near minimap.|n|nAdditionally, when you first time enter a zone that is important from the lore standpoint, you will see a popup text about this zone, slightly different depending on your character's backstory. You may also receieve some tips about quests you should not miss.|n|nIn situations when the official lore is uncertain, I tried to come up with the most sensible solution. For example, we do not know when dwarves normally become old, but since Muradin Bronzebeard was 221 years old during the Third War, I came up with a guesstimate of 500 as a \"maximum\" age of a dwarf.|n|nI sincerely apologise to those who wanted to RP a 501-years-old dwarf, as well as to anyone who find the \"test\" limiting.|n|nHuge thanks to Wowpedia and WoWWiki authors for immensive efforts on lore collection. Thanks to Arctium team for creating a great sandbox that allowed me to make and test the addon. And, of course, to Blizzard for inventing this wonderful World!|n|nYours,|nNimeral"
+	
+	elseif key=="DungeonDisclaimer" then text="Dungeon lore - brought to you by Lorehelper! Throughout our run, I will send you chunks of lore about this place. Please let me know if you don't want to hear it for some reason - then of course I won't!"
+	elseif key=="DungeonEnd" then text="That's all about this place, friends. Hope you enjoyed the story I told you using Lorehelper."
 	--Another example is, it is unclear when Darkspear trolls were driven from Stranglethorn, the addon supposes it is after the Second War when an ogre-mage was more likely to roam around Azeroth, seeking a troll tribe to seize their land.
 ------------------------------------------------------------	
 ------------------------------------------------------------
@@ -466,6 +469,52 @@ function Lorehelper_Text (key)
 ------------------------------------------------------------
 ------------------------------------------------------------
 	else text=key;
+	end	
+	
+return text;
+end
+------------------------------------------------------------	
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------
+function Lorehelper_DungeonText (dungeon)
+	local text = nil;
+	
+	if Lorehelper_VarFrame == nil then
+		print ("Lorehelper: can't create a text when addon variables aren't loaded");
+		return text;	
+------------------------------------------------------------
+	elseif dungeon=="Blackfathom Deeps" then text=""
+	elseif dungeon=="Blackrock Depths" then text=""
+	elseif dungeon=="Blackrock Spire" then text=""
+	elseif dungeon=="Dire Maul" then text=""
+	elseif dungeon=="Gnomeregan" then text="Gnomes know very little of their history, as in their very nature they are forward-thinking, rarely looking to the past. However, we do have some morsels of pre-Gnomeregan history.#Early gnomes dwelt in the caves of Dun Morogh. Being curious creatures, they focused on technological advancement. When the early dwarves arrived in the area later, they were surprised at the gnomes’ ingenuity.#The dwarves also sensed some kind of mysterious kinship with the gnomes. Whether it was their mutual tendency to live underground or their propensity for industry (though in different directions), or something else entirely…"
+	elseif dungeon=="Maraudon" then text=""
+	elseif dungeon=="Ragefire Chasm" then text=""
+	elseif dungeon=="Razorfen Downs" then text=""
+	elseif dungeon=="Razorfen Kraul" then text=""
+	elseif dungeon=="Scarlet Monastery" then text=""
+	elseif dungeon=="Scholomance" then text=""
+	elseif dungeon=="Shadowfang Keep" then text=""
+	elseif dungeon=="Stratholme" then text=""
+	elseif dungeon=="The Deadmines" then text=""
+	--!tele 49.8212 0.870144 -16.7136 0 34
+	elseif dungeon=="The Stockade" then text=""
+	elseif dungeon=="The Temple of Atal'Hakkar" then text=""
+	elseif dungeon=="Uldaman" then text=""
+	elseif dungeon=="Wailing Caverns" then text=""
+	elseif dungeon=="Zul'Farrak" then text=""
+	
+	--!tele 3005.798096 -3434.379150 293.880798 533
+	--elseif dungeon=="Naxxramas" then text=""
+	
+	else text=dungeon;
 	end	
 	
 return text;

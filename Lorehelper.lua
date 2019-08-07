@@ -68,11 +68,16 @@ Lorehelper_VarFrame = nil;
 Lorehelper_ZoneDropDown = nil;
 Lorehelper_PerspectiveDropDown = nil;
 
+Lorehelper_DungeonDropDown = nil;
+
 local Lorehelper_EventFrame = CreateFrame("FRAME"); -- Need a frame to respond to events
 Lorehelper_EventFrame:RegisterEvent("ADDON_LOADED"); -- Fired when saved variables are loaded
 Lorehelper_EventFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
 --Lorehelper_EventFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
-Lorehelper_EventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+Lorehelper_EventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA");
+--Lorehelper_EventFrame:RegisterEvent("ZONE_CHANGED_INDOORS");
+--Lorehelper_EventFrame:RegisterEvent("ZONE_CHANGED");
+Lorehelper_EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 
 function Lorehelper_EventFrame:OnEvent(event, arg1)
 	if event == "ADDON_LOADED" and arg1 == "Lorehelper" then
@@ -87,6 +92,7 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 			print(LHT("MsgAnswersLoaded"));
 			Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
 			Lorehelper_PopulateAllZonesFrame ();
+			Lorehelper_PopulateDungeonPlayerFrame ();
 			Lorehelper_VarFrame.curframe = Lorehelper_DoTest();
 		end
 	end
@@ -98,15 +104,35 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 		--local thezone = C_Map.GetMapInfo(zoneid)["name"];
 		local thezone = Lorehelper_MapIDsNames[zoneid];--have to store zone names with IDs in a file to make them locale-independent
 		--thezone = thezone:gsub(" ", "");--e.g. "TheBarrens" - no longer needed because I store them without spaces (Indian code in its best)
-		if _G["Lorehelper_ZoneButton"..thezone] then
-			local zonebutton = _G["Lorehelper_ZoneButton"..thezone];
-			if zonebutton.unlocked == false then--only to popup once
-				zonebutton.unlocked = true;
-				Lorehelper_VarFrame.unlockedzones[thezone] = true;
-				zonebutton:GetScript("OnClick")();
+		if thezone ~= nil then
+			if _G["Lorehelper_ZoneButton"..thezone] then
+				local zonebutton = _G["Lorehelper_ZoneButton"..thezone];
+				if zonebutton.unlocked == false then--only to popup once
+					zonebutton.unlocked = true;
+					Lorehelper_VarFrame.unlockedzones[thezone] = true;
+					zonebutton:GetScript("OnClick")();
+				end
 			end
 		end
 --		print(thezone);
+	end
+--------------------------------------------------------------------------
+	if event == "PLAYER_ENTERING_WORLD" then
+		local inInstance, instanceType = IsInInstance();
+		--print(instanceType);
+		if ((inInstance == true) and ((instanceType == "party") or (instanceType == "raid"))) then
+
+			local name, instType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo();
+			
+			if Lorehelper_MapIDsNames[instanceID] then
+				Lorehelper_VarFrame.curdungeon = Lorehelper_MapIDsNames[instanceID];--would be locale-specific if I used 'name' instead
+				Lorehelper_DungeonDropDown:SetValue(Lorehelper_VarFrame.curdungeon);
+				Lorehelper_DungeonPlayerFrame:Show ();
+				Lorehelper_DungeonTextPlay ();
+			else print ("Lorehelper: no lore for this dungeon! If it's a raid, forget about lore and listen to RL :)");
+			end
+			
+		end
 	end
 end
 
@@ -517,6 +543,48 @@ function Lorehelper_PopulateAllZonesFrame ()
 
 end
 ------------------------------------------
+------------------------------------------
+function Lorehelper_PopulateDungeonPlayerFrame ()
+	local varframe = Lorehelper_VarFrame; --global variable frame
+	local fr = Lorehelper_DungeonPlayerFrame;
+	
+	local dungeonlist = {"Blackfathom Deeps", "Blackrock Depths", "Blackrock Spire", "Dire Maul", "Gnomeregan","Maraudon", "Ragefire Chasm", "Razorfen Downs", "Razorfen Kraul", "Scarlet Monastery", "Scholomance", "Shadowfang Keep", "Stratholme", "The Deadmines", "The Stockade", "The Temple of Atal'Hakkar", "Uldaman", "Wailing Caverns", "Zul'Farrak"};
+---------------------
+	
+	--varframe.curdungeon = "Gnomeregan" -- A user-configurable setting
+	Lorehelper_UpdateDungeonPlayerText ();
+	
+	-- Create the dropdown, and configure its appearance
+	Lorehelper_DungeonDropDown = CreateFrame("FRAME", "Lorehelper_Global_DungeonDropDown", fr, "UIDropDownMenuTemplate")
+	Lorehelper_DungeonDropDown:SetPoint("TOPLEFT", fr, "TOPLEFT", -18, -22)
+	UIDropDownMenu_SetWidth(Lorehelper_DungeonDropDown, 180)
+	UIDropDownMenu_SetText(Lorehelper_DungeonDropDown, varframe.curdungeon)
+
+	-- Create and bind the initialization function to the dropdown menu
+	UIDropDownMenu_Initialize(Lorehelper_DungeonDropDown, function(self, level, menuList)
+	local info = UIDropDownMenu_CreateInfo()
+	
+	if (level or 1) == 1 then--not sure if this if is needed for non-nested list
+		-- Display the dungeons
+		info.func = self.SetValue
+		for i=1,#dungeonlist do
+			info.text, info.arg1, info.checked = dungeonlist[i], dungeonlist[i], dungeonlist[i] == varframe.curdungeon
+			UIDropDownMenu_AddButton(info)
+		end
+	end
+	end)
+
+	-- Implement the function to change the zone
+	function Lorehelper_DungeonDropDown:SetValue(newValue)
+	varframe.curdungeon = newValue
+	-- Update the text; if we merely wanted it to display newValue, we would not need to do this
+	UIDropDownMenu_SetText(Lorehelper_DungeonDropDown, varframe.curdungeon)
+	
+	varframe.curdungeontextpos = 0;
+	Lorehelper_UpdateDungeonPlayerText();
+	end
+end
+------------------------------------------
 function Lorehelper_GetRawZoneData (thezone, zones)
 	local rawzonedata = nil;
 
@@ -532,6 +600,10 @@ function Lorehelper_GetRawZoneData (thezone, zones)
 	end
 	
 return rawzonedata;
+end
+------------------------------------------
+function Lorehelper_BeginningOfText (text)
+return string.sub (text, 1, 80);
 end
 ------------------------------------------
 ------------------------------------------
@@ -2214,6 +2286,62 @@ end
 -------------------------------------------------
 -------------------------------------------------
 -------------------------------------------------
+-------------------------------------------------
+--Functions related to Dungeon Player
+-------------------------------------------------
+function Lorehelper_DungeonTextPlay ()
+local varframe = Lorehelper_VarFrame;
+local fr = Lorehelper_DungeonPlayerFrame;
+
+local text = Lorehelper_DungeonText (varframe.curdungeon)
+local chunkoftext = Lorehelper_ChunkOfDungeonText (text);--implicitly uses Lorehelper_VarFrame.curdungeontextpos
+if UnitInParty("player") then
+	SendChatMessage(chunkoftext, "PARTY")
+else
+	print (chunkoftext);
+end
+
+print(varframe.curdungeontextpos)
+end
+-------------------------------------------------
+function Lorehelper_ChunkOfDungeonText (text)
+local varframe = Lorehelper_VarFrame;
+
+if varframe.curdungeontextpos == 0 then
+	return (LHT("DungeonDisclaimer"))
+end
+
+--else proceed with actual dungeon text
+local chunks = {}
+local i = 1;
+
+for t in string.gmatch(text, "[^#]+") do
+  chunks[i] = t;
+  i = i+1;
+end
+
+varframe.curdungeonmaxtextpos = #chunks;
+
+if varframe.curdungeontextpos == varframe.curdungeonmaxtextpos + 1 then
+	return (LHT("DungeonEnd"))
+end
+
+return (chunks[varframe.curdungeontextpos]);
+end
+-------------------------------------------------
+function Lorehelper_UpdateDungeonPlayerText ()
+
+local text = Lorehelper_DungeonText(Lorehelper_VarFrame.curdungeon);
+local chunkoftext = Lorehelper_ChunkOfDungeonText (text)--implicitly uses Lorehelper_VarFrame.curdungeontextpos
+chunkoftext = Lorehelper_BeginningOfText(chunkoftext).."...";
+Lorehelper_DungeonPlayerFrame.text:SetText(chunkoftext);
+
+end
+-------------------------------------------------
+-------------------------------------------------
+-------------------------------------------------
+-------------------------------------------------
+-------------------------------------------------
 --[[function Lorehelper_NewQuestion(lastquestiontitle, lastanswer)
 	if lastanswer == "no" then
 		Lorehelper_TestQuestion ("Home", 
@@ -2275,13 +2403,25 @@ end
 
 -- Put your code that you want on a minimap button click here.  arg1="LeftButton", "RightButton", etc
 function Lorehelper_MinimapButton_OnClick()
-    if Lorehelper_VarFrame.curframe == nil then
-		Lorehelper_SimpleMessage ("No Lorehelper frame to display.");
-	elseif Lorehelper_VarFrame.curframe:IsShown() then
-		Lorehelper_VarFrame.curframe:Hide();
-		Lorehelper_SimpleFrame:Hide();
-		Lorehelper_AllZonesFrame:Hide();
-	else Lorehelper_VarFrame.curframe:Show();
+
+	local mousebutton = GetMouseButtonClicked();
+	
+	if mousebutton == "LeftButton" then
+		if Lorehelper_VarFrame.curframe == nil then
+			Lorehelper_SimpleMessage ("No Lorehelper frame to display.");
+		elseif Lorehelper_VarFrame.curframe:IsShown() then
+			Lorehelper_VarFrame.curframe:Hide();
+			Lorehelper_SimpleFrame:Hide();
+			Lorehelper_AllZonesFrame:Hide();
+		else Lorehelper_VarFrame.curframe:Show();
+		end
+	end
+	
+	if mousebutton == "RightButton" then
+		if Lorehelper_DungeonPlayerFrame:IsShown() then
+			Lorehelper_DungeonPlayerFrame:Hide();
+		else Lorehelper_DungeonPlayerFrame:Show();
+		end	
 	end
 end
 -----------------------------
@@ -2308,11 +2448,16 @@ function Lorehelper_Init()--creates Lorehelper_VarFrame and fills it with defaul
 	
 	Lorehelper_VarFrame.unlockedzones = {};
 	
+	Lorehelper_VarFrame.curdungeon = "Gnomeregan";
+	Lorehelper_VarFrame.curdungeontextpos = 0;
+	Lorehelper_VarFrame.curdungeonmaxtextpos = 1;
+	
 	print("Welcome to Lorehelper, "..Lorehelper_VarFrame.name.."!");
 	
 	Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
 	
 	Lorehelper_PopulateAllZonesFrame ();
+	Lorehelper_PopulateDungeonPlayerFrame ();
 end
 -----------------------------
 
