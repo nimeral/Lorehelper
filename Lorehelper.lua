@@ -603,7 +603,7 @@ return rawzonedata;
 end
 ------------------------------------------
 function Lorehelper_BeginningOfText (text)
-return string.sub (text, 1, 80);
+return string.sub (text, 1, 70);
 end
 ------------------------------------------
 ------------------------------------------
@@ -2301,7 +2301,7 @@ else
 	print (chunkoftext);
 end
 
-print(varframe.curdungeontextpos)
+--print(varframe.curdungeontextpos)
 end
 -------------------------------------------------
 function Lorehelper_ChunkOfDungeonText (text)
