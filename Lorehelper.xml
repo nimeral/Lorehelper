@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 <Frame name="Lorehelper_MainFrame_Template" parent="UIParent" inherits="BasicFrameTemplate" hidden="false" enableMouse="true" movable="true" clampedToScreen="true" virtual = "true">
-<Size x="400" y="500"/>
+<Size x="400" y="530"/>
   
   <Anchors>
     <Anchor point="CENTER"/>
@@ -105,7 +105,7 @@
 </Frame>
 
 <Frame name="Lorehelper_ListFrame_Template" hidden="false" inherits="InsetFrameTemplate2" enableMouse="true" movable="false" clampedToScreen="false" virtual = "true">
-<Size x="100" y="480"/>
+<Size x="100" y="510"/>
   
   <Scripts>
     <OnLoad>
@@ -126,7 +126,7 @@
 </Frame>
 
 <Frame name="Lorehelper_SimpleFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="false" clampedToScreen="true" virtual = "false">
-<Size x="250" y="420"/>
+<Size x="250" y="450"/>
   
   <Scripts>
     <OnLoad>
@@ -179,7 +179,7 @@
 </Frame>
 
 <Frame name="Lorehelper_AllZonesFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="false" clampedToScreen="true" virtual = "false">
-<Size x="250" y="420"/>
+<Size x="250" y="450"/>
   
   <Scripts>
     <OnLoad>

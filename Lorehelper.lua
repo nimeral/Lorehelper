@@ -630,6 +630,7 @@ function Lorehelper_TestQuestion(title, text, answers, postanswertexts, picture,
 	fr.title:SetText(title);
 	--theframe.text:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
 	fr.text:SetText(text);
+	--print (fr.text:GetHeight())
 	---------------------------------------------------
 	fr.buttonframes = {};
 	for i=1,#answers do
@@ -874,7 +875,7 @@ function Lorehelper_PresentAnswers(picture, sortorder, zones)--no other input be
 					else Lorehelper_SimpleFrame.tooltip = nil;
 					end
 					
-					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",255,0);
+					Lorehelper_SimpleFrame:SetPoint("RIGHT",fr.highlightsframe,"RIGHT",255,-3);
 					Lorehelper_SimpleFrame:Show();
 				end
 
@@ -910,7 +911,7 @@ function Lorehelper_AddHelpfulButtons (fr)
 	fr.frameofbuttons.allzonesbutton:SetScript("OnClick", 
 				function()
 				--FEATURE: anchor on curframe instead..?
-				Lorehelper_AllZonesFrame:SetPoint("LEFT",fr.frameofbuttons,"LEFT",-255,0);
+				Lorehelper_AllZonesFrame:SetPoint("LEFT",fr.frameofbuttons,"LEFT",-255,-3);
 				Lorehelper_AllZonesFrame:Show();
 				end
 				);
@@ -1175,7 +1176,7 @@ local varframe = Lorehelper_VarFrame;
 local age = varframe.age;
 --local fr = nil; --current frame, will be returned and varframe.curframe will be equal to it
 
-standard_postanswers = {LHT("HumanStandardAvoided"), LHT("HumanStandardLostSomeone"), LHT("HumanStandardParticipated"), LHT("HumanStandardLostEverything")};
+standard_postanswers = {LHT("DwarfStandardAvoided"), LHT("DwarfStandardLostSomeone"), LHT("DwarfStandardParticipated"), LHT("DwarfStandardLostEverything")};
 
 if varframe.responses["Clan"] == "Bronzebeard" then
 	warofthreehammers_postanswers = Lorehelper_FormEventPostanswers (LHT("DwarfEventWarofThreeHammersBronzebeard"),standard_postanswers, false);	
