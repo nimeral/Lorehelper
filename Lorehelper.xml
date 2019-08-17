@@ -19,13 +19,6 @@
 	  
 	  local framewidth = self:GetWidth() - 10 <!--so the text fits nicely-->
 	  
-	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
-	  self.title:SetPoint("TOPLEFT", 0, -5);
-	  self.title:SetWidth(framewidth);
-	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
-	  <!--self.title:SetTextColor(0.15, 1, 0.2, 1) old green-->
-	  self.title:SetTextColor(0.9, 0.9, 0.9, 1)
-	  
 	  self.text = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
 	  self.text:SetPoint("TOPLEFT",5,-30)
 	  self.text:SetJustifyH("LEFT")
@@ -33,7 +26,23 @@
 	  self.text:SetWidth(framewidth);
 	  self.text:SetFont("Fonts\\FRIZQT__.ttf", 16, "OUTLINE")
 	  self.text:SetTextColor(0.9, 0.9, 0.9, 1)
+	  self.text:SetText(Lorehelper_Text("DwarfEventWarofThreeHammersDarkIron")..Lorehelper_Text("DwarfStandardLostEverything"));<!--this is one of the largest texts I want to fit in the window. I "want" its height to be 410 to fit the window. Why 410? Don't ask-->
+	  local maxtextheight = self.text:GetHeight();
+	  local actualframewidth = self:GetWidth();
+	  self:SetWidth(actualframewidth*maxtextheight/410);<!--so I enlarge the width if needed-->
+	  framewidth = self:GetWidth() - 10 <!--need to update it now-->
+	  self.text:SetWidth(framewidth);  
+	  self.text:SetText("");<!--clear it just in case-->
+	  
 	  self.text:Show()<!-- shown by default -->
+
+	  <!--now we're done with adjusting frame width to fit all the texts and can set the rest up-->
+	  self.title = self:CreateFontString(nil, "ARTWORK", "GameFontNormal");
+	  self.title:SetPoint("TOPLEFT", 0, -5);
+	  self.title:SetWidth(framewidth);
+	  self.title:SetFont("Fonts\\FRIZQT__.ttf", 12, "OUTLINE")
+	  <!--self.title:SetTextColor(0.15, 1, 0.2, 1) old green-->
+	  self.title:SetTextColor(0.9, 0.9, 0.9, 1)
 	  
 	  <!--most of the frames will have newtext as well, displayed after the player chooses an answer-->
 	  self.newtext = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
