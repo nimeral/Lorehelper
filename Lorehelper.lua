@@ -125,8 +125,14 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 			local name, instType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceID, instanceGroupSize, LfgDungeonID = GetInstanceInfo();
 			
 			if Lorehelper_MapIDsNames[instanceID] then
+				if Lorehelper_VarFrame.curdungeon ~= Lorehelper_MapIDsNames[instanceID] then
+					Lorehelper_VarFrame.curdungeontextpos = 0;--don't reset curdungeontextpos if we're in the same dungeon as we were
+				end
+				
 				Lorehelper_VarFrame.curdungeon = Lorehelper_MapIDsNames[instanceID];--would be locale-specific if I used 'name' instead
-				Lorehelper_DungeonDropDown:SetValue(Lorehelper_VarFrame.curdungeon);
+				UIDropDownMenu_SetText(Lorehelper_DungeonDropDown, Lorehelper_VarFrame.curdungeon);--can't use  Lorehelper_DungeonDropDown:SetValue because it would reset Lorehelper_VarFrame.curdungeontextpos
+				Lorehelper_UpdateDungeonPlayerText();
+				--Lorehelper_DungeonDropDown:SetValue(Lorehelper_VarFrame.curdungeon);
 				Lorehelper_DungeonPlayerFrame:Show ();
 				Lorehelper_DungeonTextPlay ();
 			else print ("Lorehelper: no lore for this dungeon! If it's a raid, forget about lore and listen to RL :)");
@@ -587,6 +593,7 @@ function Lorehelper_PopulateDungeonPlayerFrame ()
 	UIDropDownMenu_SetText(Lorehelper_DungeonDropDown, varframe.curdungeon)
 	
 	varframe.curdungeontextpos = 0;
+
 	Lorehelper_UpdateDungeonPlayerText();
 	end
 end
