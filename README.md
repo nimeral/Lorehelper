@@ -2,6 +2,7 @@
 **WoW Classic addon for lore lovers**
 
 [Some screenshots to give you an idea](https://imgur.com/a/yX1oiAL)
+
 [And a couple more for Dungeon Player](https://imgur.com/a/c1lT2hj)
 
 * Guides you through the **lore of your race** via a "lore test". Standard questions are: age of your character, home Kingdom/Clan/whatever, and then a few questions about the character's participation in the important events. It's all *highly race-specific*, and won't contain nonsense like "did your troll fight in War of the Three Hammers". First War etc for humans, War of the Ancients etc for night elves, conflict with Theramore for tauren - nothing you wouldn't guess.
