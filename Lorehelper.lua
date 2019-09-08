@@ -93,6 +93,9 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 			Lorehelper_MinimapButton_Reposition();--the minimap icon is slightly behind otherwise
 			Lorehelper_PopulateAllZonesFrame ();
 			Lorehelper_PopulateDungeonPlayerFrame ();
+			if Lorehelper_VarFrame.sendtoparty ~= nil then
+				Lorehelper_SendToPartyCheckButton:SetChecked("true")
+			end
 			Lorehelper_VarFrame.curframe = Lorehelper_DoTest();
 		end
 	end
@@ -2253,7 +2256,7 @@ local fr = Lorehelper_DungeonPlayerFrame;
 
 local text = Lorehelper_DungeonText (varframe.curdungeon)
 local chunkoftext = Lorehelper_ChunkOfDungeonText (text);--implicitly uses Lorehelper_VarFrame.curdungeontextpos
-if UnitInParty("player") then
+if UnitInParty("player") and varframe.sendtoparty ~= nil then
 	SendChatMessage(chunkoftext, "PARTY")
 else
 	print (chunkoftext);

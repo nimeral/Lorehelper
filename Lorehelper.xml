@@ -333,7 +333,7 @@
 </Button>
 
 <Frame name="Lorehelper_DungeonPlayerFrame" hidden="true" inherits="BasicFrameTemplate" enableMouse="true" movable="true" clampedToScreen="true" virtual = "false">
-<Size x="200" y="120"/>
+<Size x="200" y="140"/>
   <Anchors>
     <Anchor point="TOP"/>
   </Anchors> 
@@ -386,7 +386,7 @@
   <Frames>
     <Button name="Lorehelper_PlayButton" inherits="Lorehelper_SmallButton_Template" text="Tell this">
       <Anchors>
-        <Anchor point="LEFT" x="50"/>
+        <Anchor point="LEFT" x="50" y="10"/>
       </Anchors>
 	  <Scripts>
 		<OnClick>
@@ -396,7 +396,7 @@
     </Button>	
 	<Button name="Lorehelper_PlayNextButton" inherits="Lorehelper_SmallButton_Template" text="Tell next">
       <Anchors>
-        <Anchor point="LEFT" x="100"/>
+        <Anchor point="LEFT" x="100" y="10"/>
       </Anchors>
 	  <Scripts>
 		<OnClick>
@@ -413,7 +413,7 @@
     </Button>	
 	<Button name="Lorehelper_DungeonBackButton" inherits="Lorehelper_SmallButton_Template" text="Back">
       <Anchors>
-        <Anchor point="LEFT"/>
+        <Anchor point="LEFT" y="10"/>
       </Anchors>
 	  <Scripts>
 		<OnClick>
@@ -429,7 +429,7 @@
     </Button>	
 	<Button name="Lorehelper_DungeonNextButton" inherits="Lorehelper_SmallButton_Template" text="Next">
       <Anchors>
-        <Anchor point="LEFT" x="150"/>
+        <Anchor point="LEFT" x="150" y="10"/>
       </Anchors>
 	  <Scripts>
 		<OnClick>
@@ -442,7 +442,38 @@
 		Lorehelper_UpdateDungeonPlayerText ();<!--implicitly updates Lorehelper_VarFrame.curdungeonmaxtextpos too-->
 		</OnClick>
 	  </Scripts>
-    </Button>	
+    </Button>
+	<CheckButton name="Lorehelper_SendToPartyCheckButton" inherits="OptionsCheckButtonTemplate" checked="false">
+		<Anchors>
+			<Anchor point="BOTTOMRIGHT" x="-70" y="0">
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+			Lorehelper_SendToPartyCheckButtonText:SetFont("Fonts\\FRIZQT__.ttf", 10, "OUTLINE")
+			Lorehelper_SendToPartyCheckButtonText:SetTextColor(0.9, 0.9, 0.9, 1)
+			Lorehelper_SendToPartyCheckButtonText:SetText("Tell to party");
+			self.tooltip = "Tick this if you want to|nshare the lore with your party."
+			</OnLoad>
+			<OnEnter>
+				if self.tooltip then
+					GameTooltip:SetOwner(self or UIParent, "ANCHOR_BOTTOM");
+					GameTooltip:SetText(self.tooltip);
+					GameTooltip:Show();
+				end
+			</OnEnter>
+			<OnLeave>
+				GameTooltip:Hide();
+			</OnLeave>
+			<OnClick>
+			if self:GetChecked() then
+				Lorehelper_VarFrame.sendtoparty = true;
+			else
+				Lorehelper_VarFrame.sendtoparty = nil;
+			end
+			</OnClick>
+		</Scripts>
+	</CheckButton>
   </Frames> 
 
 	<Layers>
