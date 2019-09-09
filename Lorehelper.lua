@@ -1033,7 +1033,7 @@ warsatyr_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarSat
 
 warshiftingsands_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventWarShiftingSandsStandard"),standard_postanswers, false);
 
-if varframe.class == "Druid" then
+if varframe.class == C_CreatureInfo.GetClassInfo(11).className then
 	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventThirdWarDruid"),standard_postanswers, false);	
 else
 	thirdwar_postanswers = Lorehelper_FormEventPostanswers (LHT("NightElfEventThirdWarStandard"),standard_postanswers, false);	
