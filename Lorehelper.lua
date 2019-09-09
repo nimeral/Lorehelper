@@ -135,9 +135,11 @@ function Lorehelper_EventFrame:OnEvent(event, arg1)
 				Lorehelper_VarFrame.curdungeon = Lorehelper_MapIDsNames[instanceID];--would be locale-specific if I used 'name' instead
 				UIDropDownMenu_SetText(Lorehelper_DungeonDropDown, Lorehelper_VarFrame.curdungeon);--can't use  Lorehelper_DungeonDropDown:SetValue because it would reset Lorehelper_VarFrame.curdungeontextpos
 				Lorehelper_UpdateDungeonPlayerText();
-				--Lorehelper_DungeonDropDown:SetValue(Lorehelper_VarFrame.curdungeon);
 				Lorehelper_DungeonPlayerFrame:Show ();
-				Lorehelper_DungeonTextPlay ();
+				--if we enter a dungeon and didn't tell lore yet, display the "intro" message
+				if Lorehelper_VarFrame.curdungeontextpos == 0 then
+					Lorehelper_DungeonTextPlay ();
+				end
 			else print ("Lorehelper: no lore for this dungeon! If it's a raid, forget about lore and listen to RL :)");
 			end
 			
